@@ -1,0 +1,10 @@
+{
+  "name": "먹지마 친구들",
+  "short_name": "먹지마",
+  "description": "음식을 피하며 앞으로 전진한 칸수를 기록하는 캐주얼 웹 게임",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#fffaf0",
+  "theme_color": "#2fbf9b",
+  "orientation": "portrait"
+}

@@ -484,7 +484,7 @@ input:focus{border-color:var(--green)}
 <!-- 화면3: 서비스 선택 (직원용) -->
 <div class="screen" id="scSvcWorker">
   <div class="hdr" id="svcWorkerHdr">
-    <button class="back-btn" onclick="showScreen('scUserSelect')">← 뒤로</button>
+    <button class="back-btn" onclick="goAfterEntryBack()">← 뒤로</button>
     <div class="hdr-title" id="svcWorkerCafeName">가게</div>
     <div style="font-size:11px;color:rgba(255,255,255,0.8)">직원</div>
   </div>
@@ -511,7 +511,7 @@ input:focus{border-color:var(--green)}
 </div>
 <div class="screen" id="scSvc">
   <div class="hdr" id="svcHdr">
-    <button class="back-btn" onclick="showScreen('scUserSelect')">← 뒤로</button>
+    <button class="back-btn" onclick="goAfterEntryBack()">← 뒤로</button>
     <div class="hdr-title" id="svcCafeName">가게</div>
     <div style="font-size:11px;color:rgba(255,255,255,0.8)">관리자</div>
   </div>
@@ -1860,6 +1860,13 @@ function goHome(){
   currentCafe=null;selDate=null;isAdminMode=false;currentWorkerEmp=null;
   showScreen('scHome');loadCafes();
 }
+function goAfterEntryBack(){
+  if(isEmployeeInviteMode&&currentCafe){
+    openCafePasswordScreen(currentCafe,true);
+  } else {
+    goHome();
+  }
+}
 
 function loadCafes(){
   if(!currentUser){showScreen('scLogin');return;}
@@ -1923,11 +1930,28 @@ function checkCafePw(){
     document.getElementById('adminPwArea').style.display='none';
     document.getElementById('adminPwInput2').value='';
     document.getElementById('adminPwError2').style.display='none';
-    showScreen('scUserSelect');
+    if(isEmployeeInviteMode){
+      enterAsWorker();
+    } else {
+      enterAsAdminDirect();
+    }
   } else {
     document.getElementById('pwError').style.display='block';
     document.getElementById('pwInput').value='';
   }
+}
+function enterAsAdminDirect(){
+  isAdminMode=true;
+  document.getElementById('adminPwArea').style.display='none';
+  document.getElementById('adminPwInput2').value='';
+  document.getElementById('adminPwError2').style.display='none';
+  const cm=colorMap[currentCafe.color||'green']||colorMap.green;
+  document.getElementById('svcHdr').style.background=cm.main;
+  document.getElementById('svcCafeName').textContent=currentCafe.name;
+  document.getElementById('svcIcon1').style.background=cm.light;
+  loadEmployees();
+  showScreen('scSvc');
+  setTimeout(()=>{subscribePush();checkAndNotify();},1500);
 }
 function showAdminPwInput(){
   document.getElementById('adminPwArea').style.display='block';

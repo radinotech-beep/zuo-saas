@@ -79,6 +79,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .svc-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .svc-grid .svc-card{margin-bottom:0;padding:14px 10px;min-height:126px;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:9px}
 .svc-grid .svc-icon{width:52px;height:52px;border-radius:14px}
+.id-card-icon{width:34px;height:34px;display:block}
 .svc-grid .svc-name{font-size:14px;line-height:1.25;word-break:keep-all}
 .svc-grid .svc-desc{font-size:10px;line-height:1.35;word-break:keep-all}
 .svc-card-focus-labor{background:#F4FBF8;border-color:#BFE8D8}
@@ -525,7 +526,7 @@ input:focus{border-color:var(--green)}
     <div class="svc-sub">이용할 서비스를 탭하세요</div>
     <div class="svc-grid">
       <div class="svc-card" onclick="openMasterMenu('emp')">
-        <div class="svc-icon" style="background:#EAF6F2">🔔</div>
+        <div class="svc-icon" style="background:#E6F1FB"><svg class="id-card-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect x="5" y="8" width="22" height="16" rx="3" fill="none" stroke="#1B355E" stroke-width="2.2"/><circle cx="13" cy="15" r="3" fill="#1B355E"/><path d="M8.8 21c.9-2.3 2.4-3.4 4.2-3.4s3.3 1.1 4.2 3.4" fill="none" stroke="#1B355E" stroke-width="2" stroke-linecap="round"/><path d="M19.5 13h4.2M19.5 17h4.2M19.5 21h3" stroke="#1B355E" stroke-width="2" stroke-linecap="round"/></svg></div>
         <div><div class="svc-name">알림센터</div><div class="svc-desc">대타 · 급여 · 운영 알림</div></div>
       </div>
       <div class="svc-card" onclick="enterSvc('notice')">
@@ -1962,7 +1963,7 @@ function normalizeAdminServiceCards(){
     const icon=firstCard.querySelector('.svc-icon');
     const name=firstCard.querySelector('.svc-name');
     const desc=firstCard.querySelector('.svc-desc');
-    if(icon){icon.textContent='👥';icon.style.background='#EAF6F2';}
+    if(icon){icon.innerHTML=`<svg class="id-card-icon" viewBox="0 0 32 32" aria-hidden="true" focusable="false"><rect x="5" y="8" width="22" height="16" rx="3" fill="none" stroke="#1B355E" stroke-width="2.2"/><circle cx="13" cy="15" r="3" fill="#1B355E"/><path d="M8.8 21c.9-2.3 2.4-3.4 4.2-3.4s3.3 1.1 4.2 3.4" fill="none" stroke="#1B355E" stroke-width="2" stroke-linecap="round"/><path d="M19.5 13h4.2M19.5 17h4.2M19.5 21h3" stroke="#1B355E" stroke-width="2" stroke-linecap="round"/></svg>`;icon.style.background='#E6F1FB';}
     if(name)name.textContent='직원카드 등록';
     if(desc)desc.textContent='직원 정보 · 시급 · 락커룸 비밀번호';
   }

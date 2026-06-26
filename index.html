@@ -40,6 +40,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .business-name{font-size:15px;font-weight:800;color:var(--t1)}
 .business-email{font-size:11px;color:var(--t3);margin-top:3px}
 .top-small-btn{border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.16);color:#fff;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:700;cursor:pointer}
+.hdr-actions{display:flex;align-items:center;gap:8px}
+.hdr-icon-btn{position:relative;width:34px;height:34px;border-radius:999px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.16);color:#fff;font-size:17px;font-weight:800;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.hdr-badge{position:absolute;top:-5px;right:-5px;min-width:17px;height:17px;border-radius:999px;background:var(--red);color:#fff;font-size:10px;font-weight:900;display:none;align-items:center;justify-content:center;padding:0 4px;border:2px solid var(--green)}
 .hdr{position:sticky;top:0;z-index:10;background:var(--green);padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between}
 .hdr-title{font-size:17px;font-weight:700;color:#fff}
 .hdr-sub{font-size:11px;color:rgba(255,255,255,0.75)}
@@ -513,13 +516,16 @@ input:focus{border-color:var(--green)}
   <div class="hdr" id="svcHdr">
     <button class="back-btn" onclick="goAfterEntryBack()">← 뒤로</button>
     <div class="hdr-title" id="svcCafeName">가게</div>
-    <div style="font-size:11px;color:rgba(255,255,255,0.8)">관리자</div>
+    <div class="hdr-actions">
+      <button class="hdr-icon-btn" onclick="enterSvc('alerts')" title="알림센터">🔔<span class="hdr-badge" id="svcAlertBadge">0</span></button>
+      <div style="font-size:11px;color:rgba(255,255,255,0.8)">관리자</div>
+    </div>
   </div>
   <div class="svc-wrap">
     <div class="svc-title">서비스를 선택해주세요</div>
     <div class="svc-sub">이용할 서비스를 탭하세요</div>
     <div class="svc-grid">
-      <div class="svc-card" onclick="enterSvc('alerts')">
+      <div class="svc-card" onclick="openMasterMenu('emp')">
         <div class="svc-icon" style="background:#EAF6F2">🔔</div>
         <div><div class="svc-name">알림센터</div><div class="svc-desc">대타 · 급여 · 운영 알림</div></div>
       </div>
@@ -732,7 +738,7 @@ input:focus{border-color:var(--green)}
     <!-- 관리자 메뉴 -->
     <div style="font-size:11px;font-weight:700;color:var(--t3);letter-spacing:0.5px;margin-bottom:8px;padding-left:2px">관리자 메뉴</div>
     <div style="background:#fff;border-radius:12px;border:1px solid var(--bd);overflow:hidden">
-      <div onclick="openMasterMenu('emp')" style="display:flex;align-items:center;gap:12px;padding:14px;cursor:pointer;border-bottom:1px solid #f5f5f5">
+      <div onclick="openMasterMenu('emp')" style="display:none;align-items:center;gap:12px;padding:14px;cursor:pointer;border-bottom:1px solid #f5f5f5">
         <div style="width:40px;height:40px;border-radius:10px;background:var(--gl);display:flex;align-items:center;justify-content:center;font-size:20px">👥</div>
         <div>
           <div style="font-size:14px;font-weight:600;color:var(--t1)">직원 등록 관리</div>
@@ -1951,7 +1957,40 @@ function enterAsAdminDirect(){
   document.getElementById('svcIcon1').style.background=cm.light;
   loadEmployees();
   showScreen('scSvc');
+  normalizeAdminServiceCards();
+  refreshSvcAlertBadge();
   setTimeout(()=>{subscribePush();checkAndNotify();},1500);
+}
+function normalizeAdminServiceCards(){
+  const firstCard=document.querySelector('#scSvc .svc-grid .svc-card');
+  if(firstCard){
+    const icon=firstCard.querySelector('.svc-icon');
+    const name=firstCard.querySelector('.svc-name');
+    const desc=firstCard.querySelector('.svc-desc');
+    if(icon){icon.textContent='👥';icon.style.background='#EAF6F2';}
+    if(name)name.textContent='직원카드 등록';
+    if(desc)desc.textContent='직원 정보 · 시급 · 락커룸 비밀번호';
+  }
+  updateSvcAlertBadge();
+}
+
+async function refreshSvcAlertBadge(){
+  if(!currentCafe)return;
+  try{
+    alertItems=await buildAlertItems();
+    updateSvcAlertBadge();
+  }catch(e){
+    console.warn('alert badge update failed',e);
+  }
+}
+
+function updateSvcAlertBadge(){
+  const badge=document.getElementById('svcAlertBadge');
+  if(!badge)return;
+  const hidden=currentCafe?getHiddenAlerts():[];
+  const count=(alertItems||[]).filter(a=>!hidden.includes(a.id)).length;
+  badge.textContent=count>99?'99+':String(count);
+  badge.style.display=count>0?'flex':'none';
 }
 function showAdminPwInput(){
   document.getElementById('adminPwArea').style.display='block';
@@ -1970,6 +2009,8 @@ function checkAdminModePw(){
     document.getElementById('svcIcon1').style.background=cm.light;
     loadEmployees();
     showScreen('scSvc');
+    normalizeAdminServiceCards();
+    refreshSvcAlertBadge();
     setTimeout(()=>{subscribePush();checkAndNotify();},1500);
   } else {
     document.getElementById('adminPwError2').style.display='block';
@@ -2711,6 +2752,7 @@ function renderAlertCenter(){
   document.getElementById('alertUrgentCnt').textContent=alertItems.filter(a=>a.level==='urgent'&&!hidden.includes(a.id)).length;
   document.getElementById('alertTodayCnt').textContent=alertItems.filter(a=>a.today&&!hidden.includes(a.id)).length;
   document.getElementById('alertTotalCnt').textContent=alertItems.filter(a=>!hidden.includes(a.id)).length;
+  updateSvcAlertBadge();
   document.getElementById('alertList').innerHTML=visible.length?visible.map(renderAlertCard).join(''):`<div class="alert-empty">표시할 알림이 없어요</div>`;
   const btn=document.getElementById('hiddenAlertToggle');
   btn.style.display=hiddenItems.length?'block':'none';

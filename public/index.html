@@ -14,18 +14,18 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f5;max-width:480px;margin:0 auto;min-height:100vh}
 :root{--green:#8AB4F8;--gl:#E8F0FE;--gm:#BDD6FB;--gd:#1B355E;--red:#E24B4A;--amb:#EF9F27;--al:#FAEEDA;--ad:#854F0B;--bd:#e5e5e5;--t1:#1a1a1a;--t2:#666;--t3:#999}
-#splash{position:fixed;inset:0;background:#2C1A0E;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.6s}
+#splash{position:fixed;inset:0;background:#1B355E;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.6s}
 #splash.hide{opacity:0;pointer-events:none}
-.splash-icon{font-size:72px;margin-bottom:16px;animation:sbounce 1s ease infinite alternate}
+.splash-icon{width:118px;height:118px;border-radius:30px;background:#8AB4F8;color:#1B355E;display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:900;letter-spacing:-2px;margin-bottom:16px;box-shadow:0 18px 42px rgba(0,0,0,.22);animation:sbounce 1s ease infinite alternate}
 .splash-title{font-size:30px;font-weight:700;color:#fff;margin-bottom:6px;letter-spacing:-0.5px}
-.splash-title b{color:#FAEEDA}
-.splash-sub{font-size:14px;color:rgba(255,255,255,0.8);margin-bottom:48px}
+.splash-title b{color:#8AB4F8}
+.splash-sub{font-size:14px;color:rgba(255,255,255,0.86);margin-bottom:48px}
 .splash-dots{display:flex;gap:8px}
-.splash-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.4);animation:sdot 1.2s ease infinite}
+.splash-dot{width:8px;height:8px;border-radius:50%;background:rgba(138,180,248,0.45);animation:sdot 1.2s ease infinite}
 .splash-dot:nth-child(2){animation-delay:.2s}
 .splash-dot:nth-child(3){animation-delay:.4s}
 @keyframes sbounce{from{transform:translateY(0)}to{transform:translateY(-12px)}}
-@keyframes sdot{0%,80%,100%{background:rgba(255,255,255,0.4)}40%{background:#fff}}
+@keyframes sdot{0%,80%,100%{background:rgba(138,180,248,0.45)}40%{background:#fff}}
 .screen{display:none;min-height:100vh;background:#f5f5f5}
 .screen.active{display:block}
 .auth-wrap{padding:28px 18px;min-height:calc(100vh - 52px);display:flex;flex-direction:column;justify-content:center}
@@ -395,7 +395,7 @@ input:focus{border-color:var(--green)}
 <body>
 
 <div id="splash">
-  <div class="splash-icon" style="font-size:0;margin-bottom:12px"><img src="icons/logo.png" style="width:120px;height:120px;object-fit:contain;animation:sbounce 1s ease infinite alternate" alt="ZUO"></div>
+  <div class="splash-icon" aria-label="ZUO logo">ZUO</div>
   <div class="splash-title" style="font-size:42px;font-weight:900;letter-spacing:-2px"><b>ZUO</b></div>
   <div class="splash-sub" style="font-size:15px;color:rgba(255,255,255,0.9);font-weight:500;margin-bottom:48px">한 손안에 매장관리</div>
   <div class="splash-dots">
@@ -5070,7 +5070,5 @@ if(auth.currentUser){currentUser=auth.currentUser;loadCafes();}
 <script src="zuo-fixes.js?v=20260619d"></script>
 </body>
 </html>
-
-
 
 

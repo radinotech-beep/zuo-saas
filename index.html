@@ -260,8 +260,10 @@ input:focus{border-color:var(--green)}
 .admin-cafe-name{flex:1;font-size:13px;font-weight:500;color:var(--t1)}
 .admin-cafe-pw{font-size:10px;color:var(--t3);margin-top:2px}
 .admin-edit-btn{background:none;border:1px solid var(--bd);border-radius:7px;padding:4px 9px;font-size:11px;color:var(--t2);cursor:pointer;margin-right:5px}
+.admin-copy-btn{background:none;border:1px solid var(--green);border-radius:7px;padding:4px 9px;font-size:11px;color:var(--gd);cursor:pointer;margin-right:5px;white-space:nowrap}
 .admin-del-btn{background:none;border:1px solid #fca5a5;border-radius:7px;padding:4px 9px;font-size:11px;color:var(--red);cursor:pointer}
 .add-cafe-btn{width:100%;padding:12px;border-radius:8px;border:none;background:var(--green);color:#fff;font-size:13px;font-weight:500;cursor:pointer}
+.info-email{background:#f7f7f7;border:1px solid var(--bd);border-radius:10px;padding:11px 12px;font-size:13px;font-weight:700;color:var(--t1);word-break:break-all;margin-bottom:10px}
 /* 색상 */
 .color-picker{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
 .color-dot{width:30px;height:30px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all 0.15s}
@@ -420,7 +422,7 @@ input:focus{border-color:var(--green)}
       <div class="hdr-title">ZUO</div>
       <div class="hdr-sub" id="homeDateLbl"></div>
     </div>
-    <button class="top-small-btn" onclick="signOutUser()">로그아웃</button>
+    <button class="top-small-btn" onclick="openMyInfo()">내 정보</button>
   </div>
   <div class="welcome">
     <div class="welcome-title">어느 가게인가요?</div>
@@ -439,11 +441,11 @@ input:focus{border-color:var(--green)}
   </div>
   <div class="pw-wrap">
     <div class="pw-title" id="pwTitle">입장</div>
-    <div class="pw-sub">가게 비밀번호를 입력해주세요</div>
-    <input type="password" class="pw-input" id="pwInput" placeholder="비밀번호" maxlength="10"
+    <div class="pw-sub">매장 입장 비밀번호를 입력해주세요</div>
+    <input type="password" class="pw-input" id="pwInput" placeholder="매장 입장 비밀번호" maxlength="10"
       onkeydown="if(event.key==='Enter')checkCafePw()">
     <button class="pw-btn" id="pwBtn" onclick="checkCafePw()">입장하기</button>
-    <div class="pw-error" id="pwError">비밀번호가 틀렸어요 ❌</div>
+    <div class="pw-error" id="pwError">매장 입장 비밀번호가 틀렸어요 ❌</div>
   </div>
 </div>
 
@@ -891,7 +893,7 @@ input:focus{border-color:var(--green)}
     </div>
     <div style="background:var(--al);border-radius:8px;padding:10px;margin-bottom:4px;font-size:11px;color:var(--ad);line-height:1.6">⚠️ 주휴수당 미적용 직원은 <b>0</b> 또는 <b>빈칸</b>으로 두세요</div>
     <div style="background:var(--gl);border-radius:8px;padding:10px;margin-bottom:12px;font-size:11px;color:var(--gd);line-height:1.6">💡 주휴수당 단가 × 급여명세서 횟수 = 주휴수당 합계</div>
-    <div class="fr"><label class="fl">초기 비밀번호</label><input type="password" id="empPw" placeholder="직원이 사용할 초기 비밀번호"></div>
+    <div class="fr"><label class="fl">초기 내 락커룸 비밀번호</label><input type="password" id="empPw" placeholder="직원이 사용할 내 락커룸 비밀번호"></div>
     <div class="fbtns">
       <button class="fcnl" onclick="showScreen('scEmpManage')">취소</button>
       <button class="fok" onclick="saveEmp()">저장</button>
@@ -1416,11 +1418,11 @@ input:focus{border-color:var(--green)}
 <div class="mbg" id="changePwModal">
   <div class="modal">
     <div class="mh"></div>
-    <div class="mt">비밀번호 변경</div>
-    <div class="fr"><label class="fl">현재 비밀번호</label><input type="password" id="changePwCurrent" placeholder="현재 비밀번호" style="width:100%"></div>
-    <div class="fr"><label class="fl">새 비밀번호</label><input type="password" id="changePwNew" placeholder="새 비밀번호" style="width:100%"></div>
-    <div class="fr"><label class="fl">새 비밀번호 확인</label><input type="password" id="changePwConfirm" placeholder="새 비밀번호 재입력" style="width:100%"></div>
-    <div class="pw-error" id="changePwError" style="margin-bottom:8px">비밀번호가 틀렸어요 ❌</div>
+    <div class="mt">내 락커룸 비밀번호 변경</div>
+    <div class="fr"><label class="fl">현재 내 락커룸 비밀번호</label><input type="password" id="changePwCurrent" placeholder="현재 내 락커룸 비밀번호" style="width:100%"></div>
+    <div class="fr"><label class="fl">새 내 락커룸 비밀번호</label><input type="password" id="changePwNew" placeholder="새 내 락커룸 비밀번호" style="width:100%"></div>
+    <div class="fr"><label class="fl">새 내 락커룸 비밀번호 확인</label><input type="password" id="changePwConfirm" placeholder="새 내 락커룸 비밀번호 재입력" style="width:100%"></div>
+    <div class="pw-error" id="changePwError" style="margin-bottom:8px">내 락커룸 비밀번호가 틀렸어요 ❌</div>
     <div class="mbtns">
       <button class="mcnl" onclick="closeChangePw()">취소</button>
       <button class="mok" onclick="confirmChangePw()">변경</button>
@@ -1562,7 +1564,7 @@ input:focus{border-color:var(--green)}
   <div class="modal" style="padding-bottom:28px">
     <div class="mh"></div>
     <div class="mt">근무시간 입력 - 직원 선택</div>
-    <div style="font-size:12px;color:var(--t3);margin-bottom:12px">본인 이름을 선택하세요</div>
+    <div style="font-size:12px;color:var(--t3);margin-bottom:12px">본인 이름을 선택하고 내 락커룸 비밀번호를 입력하세요</div>
     <div id="workerSelectList" style="border:1px solid var(--bd);border-radius:10px;overflow:hidden;max-height:50vh;overflow-y:auto"></div>
     <div class="mbtns" style="margin-top:14px">
       <button class="mcnl" onclick="document.getElementById('workerSelectModal').classList.remove('open')">닫기</button>
@@ -1589,10 +1591,10 @@ input:focus{border-color:var(--green)}
 <div class="mbg" id="workerPwModal">
   <div class="modal">
     <div class="mh"></div>
-    <div class="mt" id="workerPwModalTitle">비밀번호 확인</div>
-    <div class="fr"><label class="fl">비밀번호</label><input type="password" id="workerPwInput" placeholder="본인 비밀번호 입력" style="width:100%"></div>
-    <div style="font-size:11px;color:var(--t3);margin-bottom:8px">비밀번호를 잊으셨다면 중간관리자에게 문의하세요</div>
-    <div class="pw-error" id="workerPwError" style="margin-bottom:8px">비밀번호가 틀렸어요 ❌</div>
+    <div class="mt" id="workerPwModalTitle">내 락커룸 비밀번호 확인</div>
+    <div class="fr"><label class="fl">내 락커룸 비밀번호</label><input type="password" id="workerPwInput" placeholder="내 락커룸 비밀번호 입력" style="width:100%"></div>
+    <div style="font-size:11px;color:var(--t3);margin-bottom:8px">내 락커룸 비밀번호를 잊으셨다면 중간관리자에게 문의하세요</div>
+    <div class="pw-error" id="workerPwError" style="margin-bottom:8px">내 락커룸 비밀번호가 틀렸어요 ❌</div>
     <div class="mbtns">
       <button class="mcnl" onclick="closeWorkerPw()">취소</button>
       <button class="mok" onclick="checkWorkerPw()">확인</button>
@@ -1609,7 +1611,7 @@ input:focus{border-color:var(--green)}
     <div class="mh"></div>
     <div class="mt" id="cafeEditTitle">가게 추가</div>
     <div class="fr"><label class="fl">가게 이름</label><input type="text" id="cafeNameInput" placeholder="가게 이름" style="width:100%"></div>
-    <div class="fr"><label class="fl">입장 비밀번호</label><input type="password" id="cafePwInput" placeholder="직원들이 입장할 비밀번호" style="width:100%"></div>
+    <div class="fr"><label class="fl">매장 입장 비밀번호</label><input type="password" id="cafePwInput" placeholder="직원들이 사용할 매장 입장 비밀번호" style="width:100%"></div>
     <div class="fr">
       <label class="fl">가게 색상 테마</label>
       <div class="color-picker" id="colorPicker"></div>
@@ -1617,6 +1619,18 @@ input:focus{border-color:var(--green)}
     <div class="fr">
   <label class="fl">노출 순서</label>
   <input type="number" id="cafeOrderInput" placeholder="1" min="1" style="width:100%">
+</div>
+
+<!-- 내 정보 모달 -->
+<div class="mbg" id="myInfoModal">
+  <div class="modal">
+    <div class="mh"></div>
+    <div class="mt">내 정보</div>
+    <div style="font-size:11px;color:var(--t3);margin-bottom:6px">로그인된 Google 계정</div>
+    <div class="info-email" id="myInfoEmail">-</div>
+    <button class="btn-outline-s" style="width:100%;margin-bottom:8px" onclick="signOutFromMyInfo()">로그아웃</button>
+    <button class="mcnl" style="width:100%" onclick="closeMyInfo()">닫기</button>
+  </div>
 </div>
     <div class="mbtns">
       <button class="mcnl" onclick="closeCafeEdit()">취소</button>
@@ -1707,6 +1721,8 @@ function tenantAdd(name,data){
 const DAYS=["일","월","화","수","목","금","토"];
 const MONTHS=["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
 const APP_URL="https://zuo-saas.firebaseapp.com";
+const INVITE_BASE_URL="https://radinotech-beep.github.io/zuo-saas/";
+const EMPLOYEE_INVITE_CAFE_ID=new URLSearchParams(location.search).get('store');
 const SUPER_MASTER="2002"; // 최종관리자 고정 번호
 let MASTER_PW="0000"; // 가게별 중간관리자 번호 (Firebase에서 로드)
 
@@ -1714,6 +1730,7 @@ let cY=new Date().getFullYear(),cM=new Date().getMonth();
 let selDate=null,allSubs={},pendTake=null,pendEdit=null,pendDel=null;
 let currentUser=null;
 let currentCafe=null,cafes=[],editingCafeId=null,unsubscribe=null;
+let isEmployeeInviteMode=false;
 let pickingFor='start',isAm=true,selH=9,selM=0;
 let tStartAm=true,tStartH=9,tStartM=0,tEndAm=false,tEndH=3,tEndM=0;
 let employees=[],empUnsubscribe=null;
@@ -1788,8 +1805,24 @@ async function signOutUser(){
   currentCafe=null;cafes=[];employees=[];
   await auth.signOut();
 }
+function openMyInfo(){
+  const email=auth.currentUser?.email||'-';
+  document.getElementById('myInfoEmail').textContent=email;
+  document.getElementById('myInfoModal').classList.add('open');
+}
+function closeMyInfo(){
+  document.getElementById('myInfoModal').classList.remove('open');
+}
+async function signOutFromMyInfo(){
+  closeMyInfo();
+  await signOutUser();
+}
 auth.onAuthStateChanged(user=>{
   currentUser=user||null;
+  if(EMPLOYEE_INVITE_CAFE_ID){
+    loadInviteCafe(EMPLOYEE_INVITE_CAFE_ID);
+    return;
+  }
   if(!user){
     currentCafe=null;cafes=[];employees=[];
     showScreen('scLogin');
@@ -1799,7 +1832,29 @@ auth.onAuthStateChanged(user=>{
   loadCafes();
 });
 
+async function loadInviteCafe(cafeId){
+  isEmployeeInviteMode=true;
+  if(unsubscribe){unsubscribe();unsubscribe=null;}
+  if(empUnsubscribe){empUnsubscribe();empUnsubscribe=null;}
+  try{
+    const doc=await db.collection('cafes').doc(cafeId).get();
+    if(!doc.exists)throw new Error('store-not-found');
+    currentCafe={id:doc.id,...doc.data()};
+    cafes=[currentCafe];
+    openCafePasswordScreen(currentCafe,true);
+  }catch(e){
+    console.error(e);
+    isEmployeeInviteMode=false;
+    showScreen('scLogin');
+    showLoginMessage('직원용 링크를 불러오지 못했습니다. 링크가 맞는지 확인해주세요.');
+  }
+}
+
 function goHome(){
+  if(isEmployeeInviteMode&&currentCafe){
+    openCafePasswordScreen(currentCafe,true);
+    return;
+  }
   if(unsubscribe){unsubscribe();unsubscribe=null;}
   if(empUnsubscribe){empUnsubscribe();empUnsubscribe=null;}
   currentCafe=null;selDate=null;isAdminMode=false;currentWorkerEmp=null;
@@ -1840,10 +1895,17 @@ function renderCafeList(){
 let isAdminMode=false;
 function selectCafe(id){
   currentCafe=cafes.find(c=>c.id===id);
+  isEmployeeInviteMode=false;
+  openCafePasswordScreen(currentCafe,false);
+}
+function openCafePasswordScreen(cafe,isInvite){
+  currentCafe=cafe;
   const cm=colorMap[currentCafe.color||'green']||colorMap.green;
+  const backBtn=document.querySelector('#pwHdr .back-btn');
+  if(backBtn)backBtn.style.visibility=isInvite?'hidden':'visible';
   document.getElementById('pwHdr').style.background=cm.main;
   document.getElementById('pwCafeName').textContent=currentCafe.name;
-  document.getElementById('pwTitle').textContent=`${currentCafe.name} 입장`;
+  document.getElementById('pwTitle').textContent=`${currentCafe.name} 매장 입장`;
   document.getElementById('pwBtn').style.background=cm.main;
   document.getElementById('pwInput').value='';
   document.getElementById('pwError').style.display='none';
@@ -2677,7 +2739,17 @@ function goAdmin(){
 function renderAdminCafeList(){
   const list=document.getElementById('adminCafeList');
   if(!cafes.length){list.innerHTML=`<div style="padding:14px;font-size:12px;color:var(--t3);text-align:center">등록된 가게가 없어요</div>`;return;}
-  list.innerHTML=cafes.map(c=>`<div class="admin-cafe-item"><div style="flex:1"><div class="admin-cafe-name">${c.name}</div><div class="admin-cafe-pw">비밀번호: ${c.password}</div></div><button class="admin-edit-btn" onclick="openEditCafe('${c.id}')">수정</button><button class="admin-del-btn" onclick="deleteCafe('${c.id}')">삭제</button></div>`).join('');
+  list.innerHTML=cafes.map(c=>`<div class="admin-cafe-item"><div style="flex:1"><div class="admin-cafe-name">${c.name}</div><div class="admin-cafe-pw">매장 입장 비밀번호: ${c.password}</div></div><button class="admin-copy-btn" onclick="copyInviteLink('${c.id}')">직원용 링크 복사</button><button class="admin-edit-btn" onclick="openEditCafe('${c.id}')">수정</button><button class="admin-del-btn" onclick="deleteCafe('${c.id}')">삭제</button></div>`).join('');
+}
+
+function getInviteLink(cafeId){
+  const url=new URL(INVITE_BASE_URL);
+  url.searchParams.set('store',cafeId);
+  return url.toString();
+}
+function copyInviteLink(cafeId){
+  copyText(getInviteLink(cafeId));
+  showToast('링크가 복사되었습니다');
 }
 
 let selectedColor='green';
@@ -2690,7 +2762,7 @@ function selectColor(color,el){selectedColor=color;document.querySelectorAll('.c
 function openAddCafe(){editingCafeId=null;selectedColor='green';document.getElementById('cafeEditTitle').textContent='가게 추가';document.getElementById('cafeNameInput').value='';document.getElementById('cafePwInput').value='';document.getElementById('cafeOrderInput').value='';renderThemeDots();document.getElementById('cafeEditModal').classList.add('open');}
 function openEditCafe(id){const cafe=cafes.find(c=>c.id===id);if(!cafe)return;editingCafeId=id;selectedColor=cafe.color||'green';document.getElementById('cafeEditTitle').textContent='가게 수정';document.getElementById('cafeNameInput').value=cafe.name;document.getElementById('cafePwInput').value=cafe.password;document.getElementById('cafeOrderInput').value=cafe.order||'';renderThemeDots();document.getElementById('cafeEditModal').classList.add('open');}
 function closeCafeEdit(){document.getElementById('cafeEditModal').classList.remove('open');editingCafeId=null;}
-async function saveCafe(){const name=document.getElementById('cafeNameInput').value.trim();const pw=document.getElementById('cafePwInput').value.trim();if(!name){alert('가게 이름을 입력해 주세요');return;}if(!pw){alert('입장 비밀번호를 입력해 주세요');return;}const order=parseInt(document.getElementById('cafeOrderInput').value)||99;
+async function saveCafe(){const name=document.getElementById('cafeNameInput').value.trim();const pw=document.getElementById('cafePwInput').value.trim();if(!name){alert('가게 이름을 입력해 주세요');return;}if(!pw){alert('매장 입장 비밀번호를 입력해 주세요');return;}const order=parseInt(document.getElementById('cafeOrderInput').value)||99;
 if(editingCafeId){await db.collection('cafes').doc(editingCafeId).update({name,password:pw,color:selectedColor,order});}
 else{await tenantAdd('cafes',{name,password:pw,masterPw:MASTER_PW||'0000',color:selectedColor,order,createdAt:Date.now()});}closeCafeEdit();}
 async function deleteCafe(id){if(!confirm('가게를 삭제할까요?'))return;await db.collection('cafes').doc(id).delete();}
@@ -2728,7 +2800,7 @@ function renderEmpListForWorker(){
 function openWorkerPw(empId){
   const emp=employees.find(e=>e.id===empId);if(!emp)return;
   currentWorkerEmp=emp;
-  document.getElementById('workerPwModalTitle').textContent=`${emp.name}님 비밀번호 확인`;
+  document.getElementById('workerPwModalTitle').textContent=`${emp.name}님 내 락커룸 비밀번호 확인`;
   document.getElementById('workerPwInput').value='';
   document.getElementById('workerPwError').style.display='none';
   document.getElementById('workerPwModal').classList.add('open');
@@ -2752,7 +2824,7 @@ function checkWorkerPw(){
       enterWorkerInput();
     }
   } else {
-    document.getElementById('workerPwError').textContent='비밀번호가 틀렸어요 ❌';
+    document.getElementById('workerPwError').textContent='내 락커룸 비밀번호가 틀렸어요 ❌';
     document.getElementById('workerPwError').style.display='block';
   }
 }
@@ -3037,6 +3109,8 @@ function enterWorkerMenu(purpose='time'){
   const sub=document.querySelector('#workerSelectModal .mt + div');
   if(title)title.textContent=purpose==='entry'?'직원 입장 - 본인 선택':'근무시간 입력 - 직원 선택';
   if(sub)sub.textContent=purpose==='entry'?'본인 이름을 선택하고 비밀번호를 입력하세요':'본인 이름을 선택하세요';
+  if(title)title.textContent=purpose==='entry'?'직원 입장 - 본인 선택':'근무시간 입력 - 직원 선택';
+  if(sub)sub.textContent=purpose==='entry'?'본인 이름을 선택하고 내 락커룸 비밀번호를 입력하세요':'본인 이름을 선택하세요';
   if(!active.length){
     w.innerHTML=`<div style="text-align:center;padding:24px;font-size:13px;color:var(--t3)">등록된 직원이 없어요</div>`;
   } else {
@@ -3337,6 +3411,7 @@ async function saveEmp(){
   const data={cafeId:currentCafe.id,name,empType:document.getElementById('empType').value,phone:document.getElementById('empPhone').value.trim(),rrn:document.getElementById('empRrn').value.trim(),addr:document.getElementById('empAddr').value.trim(),bank:document.getElementById('empBank').value.trim(),acct:document.getElementById('empAcct').value.trim(),rate:parseInt(document.getElementById('empRate').value)||10320,holidayRate:holiRate};
   const pw=document.getElementById('empPw').value.trim();
   if(pw)data.password=pw;
+  if(!editingEmpId&&!pw){alert('초기 내 락커룸 비밀번호를 입력해주세요');return;}
   if(editingEmpId){await db.collection('employees').doc(editingEmpId).update(data);}
   else{data.createdAt=Date.now();if(!pw){alert('초기 비밀번호를 입력해주세요');return;}await tenantAdd('employees',data);}
   showScreen('scEmpManage');
@@ -4047,12 +4122,12 @@ async function confirmChangePw(){
   const nw=document.getElementById('changePwNew').value.trim();
   const cf=document.getElementById('changePwConfirm').value.trim();
   const err=document.getElementById('changePwError');
-  if(cur!==currentWorkerEmp.password&&!isMaster(cur)){err.textContent='현재 비밀번호가 틀렸어요 ❌';err.style.display='block';return;}
-  if(!nw){err.textContent='새 비밀번호를 입력해주세요';err.style.display='block';return;}
-  if(nw!==cf){err.textContent='새 비밀번호가 일치하지 않아요 ❌';err.style.display='block';return;}
+  if(cur!==currentWorkerEmp.password&&!isMaster(cur)){err.textContent='현재 내 락커룸 비밀번호가 틀렸어요 ❌';err.style.display='block';return;}
+  if(!nw){err.textContent='새 내 락커룸 비밀번호를 입력해주세요';err.style.display='block';return;}
+  if(nw!==cf){err.textContent='새 내 락커룸 비밀번호가 일치하지 않아요 ❌';err.style.display='block';return;}
   await db.collection('employees').doc(currentWorkerEmp.id).update({password:nw});
   currentWorkerEmp.password=nw;
-  closeChangePw();showToast('✅ 비밀번호가 변경됐어요!');
+  closeChangePw();showToast('✅ 내 락커룸 비밀번호가 변경됐어요!');
 }
 
 // ===== 중간관리자 번호 변경 =====

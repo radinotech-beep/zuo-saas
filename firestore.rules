@@ -41,65 +41,79 @@ service cloud.firestore {
         && request.resource.data.cafeId == resource.data.cafeId;
     }
 
+    function publicCafeChildReadAllowed() {
+      return resource.data.cafeId is string;
+    }
+
+    function publicCafeChildCreateAllowed() {
+      return request.resource.data.cafeId is string;
+    }
+
+    function publicCafeChildUpdateAllowed() {
+      return publicCafeChildReadAllowed()
+        && request.resource.data.cafeId == resource.data.cafeId;
+    }
+
     match /cafes/{cafeId} {
       allow create: if cafeCreateAllowed();
-      allow read: if cafeReadAllowed();
+      allow get: if true;
+      allow list: if cafeReadAllowed();
       allow update: if cafeUpdateAllowed();
       allow delete: if cafeReadAllowed();
     }
 
     match /employees/{docId} {
       allow create: if childCreateAllowed();
-      allow read: if childReadAllowed();
+      allow read: if childReadAllowed() || publicCafeChildReadAllowed();
       allow update: if childUpdateAllowed();
       allow delete: if childReadAllowed();
     }
 
     match /workHours/{docId} {
-      allow create: if childCreateAllowed();
-      allow read: if childReadAllowed();
-      allow update: if childUpdateAllowed();
+      allow create: if childCreateAllowed() || publicCafeChildCreateAllowed();
+      allow read: if childReadAllowed() || publicCafeChildReadAllowed();
+      allow update: if childUpdateAllowed() || publicCafeChildUpdateAllowed();
       allow delete: if childReadAllowed();
     }
 
     match /workConfirm/{docId} {
-      allow create: if childCreateAllowed();
-      allow read: if childReadAllowed();
-      allow update: if childUpdateAllowed();
+      allow create: if childCreateAllowed() || publicCafeChildCreateAllowed();
+      allow read: if childReadAllowed() || publicCafeChildReadAllowed();
+      allow update: if childUpdateAllowed() || publicCafeChildUpdateAllowed();
       allow delete: if childReadAllowed();
     }
 
     match /notices/{docId} {
-      allow create: if childCreateAllowed();
-      allow read: if childReadAllowed();
+      allow create: if childCreateAllowed() || publicCafeChildCreateAllowed();
+      allow read: if childReadAllowed() || publicCafeChildReadAllowed();
       allow update: if childUpdateAllowed();
       allow delete: if childReadAllowed();
     }
 
     match /healthCerts/{docId} {
-      allow create: if childCreateAllowed();
-      allow read: if childReadAllowed();
-      allow update: if childUpdateAllowed();
+      allow create: if childCreateAllowed() || publicCafeChildCreateAllowed();
+      allow read: if childReadAllowed() || publicCafeChildReadAllowed();
+      allow update: if childUpdateAllowed() || publicCafeChildUpdateAllowed();
       allow delete: if childReadAllowed();
     }
 
     match /supplies/{docId} {
       allow create: if childCreateAllowed();
-      allow read: if childReadAllowed();
+      allow read: if childReadAllowed() || publicCafeChildReadAllowed();
       allow update: if childUpdateAllowed();
       allow delete: if childReadAllowed();
     }
 
     match /subs/{docId} {
-      allow create: if childCreateAllowed();
-      allow read: if childReadAllowed();
-      allow update: if childUpdateAllowed();
+      allow create: if childCreateAllowed() || publicCafeChildCreateAllowed();
+      allow read: if childReadAllowed() || publicCafeChildReadAllowed();
+      allow update: if childUpdateAllowed() || publicCafeChildUpdateAllowed();
       allow delete: if childReadAllowed();
     }
 
     match /regularSchedules/{docId} {
       allow create: if childCreateAllowed();
-      allow read: if childReadAllowed();
+      allow read: if childReadAllowed() || publicCafeChildReadAllowed();
       allow update: if childUpdateAllowed();
       allow delete: if childReadAllowed();
     }

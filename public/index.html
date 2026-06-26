@@ -40,6 +40,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .business-name{font-size:15px;font-weight:800;color:var(--t1)}
 .business-email{font-size:11px;color:var(--t3);margin-top:3px}
 .top-small-btn{border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.16);color:#fff;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:700;cursor:pointer}
+.hdr-actions{display:flex;align-items:center;gap:8px}
+.hdr-icon-btn{position:relative;width:34px;height:34px;border-radius:999px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.16);color:#fff;font-size:17px;font-weight:800;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.hdr-badge{position:absolute;top:-5px;right:-5px;min-width:17px;height:17px;border-radius:999px;background:var(--red);color:#fff;font-size:10px;font-weight:900;display:none;align-items:center;justify-content:center;padding:0 4px;border:2px solid var(--green)}
 .hdr{position:sticky;top:0;z-index:10;background:var(--green);padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between}
 .hdr-title{font-size:17px;font-weight:700;color:#fff}
 .hdr-sub{font-size:11px;color:rgba(255,255,255,0.75)}
@@ -260,8 +263,10 @@ input:focus{border-color:var(--green)}
 .admin-cafe-name{flex:1;font-size:13px;font-weight:500;color:var(--t1)}
 .admin-cafe-pw{font-size:10px;color:var(--t3);margin-top:2px}
 .admin-edit-btn{background:none;border:1px solid var(--bd);border-radius:7px;padding:4px 9px;font-size:11px;color:var(--t2);cursor:pointer;margin-right:5px}
+.admin-copy-btn{background:none;border:1px solid var(--green);border-radius:7px;padding:4px 9px;font-size:11px;color:var(--gd);cursor:pointer;margin-right:5px;white-space:nowrap}
 .admin-del-btn{background:none;border:1px solid #fca5a5;border-radius:7px;padding:4px 9px;font-size:11px;color:var(--red);cursor:pointer}
 .add-cafe-btn{width:100%;padding:12px;border-radius:8px;border:none;background:var(--green);color:#fff;font-size:13px;font-weight:500;cursor:pointer}
+.info-email{background:#f7f7f7;border:1px solid var(--bd);border-radius:10px;padding:11px 12px;font-size:13px;font-weight:700;color:var(--t1);word-break:break-all;margin-bottom:10px}
 /* 색상 */
 .color-picker{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
 .color-dot{width:30px;height:30px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:all 0.15s}
@@ -382,6 +387,9 @@ input:focus{border-color:var(--green)}
 
 /* 소모품 카드형 관리 */
 .supply-page{padding:12px 14px 18px;overflow-y:auto}.supply-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}.supply-stat{background:#fff;border:1px solid var(--bd);border-radius:10px;padding:10px 8px;text-align:center}.supply-stat b{display:block;font-size:16px;color:#111;margin-bottom:2px}.supply-stat span{font-size:10px;color:var(--t3)}.supply-card-list{display:block}.supply-card{background:#fff;border:1px solid var(--bd);border-radius:12px;margin-bottom:9px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.03)}.supply-card-main{padding:12px;cursor:pointer}.supply-card-top{display:flex;align-items:flex-start;gap:8px}.supply-card-name{font-size:15px;font-weight:800;color:#111;flex:1;min-width:0}.supply-cycle{font-size:10px;color:var(--t3);margin-top:2px}.supply-dday{font-size:12px;font-weight:900;border-radius:999px;padding:4px 8px;white-space:nowrap}.supply-dday.ok{background:var(--gl);color:var(--gd)}.supply-dday.soon{background:var(--al);color:var(--ad)}.supply-dday.over{background:#FCEBEB;color:var(--red)}.supply-dday.neutral{background:#f4f4f4;color:var(--t3)}.supply-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}.supply-meta div{background:#fafafa;border:1px solid #eee;border-radius:8px;padding:8px 6px;min-width:0}.supply-meta span{display:block;font-size:9px;color:var(--t3);margin-bottom:3px}.supply-meta b{display:block;font-size:11px;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.supply-detail{border-top:1px solid #eee;background:#fcfcfc;padding:12px}.supply-actions{display:flex;gap:7px;margin-bottom:10px}.supply-actions button{flex:1;border-radius:8px;padding:9px 7px;font-size:12px;font-weight:800;cursor:pointer}.supply-primary{border:none;background:var(--green);color:#fff}.supply-soft{border:1px solid var(--bd);background:#fff;color:#333}.supply-danger{border:1px solid #fca5a5;background:#fff;color:var(--red)}.supply-latest{background:#fff;border:1px solid var(--bd);border-radius:10px;padding:10px;margin-bottom:10px}.supply-latest-title{font-size:12px;font-weight:800;color:#111;margin-bottom:5px}.supply-latest-body{font-size:12px;color:#555;line-height:1.55}.supply-timeline-title{font-size:12px;font-weight:900;color:#111;margin:10px 0 7px}.supply-history{background:#fff;border:1px solid var(--bd);border-radius:10px;padding:9px 10px;margin-bottom:7px;cursor:pointer}.supply-history-head{display:flex;justify-content:space-between;gap:8px;align-items:center}.supply-history-date{font-size:13px;font-weight:900;color:#111}.supply-history-cost{font-size:12px;font-weight:800;color:var(--green)}.supply-history-body{font-size:11px;color:#666;line-height:1.45;margin-top:4px}.supply-history-btns{display:flex;gap:4px;margin-top:7px}.supply-history-btns button{border:1px solid var(--bd);background:#fff;border-radius:6px;padding:4px 8px;font-size:10px;color:#555}.supply-history-btns button:last-child{border-color:#fca5a5;color:var(--red)}.supply-empty{background:#fff;border:1px dashed var(--bd);border-radius:12px;padding:28px 12px;text-align:center;color:var(--t3);font-size:13px}#supplyHistoryModal .modal{max-height:88vh;overflow-y:auto}.supply-view-row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid #f3f3f3;font-size:13px}.supply-view-row span{color:var(--t3)}.supply-view-row b{color:#111;text-align:right}
+
+.install-banner{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);width:calc(100% - 28px);max-width:452px;background:#fff;border:1px solid var(--bd);box-shadow:0 8px 24px rgba(0,0,0,.16);border-radius:12px;padding:10px 10px 10px 12px;z-index:350;display:flex;align-items:center;gap:8px}.install-copy{flex:1;font-size:12px;font-weight:700;color:var(--t1);line-height:1.35}.install-add{border:none;background:var(--green);color:#fff;border-radius:8px;padding:8px 10px;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap}.install-close{border:none;background:#f4f4f4;color:var(--t2);width:28px;height:28px;border-radius:50%;font-size:16px;line-height:1;cursor:pointer;flex-shrink:0}
+.supply-history-table{border:1px solid var(--bd);border-radius:10px;overflow:hidden;background:#fff}.supply-history-row{display:grid;grid-template-columns:82px 58px 72px minmax(0,1fr);align-items:center;border-top:1px solid #eee;font-size:11px;color:var(--t2);cursor:pointer}.supply-history-row:first-child{border-top:none}.supply-history-row>*{padding:8px 6px;min-width:0;border-left:1px solid #f1f1f1}.supply-history-row>*:first-child{border-left:none}.supply-history-row.head{background:var(--gl);color:var(--gd);font-weight:900;cursor:default}.supply-history-row b{font-size:11px;color:#111}.supply-history-sub{line-height:1.35;word-break:break-word}.supply-history-note{grid-column:1/-1;border-left:none!important;border-top:1px dashed #eee;background:#fafafa;color:#666;line-height:1.45}.supply-history-tools{grid-column:1/-1;display:flex;gap:5px;justify-content:flex-end;border-left:none!important;border-top:1px solid #f5f5f5;background:#fff}.supply-history-tools button{border:1px solid var(--bd);background:#fff;border-radius:6px;padding:4px 8px;font-size:10px;color:#555}.supply-history-tools button:last-child{border-color:#fca5a5;color:var(--red)}
 </style>
 </head>
 <body>
@@ -420,7 +428,7 @@ input:focus{border-color:var(--green)}
       <div class="hdr-title">ZUO</div>
       <div class="hdr-sub" id="homeDateLbl"></div>
     </div>
-    <button class="top-small-btn" onclick="signOutUser()">로그아웃</button>
+    <button class="top-small-btn" onclick="openMyInfo()">내 정보</button>
   </div>
   <div class="welcome">
     <div class="welcome-title">어느 가게인가요?</div>
@@ -439,11 +447,11 @@ input:focus{border-color:var(--green)}
   </div>
   <div class="pw-wrap">
     <div class="pw-title" id="pwTitle">입장</div>
-    <div class="pw-sub">가게 비밀번호를 입력해주세요</div>
-    <input type="password" class="pw-input" id="pwInput" placeholder="비밀번호" maxlength="10"
+    <div class="pw-sub">매장 입장 비밀번호를 입력해주세요</div>
+    <input type="password" class="pw-input" id="pwInput" placeholder="매장 입장 비밀번호" maxlength="10"
       onkeydown="if(event.key==='Enter')checkCafePw()">
     <button class="pw-btn" id="pwBtn" onclick="checkCafePw()">입장하기</button>
-    <div class="pw-error" id="pwError">비밀번호가 틀렸어요 ❌</div>
+    <div class="pw-error" id="pwError">매장 입장 비밀번호가 틀렸어요 ❌</div>
   </div>
 </div>
 
@@ -482,7 +490,7 @@ input:focus{border-color:var(--green)}
 <!-- 화면3: 서비스 선택 (직원용) -->
 <div class="screen" id="scSvcWorker">
   <div class="hdr" id="svcWorkerHdr">
-    <button class="back-btn" onclick="showScreen('scUserSelect')">← 뒤로</button>
+    <button class="back-btn" onclick="goAfterEntryBack()">← 뒤로</button>
     <div class="hdr-title" id="svcWorkerCafeName">가게</div>
     <div style="font-size:11px;color:rgba(255,255,255,0.8)">직원</div>
   </div>
@@ -509,15 +517,18 @@ input:focus{border-color:var(--green)}
 </div>
 <div class="screen" id="scSvc">
   <div class="hdr" id="svcHdr">
-    <button class="back-btn" onclick="showScreen('scUserSelect')">← 뒤로</button>
+    <button class="back-btn" onclick="goAfterEntryBack()">← 뒤로</button>
     <div class="hdr-title" id="svcCafeName">가게</div>
-    <div style="font-size:11px;color:rgba(255,255,255,0.8)">관리자</div>
+    <div class="hdr-actions">
+      <button class="hdr-icon-btn" onclick="enterSvc('alerts')" title="알림센터">🔔<span class="hdr-badge" id="svcAlertBadge">0</span></button>
+      <div style="font-size:11px;color:rgba(255,255,255,0.8)">관리자</div>
+    </div>
   </div>
   <div class="svc-wrap">
     <div class="svc-title">서비스를 선택해주세요</div>
     <div class="svc-sub">이용할 서비스를 탭하세요</div>
     <div class="svc-grid">
-      <div class="svc-card" onclick="enterSvc('alerts')">
+      <div class="svc-card" onclick="openMasterMenu('emp')">
         <div class="svc-icon" style="background:#EAF6F2">🔔</div>
         <div><div class="svc-name">알림센터</div><div class="svc-desc">대타 · 급여 · 운영 알림</div></div>
       </div>
@@ -730,7 +741,7 @@ input:focus{border-color:var(--green)}
     <!-- 관리자 메뉴 -->
     <div style="font-size:11px;font-weight:700;color:var(--t3);letter-spacing:0.5px;margin-bottom:8px;padding-left:2px">관리자 메뉴</div>
     <div style="background:#fff;border-radius:12px;border:1px solid var(--bd);overflow:hidden">
-      <div onclick="openMasterMenu('emp')" style="display:flex;align-items:center;gap:12px;padding:14px;cursor:pointer;border-bottom:1px solid #f5f5f5">
+      <div onclick="openMasterMenu('emp')" style="display:none;align-items:center;gap:12px;padding:14px;cursor:pointer;border-bottom:1px solid #f5f5f5">
         <div style="width:40px;height:40px;border-radius:10px;background:var(--gl);display:flex;align-items:center;justify-content:center;font-size:20px">👥</div>
         <div>
           <div style="font-size:14px;font-weight:600;color:var(--t1)">직원 등록 관리</div>
@@ -872,7 +883,6 @@ input:focus{border-color:var(--green)}
       </select>
     </div>
     <div class="fr"><label class="fl">연락처</label><input type="tel" id="empPhone" placeholder="010-0000-0000"></div>
-    <div class="fr"><label class="fl">주민등록번호</label><input type="text" id="empRrn" placeholder="000000-0000000" maxlength="14" oninput="formatRrn(this)"></div>
     <div class="fr"><label class="fl">주소</label><input type="text" id="empAddr" placeholder="주소 입력"></div>
     <div class="fr">
       <label class="fl">계좌 정보</label>
@@ -891,7 +901,7 @@ input:focus{border-color:var(--green)}
     </div>
     <div style="background:var(--al);border-radius:8px;padding:10px;margin-bottom:4px;font-size:11px;color:var(--ad);line-height:1.6">⚠️ 주휴수당 미적용 직원은 <b>0</b> 또는 <b>빈칸</b>으로 두세요</div>
     <div style="background:var(--gl);border-radius:8px;padding:10px;margin-bottom:12px;font-size:11px;color:var(--gd);line-height:1.6">💡 주휴수당 단가 × 급여명세서 횟수 = 주휴수당 합계</div>
-    <div class="fr"><label class="fl">초기 비밀번호</label><input type="password" id="empPw" placeholder="직원이 사용할 초기 비밀번호"></div>
+    <div class="fr"><label class="fl">초기 내 락커룸 비밀번호</label><input type="password" id="empPw" placeholder="직원이 사용할 내 락커룸 비밀번호"></div>
     <div class="fbtns">
       <button class="fcnl" onclick="showScreen('scEmpManage')">취소</button>
       <button class="fok" onclick="saveEmp()">저장</button>
@@ -1416,11 +1426,11 @@ input:focus{border-color:var(--green)}
 <div class="mbg" id="changePwModal">
   <div class="modal">
     <div class="mh"></div>
-    <div class="mt">비밀번호 변경</div>
-    <div class="fr"><label class="fl">현재 비밀번호</label><input type="password" id="changePwCurrent" placeholder="현재 비밀번호" style="width:100%"></div>
-    <div class="fr"><label class="fl">새 비밀번호</label><input type="password" id="changePwNew" placeholder="새 비밀번호" style="width:100%"></div>
-    <div class="fr"><label class="fl">새 비밀번호 확인</label><input type="password" id="changePwConfirm" placeholder="새 비밀번호 재입력" style="width:100%"></div>
-    <div class="pw-error" id="changePwError" style="margin-bottom:8px">비밀번호가 틀렸어요 ❌</div>
+    <div class="mt">내 락커룸 비밀번호 변경</div>
+    <div class="fr"><label class="fl">현재 내 락커룸 비밀번호</label><input type="password" id="changePwCurrent" placeholder="현재 내 락커룸 비밀번호" style="width:100%"></div>
+    <div class="fr"><label class="fl">새 내 락커룸 비밀번호</label><input type="password" id="changePwNew" placeholder="새 내 락커룸 비밀번호" style="width:100%"></div>
+    <div class="fr"><label class="fl">새 내 락커룸 비밀번호 확인</label><input type="password" id="changePwConfirm" placeholder="새 내 락커룸 비밀번호 재입력" style="width:100%"></div>
+    <div class="pw-error" id="changePwError" style="margin-bottom:8px">내 락커룸 비밀번호가 틀렸어요 ❌</div>
     <div class="mbtns">
       <button class="mcnl" onclick="closeChangePw()">취소</button>
       <button class="mok" onclick="confirmChangePw()">변경</button>
@@ -1458,6 +1468,7 @@ input:focus{border-color:var(--green)}
       <div id="adminCafeList"></div>
     </div>
     <button class="add-cafe-btn" onclick="openAddCafe()">+ 가게 추가</button>
+    <button class="btn-outline-s" style="width:100%;margin-top:8px" onclick="cleanupRrnFields()">주민등록번호 저장값 정리</button>
   </div>
 </div>
 
@@ -1562,7 +1573,7 @@ input:focus{border-color:var(--green)}
   <div class="modal" style="padding-bottom:28px">
     <div class="mh"></div>
     <div class="mt">근무시간 입력 - 직원 선택</div>
-    <div style="font-size:12px;color:var(--t3);margin-bottom:12px">본인 이름을 선택하세요</div>
+    <div style="font-size:12px;color:var(--t3);margin-bottom:12px">본인 이름을 선택하고 내 락커룸 비밀번호를 입력하세요</div>
     <div id="workerSelectList" style="border:1px solid var(--bd);border-radius:10px;overflow:hidden;max-height:50vh;overflow-y:auto"></div>
     <div class="mbtns" style="margin-top:14px">
       <button class="mcnl" onclick="document.getElementById('workerSelectModal').classList.remove('open')">닫기</button>
@@ -1589,10 +1600,10 @@ input:focus{border-color:var(--green)}
 <div class="mbg" id="workerPwModal">
   <div class="modal">
     <div class="mh"></div>
-    <div class="mt" id="workerPwModalTitle">비밀번호 확인</div>
-    <div class="fr"><label class="fl">비밀번호</label><input type="password" id="workerPwInput" placeholder="본인 비밀번호 입력" style="width:100%"></div>
-    <div style="font-size:11px;color:var(--t3);margin-bottom:8px">비밀번호를 잊으셨다면 중간관리자에게 문의하세요</div>
-    <div class="pw-error" id="workerPwError" style="margin-bottom:8px">비밀번호가 틀렸어요 ❌</div>
+    <div class="mt" id="workerPwModalTitle">내 락커룸 비밀번호 확인</div>
+    <div class="fr"><label class="fl">내 락커룸 비밀번호</label><input type="password" id="workerPwInput" placeholder="내 락커룸 비밀번호 입력" style="width:100%"></div>
+    <div style="font-size:11px;color:var(--t3);margin-bottom:8px">내 락커룸 비밀번호를 잊으셨다면 중간관리자에게 문의하세요</div>
+    <div class="pw-error" id="workerPwError" style="margin-bottom:8px">내 락커룸 비밀번호가 틀렸어요 ❌</div>
     <div class="mbtns">
       <button class="mcnl" onclick="closeWorkerPw()">취소</button>
       <button class="mok" onclick="checkWorkerPw()">확인</button>
@@ -1609,7 +1620,7 @@ input:focus{border-color:var(--green)}
     <div class="mh"></div>
     <div class="mt" id="cafeEditTitle">가게 추가</div>
     <div class="fr"><label class="fl">가게 이름</label><input type="text" id="cafeNameInput" placeholder="가게 이름" style="width:100%"></div>
-    <div class="fr"><label class="fl">입장 비밀번호</label><input type="password" id="cafePwInput" placeholder="직원들이 입장할 비밀번호" style="width:100%"></div>
+    <div class="fr"><label class="fl">매장 입장 비밀번호</label><input type="password" id="cafePwInput" placeholder="직원들이 사용할 매장 입장 비밀번호" style="width:100%"></div>
     <div class="fr">
       <label class="fl">가게 색상 테마</label>
       <div class="color-picker" id="colorPicker"></div>
@@ -1618,6 +1629,9 @@ input:focus{border-color:var(--green)}
   <label class="fl">노출 순서</label>
   <input type="number" id="cafeOrderInput" placeholder="1" min="1" style="width:100%">
 </div>
+
+<!-- 내 정보 모달 -->
+
     <div class="mbtns">
       <button class="mcnl" onclick="closeCafeEdit()">취소</button>
       <button class="mok" onclick="saveCafe()">저장</button>
@@ -1664,6 +1678,11 @@ input:focus{border-color:var(--green)}
   </div>
 </div>
 
+
+<div class="mbg" id="myInfoModal"><div class="modal"><div class="mh"></div><div class="mt">내 정보</div><div style="font-size:11px;color:var(--t3);margin-bottom:6px">로그인된 Google 계정</div><div class="info-email" id="myInfoEmail">-</div><button class="btn-outline-s" style="width:100%;margin-bottom:8px" onclick="signOutFromMyInfo()">로그아웃</button><button class="mcnl" style="width:100%" onclick="closeMyInfo()">닫기</button></div></div>
+
+<div class="install-banner" id="installBanner" style="display:none"><div class="install-copy">홈 화면에 추가하면 다음부터 한 번에 들어올 수 있어요</div><button class="install-add" onclick="handleInstallClick()">추가하기</button><button class="install-close" onclick="dismissInstallBanner()" aria-label="close">x</button></div>
+<div class="mbg" id="iosInstallModal"><div class="modal"><div class="mh"></div><div class="mt">홈 화면에 추가</div><div style="font-size:13px;color:var(--t2);line-height:1.7;margin-bottom:14px">iPhone에서는 Safari 하단의 공유 버튼을 누른 뒤<br><b>홈 화면에 추가</b>를 선택해주세요.</div><button class="mok" style="width:100%" onclick="closeIosInstallGuide()">확인</button></div></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
@@ -1707,13 +1726,16 @@ function tenantAdd(name,data){
 const DAYS=["일","월","화","수","목","금","토"];
 const MONTHS=["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
 const APP_URL="https://zuo-saas.firebaseapp.com";
+const INVITE_BASE_URL="https://radinotech-beep.github.io/zuo-saas/";
+const EMPLOYEE_INVITE_CAFE_ID=new URLSearchParams(location.search).get('store');
 const SUPER_MASTER="2002"; // 최종관리자 고정 번호
 let MASTER_PW="0000"; // 가게별 중간관리자 번호 (Firebase에서 로드)
-
+
 let cY=new Date().getFullYear(),cM=new Date().getMonth();
 let selDate=null,allSubs={},pendTake=null,pendEdit=null,pendDel=null;
 let currentUser=null;
 let currentCafe=null,cafes=[],editingCafeId=null,unsubscribe=null;
+let isEmployeeInviteMode=false;
 let pickingFor='start',isAm=true,selH=9,selM=0;
 let tStartAm=true,tStartH=9,tStartM=0,tEndAm=false,tEndH=3,tEndM=0;
 let employees=[],empUnsubscribe=null;
@@ -1788,8 +1810,24 @@ async function signOutUser(){
   currentCafe=null;cafes=[];employees=[];
   await auth.signOut();
 }
+function openMyInfo(){
+  const email=auth.currentUser?.email||'-';
+  document.getElementById('myInfoEmail').textContent=email;
+  document.getElementById('myInfoModal').classList.add('open');
+}
+function closeMyInfo(){
+  document.getElementById('myInfoModal').classList.remove('open');
+}
+async function signOutFromMyInfo(){
+  closeMyInfo();
+  await signOutUser();
+}
 auth.onAuthStateChanged(user=>{
   currentUser=user||null;
+  if(EMPLOYEE_INVITE_CAFE_ID){
+    loadInviteCafe(EMPLOYEE_INVITE_CAFE_ID);
+    return;
+  }
   if(!user){
     currentCafe=null;cafes=[];employees=[];
     showScreen('scLogin');
@@ -1799,11 +1837,40 @@ auth.onAuthStateChanged(user=>{
   loadCafes();
 });
 
+async function loadInviteCafe(cafeId){
+  isEmployeeInviteMode=true;
+  if(unsubscribe){unsubscribe();unsubscribe=null;}
+  if(empUnsubscribe){empUnsubscribe();empUnsubscribe=null;}
+  try{
+    const doc=await db.collection('cafes').doc(cafeId).get();
+    if(!doc.exists)throw new Error('store-not-found');
+    currentCafe={id:doc.id,...doc.data()};
+    cafes=[currentCafe];
+    openCafePasswordScreen(currentCafe,true);
+  }catch(e){
+    console.error(e);
+    isEmployeeInviteMode=false;
+    showScreen('scLogin');
+    showLoginMessage('직원용 링크를 불러오지 못했습니다. 링크가 맞는지 확인해주세요.');
+  }
+}
+
 function goHome(){
+  if(isEmployeeInviteMode&&currentCafe){
+    openCafePasswordScreen(currentCafe,true);
+    return;
+  }
   if(unsubscribe){unsubscribe();unsubscribe=null;}
   if(empUnsubscribe){empUnsubscribe();empUnsubscribe=null;}
   currentCafe=null;selDate=null;isAdminMode=false;currentWorkerEmp=null;
   showScreen('scHome');loadCafes();
+}
+function goAfterEntryBack(){
+  if(isEmployeeInviteMode&&currentCafe){
+    openCafePasswordScreen(currentCafe,true);
+  } else {
+    goHome();
+  }
 }
 
 function loadCafes(){
@@ -1840,10 +1907,17 @@ function renderCafeList(){
 let isAdminMode=false;
 function selectCafe(id){
   currentCafe=cafes.find(c=>c.id===id);
+  isEmployeeInviteMode=false;
+  openCafePasswordScreen(currentCafe,false);
+}
+function openCafePasswordScreen(cafe,isInvite){
+  currentCafe=cafe;
   const cm=colorMap[currentCafe.color||'green']||colorMap.green;
+  const backBtn=document.querySelector('#pwHdr .back-btn');
+  if(backBtn)backBtn.style.visibility=isInvite?'hidden':'visible';
   document.getElementById('pwHdr').style.background=cm.main;
   document.getElementById('pwCafeName').textContent=currentCafe.name;
-  document.getElementById('pwTitle').textContent=`${currentCafe.name} 입장`;
+  document.getElementById('pwTitle').textContent=`${currentCafe.name} 매장 입장`;
   document.getElementById('pwBtn').style.background=cm.main;
   document.getElementById('pwInput').value='';
   document.getElementById('pwError').style.display='none';
@@ -1861,11 +1935,61 @@ function checkCafePw(){
     document.getElementById('adminPwArea').style.display='none';
     document.getElementById('adminPwInput2').value='';
     document.getElementById('adminPwError2').style.display='none';
-    showScreen('scUserSelect');
+    if(isEmployeeInviteMode){
+      enterAsWorker();
+    } else {
+      enterAsAdminDirect();
+    }
   } else {
     document.getElementById('pwError').style.display='block';
     document.getElementById('pwInput').value='';
   }
+}
+function enterAsAdminDirect(){
+  isAdminMode=true;
+  document.getElementById('adminPwArea').style.display='none';
+  document.getElementById('adminPwInput2').value='';
+  document.getElementById('adminPwError2').style.display='none';
+  const cm=colorMap[currentCafe.color||'green']||colorMap.green;
+  document.getElementById('svcHdr').style.background=cm.main;
+  document.getElementById('svcCafeName').textContent=currentCafe.name;
+  document.getElementById('svcIcon1').style.background=cm.light;
+  loadEmployees();
+  showScreen('scSvc');
+  normalizeAdminServiceCards();
+  refreshSvcAlertBadge();
+  setTimeout(()=>{subscribePush();checkAndNotify();},1500);
+}
+function normalizeAdminServiceCards(){
+  const firstCard=document.querySelector('#scSvc .svc-grid .svc-card');
+  if(firstCard){
+    const icon=firstCard.querySelector('.svc-icon');
+    const name=firstCard.querySelector('.svc-name');
+    const desc=firstCard.querySelector('.svc-desc');
+    if(icon){icon.textContent='👥';icon.style.background='#EAF6F2';}
+    if(name)name.textContent='직원카드 등록';
+    if(desc)desc.textContent='직원 정보 · 시급 · 락커룸 비밀번호';
+  }
+  updateSvcAlertBadge();
+}
+
+async function refreshSvcAlertBadge(){
+  if(!currentCafe)return;
+  try{
+    alertItems=await buildAlertItems();
+    updateSvcAlertBadge();
+  }catch(e){
+    console.warn('alert badge update failed',e);
+  }
+}
+
+function updateSvcAlertBadge(){
+  const badge=document.getElementById('svcAlertBadge');
+  if(!badge)return;
+  const hidden=currentCafe?getHiddenAlerts():[];
+  const count=(alertItems||[]).filter(a=>!hidden.includes(a.id)).length;
+  badge.textContent=count>99?'99+':String(count);
+  badge.style.display=count>0?'flex':'none';
 }
 function showAdminPwInput(){
   document.getElementById('adminPwArea').style.display='block';
@@ -1884,6 +2008,8 @@ function checkAdminModePw(){
     document.getElementById('svcIcon1').style.background=cm.light;
     loadEmployees();
     showScreen('scSvc');
+    normalizeAdminServiceCards();
+    refreshSvcAlertBadge();
     setTimeout(()=>{subscribePush();checkAndNotify();},1500);
   } else {
     document.getElementById('adminPwError2').style.display='block';
@@ -1913,11 +2039,7 @@ function enterWorkerTimeInput(){
   }
 }
 
-function formatRrn(el){
-  let v=el.value.replace(/[^0-9]/g,'');
-  if(v.length>6)v=v.substring(0,6)+'-'+v.substring(6,13);
-  el.value=v;
-}
+
 function goSvcBack(){
   if(isAdminMode){showScreen('scSvc');}
   else{showScreen('scSvcWorker');}
@@ -2491,13 +2613,7 @@ function getHiddenAlerts(){try{return JSON.parse(localStorage.getItem(getHiddenA
 function setHiddenAlerts(ids){localStorage.setItem(getHiddenAlertKey(),JSON.stringify(ids));}
 function getAlertColor(a){return a.type==='birthday'?'#D9467A':a.level==='urgent'?'#E24B4A':a.category==='sub'?'#8AB4F8':a.category==='pay'?'#185FA5':a.type==='health'?'#E24B4A':'#EF9F27';}
 function getAlertBadge(a){if(a.type==='birthday')return '생일';if(a.level==='urgent')return '긴급';if(a.category==='sub')return '대타';if(a.category==='pay')return '급여';return '관리';}
-function parseEmpBirthday(emp){
-  const raw=String(emp?.rrn||'').replace(/[^0-9]/g,'');
-  if(raw.length<6)return null;
-  const mm=parseInt(raw.slice(2,4),10),dd=parseInt(raw.slice(4,6),10);
-  if(mm<1||mm>12||dd<1||dd>31)return null;
-  return {month:mm,day:dd,label:`${mm}월 ${dd}일`};
-}
+function parseEmpBirthday(emp){return null;}
 function nextBirthdayInfo(emp,today=new Date()){
   const b=parseEmpBirthday(emp);if(!b)return null;
   const base=new Date(today);base.setHours(0,0,0,0);
@@ -2625,6 +2741,7 @@ function renderAlertCenter(){
   document.getElementById('alertUrgentCnt').textContent=alertItems.filter(a=>a.level==='urgent'&&!hidden.includes(a.id)).length;
   document.getElementById('alertTodayCnt').textContent=alertItems.filter(a=>a.today&&!hidden.includes(a.id)).length;
   document.getElementById('alertTotalCnt').textContent=alertItems.filter(a=>!hidden.includes(a.id)).length;
+  updateSvcAlertBadge();
   document.getElementById('alertList').innerHTML=visible.length?visible.map(renderAlertCard).join(''):`<div class="alert-empty">표시할 알림이 없어요</div>`;
   const btn=document.getElementById('hiddenAlertToggle');
   btn.style.display=hiddenItems.length?'block':'none';
@@ -2677,7 +2794,17 @@ function goAdmin(){
 function renderAdminCafeList(){
   const list=document.getElementById('adminCafeList');
   if(!cafes.length){list.innerHTML=`<div style="padding:14px;font-size:12px;color:var(--t3);text-align:center">등록된 가게가 없어요</div>`;return;}
-  list.innerHTML=cafes.map(c=>`<div class="admin-cafe-item"><div style="flex:1"><div class="admin-cafe-name">${c.name}</div><div class="admin-cafe-pw">비밀번호: ${c.password}</div></div><button class="admin-edit-btn" onclick="openEditCafe('${c.id}')">수정</button><button class="admin-del-btn" onclick="deleteCafe('${c.id}')">삭제</button></div>`).join('');
+  list.innerHTML=cafes.map(c=>`<div class="admin-cafe-item"><div style="flex:1"><div class="admin-cafe-name">${c.name}</div><div class="admin-cafe-pw">매장 입장 비밀번호: ${c.password}</div></div><button class="admin-copy-btn" onclick="copyInviteLink('${c.id}')">직원용 링크 복사</button><button class="admin-edit-btn" onclick="openEditCafe('${c.id}')">수정</button><button class="admin-del-btn" onclick="deleteCafe('${c.id}')">삭제</button></div>`).join('');
+}
+
+function getInviteLink(cafeId){
+  const url=new URL(INVITE_BASE_URL);
+  url.searchParams.set('store',cafeId);
+  return url.toString();
+}
+function copyInviteLink(cafeId){
+  copyText(getInviteLink(cafeId));
+  showToast('링크가 복사되었습니다');
 }
 
 let selectedColor='green';
@@ -2690,12 +2817,25 @@ function selectColor(color,el){selectedColor=color;document.querySelectorAll('.c
 function openAddCafe(){editingCafeId=null;selectedColor='green';document.getElementById('cafeEditTitle').textContent='가게 추가';document.getElementById('cafeNameInput').value='';document.getElementById('cafePwInput').value='';document.getElementById('cafeOrderInput').value='';renderThemeDots();document.getElementById('cafeEditModal').classList.add('open');}
 function openEditCafe(id){const cafe=cafes.find(c=>c.id===id);if(!cafe)return;editingCafeId=id;selectedColor=cafe.color||'green';document.getElementById('cafeEditTitle').textContent='가게 수정';document.getElementById('cafeNameInput').value=cafe.name;document.getElementById('cafePwInput').value=cafe.password;document.getElementById('cafeOrderInput').value=cafe.order||'';renderThemeDots();document.getElementById('cafeEditModal').classList.add('open');}
 function closeCafeEdit(){document.getElementById('cafeEditModal').classList.remove('open');editingCafeId=null;}
-async function saveCafe(){const name=document.getElementById('cafeNameInput').value.trim();const pw=document.getElementById('cafePwInput').value.trim();if(!name){alert('가게 이름을 입력해 주세요');return;}if(!pw){alert('입장 비밀번호를 입력해 주세요');return;}const order=parseInt(document.getElementById('cafeOrderInput').value)||99;
+async function saveCafe(){const name=document.getElementById('cafeNameInput').value.trim();const pw=document.getElementById('cafePwInput').value.trim();if(!name){alert('가게 이름을 입력해 주세요');return;}if(!pw){alert('매장 입장 비밀번호를 입력해 주세요');return;}const order=parseInt(document.getElementById('cafeOrderInput').value)||99;
 if(editingCafeId){await db.collection('cafes').doc(editingCafeId).update({name,password:pw,color:selectedColor,order});}
 else{await tenantAdd('cafes',{name,password:pw,masterPw:MASTER_PW||'0000',color:selectedColor,order,createdAt:Date.now()});}closeCafeEdit();}
 async function deleteCafe(id){if(!confirm('가게를 삭제할까요?'))return;await db.collection('cafes').doc(id).delete();}
 
 // ===== 근로관리 =====
+async function cleanupRrnFields(){
+  if(!currentCafe){alert('가게를 먼저 선택해주세요');return;}
+  const first=confirm('현재 가게 직원 문서에 저장된 주민등록번호(rrn) 필드를 삭제합니다. 이 작업은 되돌릴 수 없습니다. 계속할까요?');
+  if(!first)return;
+  const second=confirm('정말 삭제할까요? 삭제 후 앱에서는 주민등록번호를 복구할 수 없습니다.');
+  if(!second)return;
+  const snap=await tenantCollection('employees').where('cafeId','==',currentCafe.id).get();
+  const batch=db.batch();let count=0;
+  snap.forEach(doc=>{if(Object.prototype.hasOwnProperty.call(doc.data(),'rrn')){batch.update(doc.ref,{rrn:firebase.firestore.FieldValue.delete()});count++;}});
+  if(count){await batch.commit();}
+  showToast(count?('주민등록번호 필드 '+count+'건을 삭제했어요'):'삭제할 주민등록번호 필드가 없어요');
+}
+
 function switchLaborTab(tab){
   document.getElementById('lt1').classList.toggle('on',tab==='worker');
   document.getElementById('lt2').classList.toggle('on',tab==='master');
@@ -2728,7 +2868,7 @@ function renderEmpListForWorker(){
 function openWorkerPw(empId){
   const emp=employees.find(e=>e.id===empId);if(!emp)return;
   currentWorkerEmp=emp;
-  document.getElementById('workerPwModalTitle').textContent=`${emp.name}님 비밀번호 확인`;
+  document.getElementById('workerPwModalTitle').textContent=`${emp.name}님 내 락커룸 비밀번호 확인`;
   document.getElementById('workerPwInput').value='';
   document.getElementById('workerPwError').style.display='none';
   document.getElementById('workerPwModal').classList.add('open');
@@ -2752,7 +2892,7 @@ function checkWorkerPw(){
       enterWorkerInput();
     }
   } else {
-    document.getElementById('workerPwError').textContent='비밀번호가 틀렸어요 ❌';
+    document.getElementById('workerPwError').textContent='내 락커룸 비밀번호가 틀렸어요 ❌';
     document.getElementById('workerPwError').style.display='block';
   }
 }
@@ -3037,6 +3177,8 @@ function enterWorkerMenu(purpose='time'){
   const sub=document.querySelector('#workerSelectModal .mt + div');
   if(title)title.textContent=purpose==='entry'?'직원 입장 - 본인 선택':'근무시간 입력 - 직원 선택';
   if(sub)sub.textContent=purpose==='entry'?'본인 이름을 선택하고 비밀번호를 입력하세요':'본인 이름을 선택하세요';
+  if(title)title.textContent=purpose==='entry'?'직원 입장 - 본인 선택':'근무시간 입력 - 직원 선택';
+  if(sub)sub.textContent=purpose==='entry'?'본인 이름을 선택하고 내 락커룸 비밀번호를 입력하세요':'본인 이름을 선택하세요';
   if(!active.length){
     w.innerHTML=`<div style="text-align:center;padding:24px;font-size:13px;color:var(--t3)">등록된 직원이 없어요</div>`;
   } else {
@@ -3308,7 +3450,7 @@ let editingEmpId=null;
 function setupEmpAdd(){
   editingEmpId=null;
   document.getElementById('empAddTitle').textContent='직원 등록';
-  ['empName','empPhone','empAddr','empBank','empAcct','empPw','empRrn'].forEach(id=>document.getElementById(id).value='');
+  ['empName','empPhone','empAddr','empBank','empAcct','empPw'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('empRate').value='10320';
   document.getElementById('empHoliRate').value='';
   document.getElementById('empType').value='정규직';
@@ -3319,7 +3461,6 @@ function setupEmpEdit(id){
   document.getElementById('empAddTitle').textContent='직원 수정';
   document.getElementById('empName').value=emp.name||'';
   document.getElementById('empPhone').value=emp.phone||'';
-  document.getElementById('empRrn').value=emp.rrn||'';
   document.getElementById('empAddr').value=emp.addr||'';
   document.getElementById('empBank').value=emp.bank||'';
   document.getElementById('empAcct').value=emp.acct||'';
@@ -3334,9 +3475,10 @@ async function saveEmp(){
   if(!name){alert('이름을 입력해주세요');return;}
   const holiRateRaw=document.getElementById('empHoliRate').value;
   const holiRate=holiRateRaw===''?null:parseInt(holiRateRaw);
-  const data={cafeId:currentCafe.id,name,empType:document.getElementById('empType').value,phone:document.getElementById('empPhone').value.trim(),rrn:document.getElementById('empRrn').value.trim(),addr:document.getElementById('empAddr').value.trim(),bank:document.getElementById('empBank').value.trim(),acct:document.getElementById('empAcct').value.trim(),rate:parseInt(document.getElementById('empRate').value)||10320,holidayRate:holiRate};
+  const data={cafeId:currentCafe.id,name,empType:document.getElementById('empType').value,phone:document.getElementById('empPhone').value.trim(),addr:document.getElementById('empAddr').value.trim(),bank:document.getElementById('empBank').value.trim(),acct:document.getElementById('empAcct').value.trim(),rate:parseInt(document.getElementById('empRate').value)||10320,holidayRate:holiRate};
   const pw=document.getElementById('empPw').value.trim();
   if(pw)data.password=pw;
+  if(!editingEmpId&&!pw){alert('초기 내 락커룸 비밀번호를 입력해주세요');return;}
   if(editingEmpId){await db.collection('employees').doc(editingEmpId).update(data);}
   else{data.createdAt=Date.now();if(!pw){alert('초기 비밀번호를 입력해주세요');return;}await tenantAdd('employees',data);}
   showScreen('scEmpManage');
@@ -4047,12 +4189,12 @@ async function confirmChangePw(){
   const nw=document.getElementById('changePwNew').value.trim();
   const cf=document.getElementById('changePwConfirm').value.trim();
   const err=document.getElementById('changePwError');
-  if(cur!==currentWorkerEmp.password&&!isMaster(cur)){err.textContent='현재 비밀번호가 틀렸어요 ❌';err.style.display='block';return;}
-  if(!nw){err.textContent='새 비밀번호를 입력해주세요';err.style.display='block';return;}
-  if(nw!==cf){err.textContent='새 비밀번호가 일치하지 않아요 ❌';err.style.display='block';return;}
+  if(cur!==currentWorkerEmp.password&&!isMaster(cur)){err.textContent='현재 내 락커룸 비밀번호가 틀렸어요 ❌';err.style.display='block';return;}
+  if(!nw){err.textContent='새 내 락커룸 비밀번호를 입력해주세요';err.style.display='block';return;}
+  if(nw!==cf){err.textContent='새 내 락커룸 비밀번호가 일치하지 않아요 ❌';err.style.display='block';return;}
   await db.collection('employees').doc(currentWorkerEmp.id).update({password:nw});
   currentWorkerEmp.password=nw;
-  closeChangePw();showToast('✅ 비밀번호가 변경됐어요!');
+  closeChangePw();showToast('✅ 내 락커룸 비밀번호가 변경됐어요!');
 }
 
 // ===== 중간관리자 번호 변경 =====
@@ -4748,7 +4890,7 @@ async function exportDailyExcel(){
   sc(ws,1,4,{v:`연락가능한 e-mail : radinotech@gmail.com`,t:'s',s:{font:{name:'맑은 고딕',sz:10},alignment:{horizontal:'left',vertical:'center'},border:{}}});
 
   // 헤더
-  const headers=['성    명','주민등록번호','주소','지급액','근무일수','연락처','은행','계좌'];
+  const headers=['성    명','비고','주소','지급액','근무일수','연락처','은행','계좌'];
   headers.forEach((h,i)=>sc(ws,2,i,cell(h,{bold:true,fill:C_HEADER,color:'0F6E56',b:bdrMed,sz:10})));
 
   // 직원 데이터 - renderPayTable과 동일 로직
@@ -4768,7 +4910,7 @@ async function exportDailyExcel(){
     grandTotal+=pay.net;
 
     sc(ws,row,0,cell(emp.name,{bold:true,fill:rowFill,align:'center',b:bdr,sz:10}));
-    sc(ws,row,1,cell(emp.rrn||'',{fill:rowFill,align:'center',b:bdr,sz:10}));
+    sc(ws,row,1,cell('',{fill:rowFill,align:'center',b:bdr,sz:10}));
     sc(ws,row,2,cell(emp.addr||'',{fill:rowFill,align:'left',b:bdr,sz:9,wrap:true}));
     sc(ws,row,3,cell(pay.net,{bold:true,fill:rowFill,align:'center',b:bdr,sz:10,fmt:FMT_WON}));
     sc(ws,row,4,cell('',{fill:rowFill,align:'center',b:bdr,sz:10})); // 근무일수 공란
@@ -4799,6 +4941,19 @@ async function exportDailyExcel(){
 
 
 // ===== Web Push 알림 =====
+
+let deferredInstallPrompt=null;
+function isStandaloneMode(){return window.matchMedia('(display-mode: standalone)').matches||window.navigator.standalone===true;}
+function installDismissedUntil(){return Number(localStorage.getItem('zuo_install_dismissed_until')||0);}
+function shouldShowInstallBanner(){return !isStandaloneMode()&&Date.now()>installDismissedUntil()&&!localStorage.getItem('zuo_install_done');}
+function showInstallBannerIfNeeded(){const b=document.getElementById('installBanner');if(b&&shouldShowInstallBanner())b.style.display='flex';}
+function dismissInstallBanner(days=7){localStorage.setItem('zuo_install_dismissed_until',String(Date.now()+days*86400000));const b=document.getElementById('installBanner');if(b)b.style.display='none';}
+async function handleInstallClick(){if(deferredInstallPrompt){deferredInstallPrompt.prompt();const choice=await deferredInstallPrompt.userChoice.catch(()=>null);if(choice?.outcome==='accepted'){localStorage.setItem('zuo_install_done','1');dismissInstallBanner(365);}deferredInstallPrompt=null;return;}const isiOS=/iphone|ipad|ipod/i.test(navigator.userAgent);if(isiOS){document.getElementById('iosInstallModal').classList.add('open');dismissInstallBanner(7);return;}alert('브라우저 메뉴에서 홈 화면에 추가를 선택해주세요.');dismissInstallBanner(7);}
+function closeIosInstallGuide(){document.getElementById('iosInstallModal').classList.remove('open');}
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstallPrompt=e;showInstallBannerIfNeeded();});
+window.addEventListener('appinstalled',()=>{localStorage.setItem('zuo_install_done','1');dismissInstallBanner(365);});
+setTimeout(showInstallBannerIfNeeded,1200);
+
 const VAPID_PUBLIC_KEY='BGyQr5X0IXSzyQhRLzcRmvK8ePDZ-WvTx9LyiJuXUQLY5q8_0bJZoVwAIDGz-F6527x-Son09X3itnPRhWcJwZ4';
 function urlBase64ToUint8Array(b){
   const p='='.repeat((4-b.length%4)%4);
@@ -4907,7 +5062,7 @@ async function testPushNotification(){
     alert('서비스워커가 준비중이에요.\n페이지를 새로고침 후 다시 시도해주세요!');
   }
 }
-document.getElementById('adminPwInput2').addEventListener('keyup',e=>{if(e.key==='Enter')checkAdminModePw();});
+document.getElementById('adminPwInput2').addEventListener('keyup',e=>{if(e.key==='Enter')checkAdminModePw();});
 
 if(auth.currentUser){currentUser=auth.currentUser;loadCafes();}
 </script>

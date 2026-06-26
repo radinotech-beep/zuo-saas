@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta name="theme-color" content="#1D9E75">
+<meta name="theme-color" content="#8AB4F8">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="ZUO">
@@ -13,7 +13,7 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f5;max-width:480px;margin:0 auto;min-height:100vh}
-:root{--green:#1D9E75;--gl:#E1F5EE;--gm:#5DCAA5;--gd:#0F6E56;--red:#E24B4A;--amb:#EF9F27;--al:#FAEEDA;--ad:#854F0B;--bd:#e5e5e5;--t1:#1a1a1a;--t2:#666;--t3:#999}
+:root{--green:#8AB4F8;--gl:#E8F0FE;--gm:#BDD6FB;--gd:#1B355E;--red:#E24B4A;--amb:#EF9F27;--al:#FAEEDA;--ad:#854F0B;--bd:#e5e5e5;--t1:#1a1a1a;--t2:#666;--t3:#999}
 #splash{position:fixed;inset:0;background:#2C1A0E;z-index:999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.6s}
 #splash.hide{opacity:0;pointer-events:none}
 .splash-icon{font-size:72px;margin-bottom:16px;animation:sbounce 1s ease infinite alternate}
@@ -44,7 +44,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .hdr-title{font-size:17px;font-weight:700;color:#fff}
 .hdr-sub{font-size:11px;color:rgba(255,255,255,0.75)}
 .back-btn{background:none;border:none;color:rgba(255,255,255,0.9);font-size:13px;font-weight:500;cursor:pointer;padding:4px 0}
-/* 카페 선택 */
+/* 가게 선택 */
 .welcome{padding:28px 16px 12px;text-align:center}
 .welcome-title{font-size:22px;font-weight:700;color:var(--t1);margin-bottom:6px}
 .welcome-sub{font-size:13px;color:var(--t3);margin-bottom:24px}
@@ -397,7 +397,7 @@ input:focus{border-color:var(--green)}
   </div>
 </div>
 
-<!-- 화면1: 카페 선택 -->
+<!-- 화면1: 가게 선택 -->
 <div class="screen active" id="scLogin">
   <div class="hdr">
     <div class="hdr-title">ZUO SaaS</div>
@@ -406,28 +406,12 @@ input:focus{border-color:var(--green)}
   <div class="auth-wrap">
     <div class="auth-card">
       <div class="auth-logo">ZUO</div>
-      <div class="auth-title">사업체 계정으로 시작</div>
-      <div class="auth-sub">Google 계정으로 로그인하면 사업체별로 매장, 직원, 급여, 공지 데이터가 분리됩니다.</div>
+      <div class="auth-title">내 가게 관리 시작</div>
+      <div class="auth-sub">Google 계정으로 로그인하면 내 가게 목록과 직원, 근무, 급여 데이터가 분리됩니다.</div>
       <button class="google-btn" onclick="signInWithGoogle()"><span class="google-mark">G</span> Google로 계속하기</button>
       <div id="loginMsg" style="font-size:12px;color:var(--red);text-align:center;margin-top:12px;display:none"></div>
     </div>
   </div>
-</div>
-
-<div class="screen" id="scBusiness">
-  <div class="hdr">
-    <div>
-      <div class="hdr-title">사업체 선택</div>
-      <div class="hdr-sub" id="businessUserEmail"></div>
-    </div>
-    <button class="top-small-btn" onclick="signOutUser()">로그아웃</button>
-  </div>
-  <div class="welcome">
-    <div class="welcome-title">어느 사업체로 들어갈까요?</div>
-    <div class="welcome-sub">선택한 사업체의 데이터만 표시됩니다.</div>
-  </div>
-  <div class="business-list" id="businessList"></div>
-  <button class="admin-btn" onclick="createBusiness()">+ 사업체 추가</button>
 </div>
 
 <div class="screen" id="scHome">
@@ -436,26 +420,26 @@ input:focus{border-color:var(--green)}
       <div class="hdr-title">ZUO</div>
       <div class="hdr-sub" id="homeDateLbl"></div>
     </div>
-    <button class="top-small-btn" onclick="backToBusinessList()">사업체 변경</button>
+    <button class="top-small-btn" onclick="signOutUser()">로그아웃</button>
   </div>
   <div class="welcome">
-    <div class="welcome-title">어느 카페인가요?</div>
-    <div class="welcome-sub">입장할 카페를 선택해주세요</div>
+    <div class="welcome-title">어느 가게인가요?</div>
+    <div class="welcome-sub">입장할 가게를 선택해주세요</div>
   </div>
   <div class="cafe-list" id="cafeList"></div>
   <button class="admin-btn" onclick="goAdmin()">⚙️ 관리자 설정</button>
 </div>
 
-<!-- 화면2: 카페 비밀번호 -->
+<!-- 화면2: 가게 비밀번호 -->
 <div class="screen" id="scPw">
   <div class="hdr" id="pwHdr">
     <button class="back-btn" onclick="goHome()">← 뒤로</button>
-    <div class="hdr-title" id="pwCafeName">카페 입장</div>
+    <div class="hdr-title" id="pwCafeName">가게 입장</div>
     <div style="width:40px"></div>
   </div>
   <div class="pw-wrap">
     <div class="pw-title" id="pwTitle">입장</div>
-    <div class="pw-sub">카페 비밀번호를 입력해주세요</div>
+    <div class="pw-sub">가게 비밀번호를 입력해주세요</div>
     <input type="password" class="pw-input" id="pwInput" placeholder="비밀번호" maxlength="10"
       onkeydown="if(event.key==='Enter')checkCafePw()">
     <button class="pw-btn" id="pwBtn" onclick="checkCafePw()">입장하기</button>
@@ -467,7 +451,7 @@ input:focus{border-color:var(--green)}
 <div class="screen" id="scUserSelect">
   <div class="hdr" id="userSelectHdr">
     <button class="back-btn" onclick="showScreen('scPw')">← 뒤로</button>
-    <div class="hdr-title" id="userSelectCafeName">카페</div>
+    <div class="hdr-title" id="userSelectCafeName">가게</div>
     <div style="width:40px"></div>
   </div>
   <div class="pw-wrap">
@@ -499,7 +483,7 @@ input:focus{border-color:var(--green)}
 <div class="screen" id="scSvcWorker">
   <div class="hdr" id="svcWorkerHdr">
     <button class="back-btn" onclick="showScreen('scUserSelect')">← 뒤로</button>
-    <div class="hdr-title" id="svcWorkerCafeName">카페</div>
+    <div class="hdr-title" id="svcWorkerCafeName">가게</div>
     <div style="font-size:11px;color:rgba(255,255,255,0.8)">직원</div>
   </div>
   <div class="svc-wrap">
@@ -526,7 +510,7 @@ input:focus{border-color:var(--green)}
 <div class="screen" id="scSvc">
   <div class="hdr" id="svcHdr">
     <button class="back-btn" onclick="showScreen('scUserSelect')">← 뒤로</button>
-    <div class="hdr-title" id="svcCafeName">카페</div>
+    <div class="hdr-title" id="svcCafeName">가게</div>
     <div style="font-size:11px;color:rgba(255,255,255,0.8)">관리자</div>
   </div>
   <div class="svc-wrap">
@@ -575,7 +559,7 @@ input:focus{border-color:var(--green)}
 <div class="screen" id="scSchedule">
   <div class="hdr" id="scheduleHdr">
     <button class="back-btn" onclick="showScreen('scSvc')">← 뒤로</button>
-    <div><div class="hdr-title" id="scheduleCafeName">카페</div><div class="hdr-sub">시간표 보여ZUO</div></div>
+    <div><div class="hdr-title" id="scheduleCafeName">가게</div><div class="hdr-sub">시간표 보여ZUO</div></div>
     <div class="hdr-sub">관리자</div>
   </div>
   <div class="tabs">
@@ -627,7 +611,7 @@ input:focus{border-color:var(--green)}
 <div class="screen" id="scAlerts">
   <div class="hdr" id="alertsHdr">
     <button class="back-btn" onclick="showScreen('scSvc')">← 뒤로</button>
-    <div><div class="hdr-title" id="alertsCafeName">카페</div><div class="hdr-sub">오늘 처리할 운영 알림</div></div>
+    <div><div class="hdr-title" id="alertsCafeName">가게</div><div class="hdr-sub">오늘 처리할 운영 알림</div></div>
     <button onclick="loadAlertCenter()" style="background:rgba(255,255,255,0.2);border:none;color:#fff;font-size:11px;padding:4px 8px;border-radius:6px;cursor:pointer">새로고침</button>
   </div>
   <div class="tabs">
@@ -663,7 +647,7 @@ input:focus{border-color:var(--green)}
   <div class="hdr" id="appHdr">
     <button class="back-btn" onclick="goSvcBack()">← 뒤로</button>
     <div>
-      <div class="hdr-title" id="appCafeName">카페</div>
+      <div class="hdr-title" id="appCafeName">가게</div>
       <div class="hdr-sub">대타해ZUO</div>
     </div>
     <div class="hdr-sub" id="appDateLbl"></div>
@@ -727,7 +711,7 @@ input:focus{border-color:var(--green)}
 <div class="screen" id="scLabor">
   <div class="hdr" id="laborHdr">
     <button class="back-btn" onclick="goSvcBack()">← 뒤로</button>
-    <div><div class="hdr-title" id="laborCafeName">카페</div><div class="hdr-sub">근로 관리해ZUO</div></div>
+    <div><div class="hdr-title" id="laborCafeName">가게</div><div class="hdr-sub">근로 관리해ZUO</div></div>
     <div style="width:40px"></div>
   </div>
   <div style="padding:12px 14px;overflow-y:auto">
@@ -950,7 +934,7 @@ input:focus{border-color:var(--green)}
 
       <!-- 카드 헤더 -->
       <div id="psCardHdr" style="background:var(--green);padding:20px 18px 16px;position:relative">
-        <div style="font-size:11px;color:rgba(255,255,255,0.75);margin-bottom:4px" id="psCafeName">☕ 카페 · 급여 명세서</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.75);margin-bottom:4px" id="psCafeName">☕ 가게 · 급여 명세서</div>
         <div style="font-size:22px;font-weight:800;color:#fff;margin-bottom:2px" id="psName">이름</div>
         <div style="font-size:13px;color:rgba(255,255,255,0.85)" id="psPeriod">2026년 4월 급여 명세서</div>
         <div style="font-size:11px;color:rgba(255,255,255,0.7);margin-top:3px" id="psEmpType"></div>
@@ -1174,7 +1158,7 @@ input:focus{border-color:var(--green)}
 <div class="screen" id="scNotice">
   <div class="hdr" id="noticeHdr">
     <button class="back-btn" onclick="goSvcBack()">← 뒤로</button>
-    <div><div class="hdr-title" id="noticeCafeName">카페</div><div class="hdr-sub">공지사항 읽어ZUO</div></div>
+    <div><div class="hdr-title" id="noticeCafeName">가게</div><div class="hdr-sub">공지사항 읽어ZUO</div></div>
     <button onclick="openNoticeWrite()" style="background:rgba(255,255,255,0.2);border:none;color:#fff;font-size:11px;padding:4px 8px;border-radius:6px;cursor:pointer">✏️ 작성</button>
   </div>
   <div style="padding:12px 14px;overflow-y:auto">
@@ -1222,7 +1206,7 @@ input:focus{border-color:var(--green)}
 <div class="screen" id="scHealth">
   <div class="hdr" id="healthHdr">
     <button class="back-btn" onclick="goSvcBack()">← 뒤로</button>
-    <div><div class="hdr-title" id="healthCafeName">카페</div><div class="hdr-sub">보건증 관리해ZUO</div></div>
+    <div><div class="hdr-title" id="healthCafeName">가게</div><div class="hdr-sub">보건증 관리해ZUO</div></div>
     <button onclick="openHealthModal()" style="background:rgba(255,255,255,0.2);border:none;color:#fff;font-size:11px;padding:4px 8px;border-radius:6px;cursor:pointer">+ 추가</button>
   </div>
   <div class="tabs">
@@ -1245,7 +1229,7 @@ input:focus{border-color:var(--green)}
 <div class="screen" id="scSupply">
   <div class="hdr" id="supplyHdr">
     <button class="back-btn" onclick="goSvcBack()">← 뒤로</button>
-    <div><div class="hdr-title" id="supplyCafeName">카페</div><div class="hdr-sub">소모품 관리해ZUO</div></div>
+    <div><div class="hdr-title" id="supplyCafeName">가게</div><div class="hdr-sub">소모품 관리해ZUO</div></div>
     <button id="supplyAddBtn" style="display:block;background:rgba(255,255,255,0.2);border:none;color:#fff;font-size:11px;padding:4px 8px;border-radius:6px;cursor:pointer" onclick="openSupplyAdd()">+ 추가</button>
   </div>
   <div class="supply-page">
@@ -1331,7 +1315,7 @@ input:focus{border-color:var(--green)}
 <div class="screen" id="scProfit">
   <div class="hdr" id="profitHdr">
     <button class="back-btn" onclick="goSvcBack()">← 뒤로</button>
-    <div><div class="hdr-title" id="profitCafeName">카페</div><div class="hdr-sub">수익 관리해ZUO</div></div>
+    <div><div class="hdr-title" id="profitCafeName">가게</div><div class="hdr-sub">수익 관리해ZUO</div></div>
     <div style="width:40px"></div>
   </div>
   <div style="padding:8px 14px;background:#fff;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between">
@@ -1470,10 +1454,10 @@ input:focus{border-color:var(--green)}
   </div>
   <div class="admin-wrap">
     <div class="admin-section">
-      <div class="admin-section-title">카페 목록 관리</div>
+      <div class="admin-section-title">가게 목록 관리</div>
       <div id="adminCafeList"></div>
     </div>
-    <button class="add-cafe-btn" onclick="openAddCafe()">+ 카페 추가</button>
+    <button class="add-cafe-btn" onclick="openAddCafe()">+ 가게 추가</button>
   </div>
 </div>
 
@@ -1554,19 +1538,7 @@ input:focus{border-color:var(--green)}
 </div>
 
 <!-- 관리자 비밀번호 모달 -->
-<div class="mbg" id="adminPwModal">
-  <div class="modal">
-    <div class="mh"></div>
-    <div class="mt">관리자 로그인</div>
-    <div class="fr"><label class="fl">관리자 비밀번호</label><input type="password" id="adminPwInput" placeholder="비밀번호 입력" style="width:100%"></div>
-    <div class="pw-error" id="adminPwError" style="margin-bottom:8px">비밀번호가 틀렸어요 ❌</div>
-    <button onclick="openRecover()" style="background:none;border:none;color:var(--t3);font-size:12px;cursor:pointer;padding:4px 0;margin-bottom:8px">비밀번호를 잊으셨나요?</button>
-    <div class="mbtns">
-      <button class="mcnl" onclick="closeAdminPw()">취소</button>
-      <button class="mok" onclick="checkAdminPw()">확인</button>
-    </div>
-  </div>
-</div>
+
 
 <!-- 퇴사 처리 모달 -->
 <div class="mbg" id="resignModal">
@@ -1629,30 +1601,17 @@ input:focus{border-color:var(--green)}
 </div>
 
 <!-- 복구 모달 -->
-<div class="mbg" id="adminRecoverModal">
-  <div class="modal">
-    <div class="mh"></div>
-    <div class="mt">관리자 비밀번호 찾기</div>
-    <div style="font-size:12px;color:var(--t3);margin-bottom:14px;line-height:1.6">복구 코드를 입력하면 비밀번호를 재설정할 수 있어요.</div>
-    <div class="fr"><label class="fl">복구 코드</label><input type="text" id="recoverCode" placeholder="복구 코드 입력" style="width:100%"></div>
-    <div class="fr"><label class="fl">새 비밀번호</label><input type="password" id="newAdminPw" placeholder="새 비밀번호" style="width:100%"></div>
-    <div class="pw-error" id="recoverError" style="margin-bottom:8px">복구 코드가 틀렸어요 ❌</div>
-    <div class="mbtns">
-      <button class="mcnl" onclick="closeRecover()">취소</button>
-      <button class="mok" onclick="confirmRecover()">재설정</button>
-    </div>
-  </div>
-</div>
 
-<!-- 카페 추가/수정 모달 -->
+
+<!-- 가게 추가/수정 모달 -->
 <div class="mbg" id="cafeEditModal">
   <div class="modal">
     <div class="mh"></div>
-    <div class="mt" id="cafeEditTitle">카페 추가</div>
-    <div class="fr"><label class="fl">카페 이름</label><input type="text" id="cafeNameInput" placeholder="카페 이름" style="width:100%"></div>
+    <div class="mt" id="cafeEditTitle">가게 추가</div>
+    <div class="fr"><label class="fl">가게 이름</label><input type="text" id="cafeNameInput" placeholder="가게 이름" style="width:100%"></div>
     <div class="fr"><label class="fl">입장 비밀번호</label><input type="password" id="cafePwInput" placeholder="직원들이 입장할 비밀번호" style="width:100%"></div>
     <div class="fr">
-      <label class="fl">카페 색상 테마</label>
+      <label class="fl">가게 색상 테마</label>
       <div class="color-picker" id="colorPicker"></div>
     </div>
     <div class="fr">
@@ -1727,36 +1686,33 @@ const db=firebase.firestore();
 const auth=firebase.auth();
 const googleProvider=new firebase.auth.GoogleAuthProvider();
 googleProvider.setCustomParameters({prompt:'select_account'});
-const TENANT_COLLECTIONS=new Set(['cafes','employees','workHours','workConfirm','notices','healthCerts','supplies','subs','regularSchedules','payslips','profits','profitFixed']);
 function tenantCollection(name){
   const ref=db.collection(name);
-  if(TENANT_COLLECTIONS.has(name)&&currentBusiness?.id){
-    return ref.where('businessId','==',currentBusiness.id);
+  if(name==='cafes'&&currentUser?.uid){
+    return ref.where('ownerUid','==',currentUser.uid);
   }
   return ref;
 }
 function withBusinessData(data){
   const base={...(data||{})};
-  if(currentBusiness?.id)base.businessId=currentBusiness.id;
+  if(base.ownerUid!==undefined&&base.ownerUid!==currentUser?.uid)delete base.ownerUid;
   return base;
 }
 function tenantAdd(name,data){
-  return db.collection(name).add(withBusinessData(data));
+  const base=withBusinessData(data);
+  if(name==='cafes'&&currentUser?.uid)base.ownerUid=currentUser.uid;
+  return db.collection(name).add(base);
 }
 
 const DAYS=["일","월","화","수","목","금","토"];
 const MONTHS=["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
-const RECOVER_CODE="duo1234";
 const APP_URL="https://zuo-saas.firebaseapp.com";
 const SUPER_MASTER="2002"; // 최종관리자 고정 번호
-let MASTER_PW="0000"; // 카페별 중간관리자 번호 (Firebase에서 로드)
-
-let ADMIN_PW=localStorage.getItem('adminPw')||"admin1234";
+let MASTER_PW="0000"; // 가게별 중간관리자 번호 (Firebase에서 로드)
+
 let cY=new Date().getFullYear(),cM=new Date().getMonth();
 let selDate=null,allSubs={},pendTake=null,pendEdit=null,pendDel=null;
 let currentUser=null;
-let currentBusiness=null;
-let businessUnsubscribe=null;
 let currentCafe=null,cafes=[],editingCafeId=null,unsubscribe=null;
 let pickingFor='start',isAm=true,selH=9,selM=0;
 let tStartAm=true,tStartH=9,tStartM=0,tEndAm=false,tEndH=3,tEndM=0;
@@ -1767,7 +1723,7 @@ let payY=new Date().getFullYear(),payM=new Date().getMonth();
 let psHoliRateVal=41280,psWeekCntVal=4;
 
 const colorMap={
-  green:{main:'#1D9E75',light:'#E1F5EE',dark:'#0F6E56'},
+  green:{main:'#8AB4F8',light:'#E8F0FE',dark:'#1B355E'},
   blue:{main:'#185FA5',light:'#E6F1FB',dark:'#0C447C'},
   purple:{main:'#534AB7',light:'#EEEDFE',dark:'#3C3489'},
   pink:{main:'#993556',light:'#FBEAF0',dark:'#72243E'},
@@ -1788,11 +1744,22 @@ const dateStr=`${now.getMonth()+1}월 ${now.getDate()}일`;
 document.getElementById('homeDateLbl').textContent=dateStr;
 document.getElementById('appDateLbl').textContent=dateStr;
 
-function showScreen(id){
+let activeScreenId=null;
+function showScreen(id,skipHistory=false){
+  const next=document.getElementById(id);
+  if(!next)return;
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+  next.classList.add('active');
+  if(!skipHistory&&activeScreenId!==id){
+    history.pushState({screen:id},'',location.href);
+  }
+  activeScreenId=id;
   window.scrollTo(0,0);
 }
+window.addEventListener('popstate',e=>{
+  const id=e.state?.screen||'scHome';
+  showScreen(id,true);
+});
 
 function applyTheme(color){
   const t=colorMap[color]||colorMap.green;
@@ -1816,78 +1783,20 @@ async function signInWithGoogle(){
   catch(e){console.error(e);showLoginMessage('Google 로그인에 실패했습니다. Firebase Auth 설정과 팝업 허용 상태를 확인해주세요.');}
 }
 async function signOutUser(){
-  if(businessUnsubscribe){businessUnsubscribe();businessUnsubscribe=null;}
-  currentBusiness=null;currentCafe=null;cafes=[];employees=[];
-  localStorage.removeItem('zuo_current_business');
-  await auth.signOut();
-}
-function renderBusinessList(list){
-  const box=document.getElementById('businessList');
-  if(!box)return;
-  if(!list.length){
-    box.innerHTML='<div style="text-align:center;padding:28px;font-size:13px;color:var(--t3)">등록된 사업체가 없습니다.<br>사업체를 추가해주세요.</div>';
-    return;
-  }
-  box.innerHTML=list.map(b=>`<div class="business-card" onclick="selectBusiness('${b.id}')">
-    <div><div class="business-name">${b.name||'이름 없는 사업체'}</div><div class="business-email">${b.email||''}</div></div>
-    <div style="color:var(--green);font-size:18px">›</div>
-  </div>`).join('');
-}
-async function loadBusinesses(){
-  if(!currentUser)return;
-  if(businessUnsubscribe){businessUnsubscribe();businessUnsubscribe=null;}
-  const emailEl=document.getElementById('businessUserEmail');
-  if(emailEl)emailEl.textContent=currentUser.email||'';
-  businessUnsubscribe=db.collection('businesses').where('googleUid','==',currentUser.uid).onSnapshot(async snap=>{
-    const list=[];snap.forEach(d=>list.push({id:d.id,...d.data()}));
-    list.sort((a,b)=>(a.createdAt||0)-(b.createdAt||0));
-    window.businesses=list;
-    renderBusinessList(list);
-    const saved=localStorage.getItem('zuo_current_business');
-    const found=list.find(b=>b.id===saved);
-    if(found&&!currentBusiness){selectBusiness(found.id);}
-    else if(!currentBusiness)showScreen('scBusiness');
-  });
-}
-async function createBusiness(){
-  if(!currentUser)return;
-  const name=(prompt('사업체명을 입력해주세요', currentUser.displayName?currentUser.displayName+' 사업체':'')||'').trim();
-  if(!name)return;
-  const ref=await db.collection('businesses').add({
-    name,
-    email:currentUser.email||'',
-    googleUid:currentUser.uid,
-    createdAt:Date.now()
-  });
-  currentBusiness={id:ref.id,name,email:currentUser.email||'',googleUid:currentUser.uid};
-  localStorage.setItem('zuo_current_business',ref.id);
-  showScreen('scHome');
-  loadCafes();
-}
-function selectBusiness(id){
-  const b=(window.businesses||[]).find(x=>x.id===id);
-  if(!b)return;
-  currentBusiness=b;
-  localStorage.setItem('zuo_current_business',id);
-  currentCafe=null;employees=[];cafes=[];
-  showScreen('scHome');
-  loadCafes();
-}
-function backToBusinessList(){
   if(unsubscribe){unsubscribe();unsubscribe=null;}
   if(empUnsubscribe){empUnsubscribe();empUnsubscribe=null;}
-  currentCafe=null;employees=[];cafes=[];
-  showScreen('scBusiness');
-  loadBusinesses();
+  currentCafe=null;cafes=[];employees=[];
+  await auth.signOut();
 }
 auth.onAuthStateChanged(user=>{
   currentUser=user||null;
   if(!user){
-    currentBusiness=null;currentCafe=null;cafes=[];employees=[];
+    currentCafe=null;cafes=[];employees=[];
     showScreen('scLogin');
     return;
   }
-  loadBusinesses();
+  showScreen('scHome');
+  loadCafes();
 });
 
 function goHome(){
@@ -1898,7 +1807,7 @@ function goHome(){
 }
 
 function loadCafes(){
-  if(!currentBusiness){showScreen('scBusiness');return;}
+  if(!currentUser){showScreen('scLogin');return;}
   if(unsubscribe){unsubscribe();unsubscribe=null;}
   unsubscribe=tenantCollection('cafes').onSnapshot(snap=>{
     cafes=[];
@@ -1915,7 +1824,7 @@ function loadCafeMasterPw(){
 
 function renderCafeList(){
   const list=document.getElementById('cafeList');
-  if(!cafes.length){list.innerHTML=`<div style="text-align:center;padding:28px;font-size:13px;color:var(--t3)">등록된 카페가 없어요<br>관리자에게 문의해주세요</div>`;return;}
+  if(!cafes.length){list.innerHTML=`<div style="text-align:center;padding:28px;font-size:13px;color:var(--t3)">등록된 가게가 없어요<br>관리자 설정에서 가게를 추가해주세요</div>`;return;}
   list.innerHTML=cafes.map(c=>{
     const cm=colorMap[c.color||'green']||colorMap.green;
     return `<div class="cafe-card" onclick="selectCafe('${c.id}')">
@@ -1945,7 +1854,7 @@ function selectCafe(id){
 function checkCafePw(){
   const pw=document.getElementById('pwInput').value;
   if(pw===currentCafe.password){
-    // 카페 비번 통과 → 사용자 선택 화면으로
+    // 가게 비번 통과 → 사용자 선택 화면으로
     const cm=colorMap[currentCafe.color||'green']||colorMap.green;
     document.getElementById('userSelectHdr').style.background=cm.main;
     document.getElementById('userSelectCafeName').textContent=currentCafe.name;
@@ -2580,7 +2489,7 @@ function monthLabelFromDate(d){return `${d.getFullYear()}년 ${d.getMonth()+1}�
 function getHiddenAlertKey(){return `zuo_hidden_alerts_${currentCafe.id}_${localDateKey(new Date())}`;}
 function getHiddenAlerts(){try{return JSON.parse(localStorage.getItem(getHiddenAlertKey())||'[]');}catch(e){return [];}}
 function setHiddenAlerts(ids){localStorage.setItem(getHiddenAlertKey(),JSON.stringify(ids));}
-function getAlertColor(a){return a.type==='birthday'?'#D9467A':a.level==='urgent'?'#E24B4A':a.category==='sub'?'#1D9E75':a.category==='pay'?'#185FA5':a.type==='health'?'#E24B4A':'#EF9F27';}
+function getAlertColor(a){return a.type==='birthday'?'#D9467A':a.level==='urgent'?'#E24B4A':a.category==='sub'?'#8AB4F8':a.category==='pay'?'#185FA5':a.type==='health'?'#E24B4A':'#EF9F27';}
 function getAlertBadge(a){if(a.type==='birthday')return '생일';if(a.level==='urgent')return '긴급';if(a.category==='sub')return '대타';if(a.category==='pay')return '급여';return '관리';}
 function parseEmpBirthday(emp){
   const raw=String(emp?.rrn||'').replace(/[^0-9]/g,'');
@@ -2760,21 +2669,14 @@ function copySelectedAlerts(){copyAlerts(getPickedAlertItems());}
 function copyAllAlerts(){copyAlerts(alertItems.filter(a=>!getHiddenAlerts().includes(a.id)&&(alertFilter==='all'||a.category===alertFilter)));}
 
 // 관리자
-function goAdmin(){document.getElementById('adminPwInput').value='';document.getElementById('adminPwError').style.display='none';document.getElementById('adminPwModal').classList.add('open');}
-function closeAdminPw(){document.getElementById('adminPwModal').classList.remove('open');}
-function checkAdminPw(){if(document.getElementById('adminPwInput').value===ADMIN_PW){closeAdminPw();showScreen('scAdmin');}else{document.getElementById('adminPwError').style.display='block';}}
-function openRecover(){closeAdminPw();document.getElementById('recoverCode').value='';document.getElementById('newAdminPw').value='';document.getElementById('recoverError').style.display='none';document.getElementById('adminRecoverModal').classList.add('open');}
-function closeRecover(){document.getElementById('adminRecoverModal').classList.remove('open');}
-function confirmRecover(){
-  if(document.getElementById('recoverCode').value.trim()!==RECOVER_CODE){document.getElementById('recoverError').style.display='block';return;}
-  const np=document.getElementById('newAdminPw').value.trim();
-  if(!np){alert('새 비밀번호를 입력해주세요');return;}
-  ADMIN_PW=np;localStorage.setItem('adminPw',np);closeRecover();alert('✅ 비밀번호가 재설정됐어요!');
+function goAdmin(){
+  renderAdminCafeList();
+  showScreen('scAdmin');
 }
 
 function renderAdminCafeList(){
   const list=document.getElementById('adminCafeList');
-  if(!cafes.length){list.innerHTML=`<div style="padding:14px;font-size:12px;color:var(--t3);text-align:center">등록된 카페가 없어요</div>`;return;}
+  if(!cafes.length){list.innerHTML=`<div style="padding:14px;font-size:12px;color:var(--t3);text-align:center">등록된 가게가 없어요</div>`;return;}
   list.innerHTML=cafes.map(c=>`<div class="admin-cafe-item"><div style="flex:1"><div class="admin-cafe-name">${c.name}</div><div class="admin-cafe-pw">비밀번호: ${c.password}</div></div><button class="admin-edit-btn" onclick="openEditCafe('${c.id}')">수정</button><button class="admin-del-btn" onclick="deleteCafe('${c.id}')">삭제</button></div>`).join('');
 }
 
@@ -2785,13 +2687,13 @@ function renderThemeDots(){
   picker.innerHTML=THEME_COLORS.map(c=>`<div class="color-dot ${selectedColor===c?'selected':''}" data-color="${c}" style="background:${colorMap[c].main}" onclick="selectColor('${c}',this)"></div>`).join('');
 }
 function selectColor(color,el){selectedColor=color;document.querySelectorAll('.color-dot').forEach(d=>d.classList.remove('selected'));if(el)el.classList.add('selected');}
-function openAddCafe(){editingCafeId=null;selectedColor='green';document.getElementById('cafeEditTitle').textContent='카페 추가';document.getElementById('cafeNameInput').value='';document.getElementById('cafePwInput').value='';document.getElementById('cafeOrderInput').value='';renderThemeDots();document.getElementById('cafeEditModal').classList.add('open');}
-function openEditCafe(id){const cafe=cafes.find(c=>c.id===id);if(!cafe)return;editingCafeId=id;selectedColor=cafe.color||'green';document.getElementById('cafeEditTitle').textContent='카페 수정';document.getElementById('cafeNameInput').value=cafe.name;document.getElementById('cafePwInput').value=cafe.password;document.getElementById('cafeOrderInput').value=cafe.order||'';renderThemeDots();document.getElementById('cafeEditModal').classList.add('open');}
+function openAddCafe(){editingCafeId=null;selectedColor='green';document.getElementById('cafeEditTitle').textContent='가게 추가';document.getElementById('cafeNameInput').value='';document.getElementById('cafePwInput').value='';document.getElementById('cafeOrderInput').value='';renderThemeDots();document.getElementById('cafeEditModal').classList.add('open');}
+function openEditCafe(id){const cafe=cafes.find(c=>c.id===id);if(!cafe)return;editingCafeId=id;selectedColor=cafe.color||'green';document.getElementById('cafeEditTitle').textContent='가게 수정';document.getElementById('cafeNameInput').value=cafe.name;document.getElementById('cafePwInput').value=cafe.password;document.getElementById('cafeOrderInput').value=cafe.order||'';renderThemeDots();document.getElementById('cafeEditModal').classList.add('open');}
 function closeCafeEdit(){document.getElementById('cafeEditModal').classList.remove('open');editingCafeId=null;}
-async function saveCafe(){const name=document.getElementById('cafeNameInput').value.trim();const pw=document.getElementById('cafePwInput').value.trim();if(!name){alert('카페 이름을 입력해 주세요');return;}if(!pw){alert('입장 비밀번호를 입력해 주세요');return;}const order=parseInt(document.getElementById('cafeOrderInput').value)||99;
+async function saveCafe(){const name=document.getElementById('cafeNameInput').value.trim();const pw=document.getElementById('cafePwInput').value.trim();if(!name){alert('가게 이름을 입력해 주세요');return;}if(!pw){alert('입장 비밀번호를 입력해 주세요');return;}const order=parseInt(document.getElementById('cafeOrderInput').value)||99;
 if(editingCafeId){await db.collection('cafes').doc(editingCafeId).update({name,password:pw,color:selectedColor,order});}
 else{await tenantAdd('cafes',{name,password:pw,masterPw:MASTER_PW||'0000',color:selectedColor,order,createdAt:Date.now()});}closeCafeEdit();}
-async function deleteCafe(id){if(!confirm('카페를 삭제할까요?'))return;await db.collection('cafes').doc(id).delete();}
+async function deleteCafe(id){if(!confirm('가게를 삭제할까요?'))return;await db.collection('cafes').doc(id).delete();}
 
 // ===== 근로관리 =====
 function switchLaborTab(tab){
@@ -2859,7 +2761,7 @@ function enterWorkerInput(){
   workData={};wkY=new Date().getFullYear();wkM=new Date().getMonth();wkSelDay=null;
   lastSavedHours=undefined;lastSavedWorkPreset=null;
   document.getElementById('workerInputName').textContent=currentWorkerEmp.name;
-  document.getElementById('workerInputHdr').style.background=getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#1D9E75';
+  document.getElementById('workerInputHdr').style.background=getComputedStyle(document.documentElement).getPropertyValue('--green').trim()||'#8AB4F8';
   initWkTimeSelects();
   loadWorkHours();
   loadConfirmStatus();
@@ -2868,7 +2770,7 @@ function enterWorkerInput(){
 
 function loadWorkHours(){
   const period=`${wkY}-${String(wkM+1).padStart(2,'0')}`;
-  tenantCollection('workHours').where('empId','==',currentWorkerEmp.id).where('period','==',period).get().then(snap=>{
+  tenantCollection('workHours').where('cafeId','==',currentCafe.id).where('empId','==',currentWorkerEmp.id).where('period','==',period).get().then(snap=>{
     workData=getWorkDaysFromSnapshot(snap);
     renderWkGrid();
   });
@@ -3060,7 +2962,7 @@ async function saveWkHours(){
   if(!wkSelDay)return;
   // 확정된 달이면 저장 불가
   const period=`${wkY}-${String(wkM+1).padStart(2,'0')}`;
-  const confirmSnap=await tenantCollection('workConfirm').where('empId','==',currentWorkerEmp.id).where('period','==',period).get();
+  const confirmSnap=await tenantCollection('workConfirm').where('cafeId','==',currentCafe.id).where('empId','==',currentWorkerEmp.id).where('period','==',period).get();
   if(!confirmSnap.empty&&confirmSnap.docs[0].data().confirmed&&!isMaster('skip')){
     showToast('🔒 확정된 데이터는 수정할 수 없어요. 관리자에게 문의하세요.');return;
   }
@@ -3068,7 +2970,7 @@ async function saveWkHours(){
   const note=document.getElementById('wkNote').value.trim();
   const workMin=calcCurrentWorkMin();
   const data={empId:currentWorkerEmp.id,cafeId:currentCafe.id,period,day:wkSelDay,startTime:wkStartTime,endTime:wkEndTime,breakMin:wkBreakMin,workMin,hours:workMin/60,note,updatedAt:Date.now()};
-const existing=await tenantCollection('workHours').where('empId','==',currentWorkerEmp.id).where('period','==',period).where('day','==',wkSelDay).get();
+const existing=await tenantCollection('workHours').where('cafeId','==',currentCafe.id).where('empId','==',currentWorkerEmp.id).where('period','==',period).where('day','==',wkSelDay).get();
 if(!existing.empty){await Promise.all(existing.docs.map(doc=>db.collection('workHours').doc(doc.id).update(data)));}
 else{await tenantAdd('workHours',data);}
   lastSavedHours=workMin/60;
@@ -3081,7 +2983,7 @@ else{await tenantAdd('workHours',data);}
 let wkIsConfirmed=false;
 async function loadConfirmStatus(){
   const period=`${wkY}-${String(wkM+1).padStart(2,'0')}`;
-  const snap=await tenantCollection('workConfirm').where('empId','==',currentWorkerEmp.id).where('period','==',period).get();
+  const snap=await tenantCollection('workConfirm').where('cafeId','==',currentCafe.id).where('empId','==',currentWorkerEmp.id).where('period','==',period).get();
   wkIsConfirmed=!snap.empty&&snap.docs[0].data().confirmed;
   const banner=document.getElementById('wkConfirmedBanner');
   const confirmArea=document.getElementById('wkConfirmArea');
@@ -3103,7 +3005,7 @@ async function loadConfirmStatus(){
 async function toggleConfirmMonth(){
   if(!isMaster(prompt('관리자 번호를 입력하세요')||'')){alert('번호가 틀렸어요');return;}
   const period=`${wkY}-${String(wkM+1).padStart(2,'0')}`;
-  const snap=await tenantCollection('workConfirm').where('empId','==',currentWorkerEmp.id).where('period','==',period).get();
+  const snap=await tenantCollection('workConfirm').where('cafeId','==',currentCafe.id).where('empId','==',currentWorkerEmp.id).where('period','==',period).get();
   const newVal=!wkIsConfirmed;
   if(!snap.empty){await db.collection('workConfirm').doc(snap.docs[0].id).update({confirmed:newVal});}
   else{await tenantAdd('workConfirm',{empId:currentWorkerEmp.id,cafeId:currentCafe.id,period,confirmed:true});}
@@ -3465,7 +3367,7 @@ async function openPayslip(empId){
   psCurrentEmp=emp;
   const period=`${payY}-${String(payM+1).padStart(2,'0')}`;
   // 근무시간 로드
-  const snap=await tenantCollection('workHours').where('empId','==',empId).where('period','==',period).get();
+  const snap=await tenantCollection('workHours').where('cafeId','==',currentCafe.id).where('empId','==',empId).where('period','==',period).get();
   const workDays=getWorkDaysFromSnapshot(snap);
   const total=sumWorkDays(workDays);
   const base=Math.round(total*(emp.rate||0));
@@ -3489,7 +3391,7 @@ async function openPayslip(empId){
   }
   psWeekCntVal=weeksInMonth;
   // ★ 저장된 명세서 데이터 불러오기
-  const psSnap=await tenantCollection('payslips').where('empId','==',empId).where('period','==',period).get();
+  const psSnap=await tenantCollection('payslips').where('cafeId','==',currentCafe.id).where('empId','==',empId).where('period','==',period).get();
   let savedBonus=0,savedBonusMemo='',savedEtc=0,savedEtcMemo='';
   if(!psSnap.empty){
     const saved=psSnap.docs[0].data();
@@ -3816,7 +3718,7 @@ async function exportTrendExcel(){
   const data=[['월','직원','근무시간','시급합계','주휴합계','총합계']];
   for(const period of months){
     for(const emp of employees){
-      const snap=await tenantCollection('workHours').where('empId','==',emp.id).where('period','==',period).get();
+      const snap=await tenantCollection('workHours').where('cafeId','==',currentCafe.id).where('empId','==',emp.id).where('period','==',period).get();
       const hrs=sumWorkDays(getWorkDaysFromSnapshot(snap));
       const base=Math.round(hrs*(emp.rate||0));
       const holi=Math.round(((emp.holidayRate!==null&&emp.holidayRate!==undefined)?emp.holidayRate:0)*4);
@@ -3917,7 +3819,7 @@ async function exportExcel(){
   const DAY_KR=['일','월','화','수','목','금','토'];
   const empDataMap={};
   for(const emp of employees){
-    const snap=await tenantCollection('workHours').where('empId','==',emp.id).where('period','==',period).get();
+    const snap=await tenantCollection('workHours').where('cafeId','==',currentCafe.id).where('empId','==',emp.id).where('period','==',period).get();
     const days=getWorkDaysFromSnapshot(snap);
     empDataMap[emp.id]={emp,days};
   }
@@ -4195,7 +4097,7 @@ async function deleteNotice(id){
 function renderNotices(){
   const w=document.getElementById('noticeList');
   const cats=['전체',...NOTICE_CATS];
-  const catColor={'일반공지':'#1D9E75','신메뉴 공지':'#BA7517','우리 매장 수칙':'#534AB7'};
+  const catColor={'일반공지':'#8AB4F8','신메뉴 공지':'#BA7517','우리 매장 수칙':'#534AB7'};
   let html=`<div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap">
     ${cats.map(c=>`<button onclick="setNoticeCat('${c}')" style="padding:5px 12px;border-radius:20px;border:1px solid ${noticeCatFilter===c?'var(--green)':'var(--bd)'};background:${noticeCatFilter===c?'var(--green)':'#fff'};color:${noticeCatFilter===c?'#fff':'var(--t2)'};font-size:12px;cursor:pointer">${c}</button>`).join('')}
   </div>`;
@@ -5005,10 +4907,9 @@ async function testPushNotification(){
     alert('서비스워커가 준비중이에요.\n페이지를 새로고침 후 다시 시도해주세요!');
   }
 }
-document.getElementById('adminPwInput2').addEventListener('keyup',e=>{if(e.key==='Enter')checkAdminModePw();});
-  document.getElementById('adminPwInput').addEventListener('keyup',e=>{if(e.key==='Enter')checkAdminPw();});
+document.getElementById('adminPwInput2').addEventListener('keyup',e=>{if(e.key==='Enter')checkAdminModePw();});
 
-if(auth.currentUser)loadBusinesses();
+if(auth.currentUser){currentUser=auth.currentUser;loadCafes();}
 </script>
 
 <script src="zuo-fixes.js?v=20260619d"></script>

@@ -1504,8 +1504,8 @@ input:focus{border-color:var(--green)}
       <div class="fr">
         <label class="fl">대타 시간</label>
         <div class="tg">
-          <div><div class="tlbl">시작</div><input type="text" id="eS" style="width:100%"></div>
-          <div><div class="tlbl">종료</div><input type="text" id="eE" style="width:100%"></div>
+          <div><div class="tlbl">시작</div><div class="time-display-box" id="eS" onclick="openTimePicker('editStart')" style="border:1px solid var(--bd);border-radius:8px;padding:9px 12px;background:#fff;cursor:pointer;text-align:center;font-size:14px;font-weight:600;color:var(--green)">오전 9:00</div></div>
+          <div><div class="tlbl">종료</div><div class="time-display-box" id="eE" onclick="openTimePicker('editEnd')" style="border:1px solid var(--bd);border-radius:8px;padding:9px 12px;background:#fff;cursor:pointer;text-align:center;font-size:14px;font-weight:600;color:var(--green)">오후 3:00</div></div>
         </div>
       </div>
       <div class="fr"><label class="fl">메모</label><input type="text" id="eNote" style="width:100%"></div>
@@ -2260,8 +2260,8 @@ function openEdit(fid){
   if(!sub)return;pendEdit=fid;
   document.getElementById('editPwCheck').value='';
   document.getElementById('eName').value=sub.name;
-  document.getElementById('eS').value=sub.timeStart;
-  document.getElementById('eE').value=sub.timeEnd;
+  document.getElementById('eS').textContent=sub.timeStart;
+  document.getElementById('eE').textContent=sub.timeEnd;
   document.getElementById('eNote').value=sub.note||'';
   document.getElementById('editModal').classList.add('open');
 }
@@ -2273,7 +2273,7 @@ async function confirmEdit(){
   if(pw!==sub.password&&pw!==MASTER_PW){alert('비밀번호가 틀렸어요 ❌');return;}
   const name=document.getElementById('eName').value.trim();
   if(!name){alert('이름을 입력해 주세요');return;}
-  await db.collection('subs').doc(pendEdit).update({name,timeStart:document.getElementById('eS').value,timeEnd:document.getElementById('eE').value,note:document.getElementById('eNote').value.trim()});
+  await db.collection('subs').doc(pendEdit).update({name,timeStart:document.getElementById('eS').textContent,timeEnd:document.getElementById('eE').textContent,note:document.getElementById('eNote').value.trim()});
   closeEdit();
 }
 
@@ -2309,11 +2309,21 @@ function switchTab(tab){
 }
 
 // 시간 선택
+function parseDisplayTimeParts(txt){
+  const m=String(txt||'').match(/(\uC624\uC804|\uC624\uD6C4)\s*(\d{1,2}):(\d{2})/);
+  if(!m)return null;
+  return {am:m[1]==='\uC624\uC804',h:parseInt(m[2],10),m:parseInt(m[3],10)};
+}
 function openTimePicker(type){
   pickingFor=type;
-  document.getElementById('timePickTitle').textContent=type==='start'?'시작 시간 선택':'종료 시간 선택';
+  document.getElementById('timePickTitle').textContent=(type==='start'||type==='editStart')?'\uC2DC\uC791 \uC2DC\uAC04 \uC120\uD0DD':'\uC885\uB8CC \uC2DC\uAC04 \uC120\uD0DD';
   if(type==='start'){isAm=tStartAm;selH=tStartH;selM=tStartM;}
-  else{isAm=tEndAm;selH=tEndH;selM=tEndM;}
+  else if(type==='end'){isAm=tEndAm;selH=tEndH;selM=tEndM;}
+  else {
+    const current=parseDisplayTimeParts(document.getElementById(type==='editStart'?'eS':'eE').textContent);
+    if(current){isAm=current.am;selH=current.h;selM=current.m;}
+    else {isAm=type==='editStart';selH=type==='editStart'?9:3;selM=0;}
+  }
   renderTimePicker();
   document.getElementById('timePickModal').classList.add('open');
 }
@@ -2350,7 +2360,9 @@ function selMin(m){selM=m;renderTimePicker();}
 function confirmTime(){
   const txt=formatTime(isAm,selH,selM);
   if(pickingFor==='start'){tStartAm=isAm;tStartH=selH;tStartM=selM;document.getElementById('tSBox').textContent=txt;}
-  else{tEndAm=isAm;tEndH=selH;tEndM=selM;document.getElementById('tEBox').textContent=txt;}
+  else if(pickingFor==='end'){tEndAm=isAm;tEndH=selH;tEndM=selM;document.getElementById('tEBox').textContent=txt;}
+  else if(pickingFor==='editStart'){document.getElementById('eS').textContent=txt;}
+  else if(pickingFor==='editEnd'){document.getElementById('eE').textContent=txt;}
   closeTimePicker();
 }
 

@@ -42,6 +42,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .top-small-btn{border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.16);color:#fff;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:700;cursor:pointer}
 .hdr-actions{display:flex;align-items:center;gap:8px}
 .hdr-icon-btn{position:relative;width:34px;height:34px;border-radius:999px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.16);color:#fff;font-size:17px;font-weight:800;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.admin-gear-btn{flex-shrink:0;margin-left:auto}
 .hdr-badge{position:absolute;top:-5px;right:-5px;min-width:17px;height:17px;border-radius:999px;background:var(--red);color:#fff;font-size:10px;font-weight:900;display:none;align-items:center;justify-content:center;padding:0 4px;border:2px solid var(--green)}
 .hdr{position:sticky;top:0;z-index:10;background:var(--green);padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between}
 .hdr-title{font-size:17px;font-weight:700;color:#fff}
@@ -259,6 +260,9 @@ input:focus{border-color:var(--green)}
 .admin-wrap{padding:14px}
 .admin-section{background:#fff;border-radius:12px;border:1px solid var(--bd);margin-bottom:14px;overflow:hidden}
 .admin-section-title{padding:12px 14px;font-size:13px;font-weight:600;color:var(--t1);border-bottom:1px solid var(--bd);background:#fafafa}
+.admin-modal-body{max-height:72vh;overflow-y:auto;padding:0 0 4px}
+.admin-modal-body .admin-wrap{padding:0}
+.admin-modal-body .admin-section{margin-bottom:12px}
 .admin-cafe-item{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-bottom:1px solid #f0f0f0}
 .admin-cafe-item:last-child{border-bottom:none}
 .admin-cafe-name{flex:1;font-size:13px;font-weight:500;color:var(--t1)}
@@ -1520,6 +1524,25 @@ input:focus{border-color:var(--green)}
   </div>
 </div>
 
+<div class="mbg" id="adminSettingsModal" onclick="if(event.target===this)closeAdminSettingsModal()">
+  <div class="modal">
+    <div class="mh"></div>
+    <div class="mt">⚙️ 관리자 설정</div>
+    <div class="admin-modal-body">
+      <div class="admin-wrap">
+        <div class="admin-section">
+          <div class="admin-section-title">가게 목록 관리</div>
+          <div id="adminCafeListPopup"></div>
+        </div>
+        <button class="add-cafe-btn" onclick="openAddCafe()">+ 가게 추가</button>
+      </div>
+    </div>
+    <div class="mbtns" style="margin-top:10px">
+      <button class="mcnl" onclick="closeAdminSettingsModal()">닫기</button>
+    </div>
+  </div>
+</div>
+
 <!-- 시간 선택 모달 -->
 <div class="mbg" id="timePickModal">
   <div class="modal">
@@ -1836,12 +1859,31 @@ function showScreen(id,skipHistory=false){
     history.pushState({screen:id},'',location.href);
   }
   activeScreenId=id;
+  updateAdminHeaderButtons();
   window.scrollTo(0,0);
 }
 window.addEventListener('popstate',e=>{
   const id=e.state?.screen||'scHome';
   showScreen(id,true);
 });
+
+function updateAdminHeaderButtons(){
+  document.querySelectorAll('.admin-gear-btn').forEach(btn=>btn.remove());
+  if(!isAdminMode||!currentCafe)return;
+  const active=document.querySelector('.screen.active');
+  if(!active||['scLogin','scHome','scSvcWorker','scWorkerInput'].includes(active.id))return;
+  const hdr=active.querySelector('.hdr');
+  if(!hdr)return;
+  const btn=document.createElement('button');
+  btn.type='button';
+  btn.className='hdr-icon-btn admin-gear-btn';
+  btn.title='관리자 설정';
+  btn.textContent='⚙️';
+  btn.onclick=openAdminSettingsModal;
+  const actions=hdr.querySelector('.hdr-actions');
+  if(actions)actions.prepend(btn);
+  else hdr.appendChild(btn);
+}
 
 function applyTheme(color){
   const t=colorMap[color]||colorMap.green;
@@ -1923,6 +1965,7 @@ function goHome(){
   if(unsubscribe){unsubscribe();unsubscribe=null;}
   if(empUnsubscribe){empUnsubscribe();empUnsubscribe=null;}
   currentCafe=null;selDate=null;isAdminMode=false;currentWorkerEmp=null;
+  updateAdminHeaderButtons();
   showScreen('scHome');loadCafes();
 }
 function goAfterEntryBack(){
@@ -1968,6 +2011,8 @@ let isAdminMode=false;
 function selectCafe(id){
   currentCafe=cafes.find(c=>c.id===id);
   isEmployeeInviteMode=false;
+  isAdminMode=false;
+  updateAdminHeaderButtons();
   openCafePasswordScreen(currentCafe,false);
 }
 function openCafePasswordScreen(cafe,isInvite){
@@ -2089,6 +2134,7 @@ function setCafeHeaderNames(){
 function enterAsWorker(){
   isAdminMode=false;
   currentWorkerEmp=null;
+  updateAdminHeaderButtons();
   const cm=colorMap[currentCafe.color||'green']||colorMap.green;
   document.getElementById('svcWorkerHdr').style.background=cm.main;
   document.getElementById('svcWorkerCafeName').textContent=currentCafe.name;
@@ -2877,12 +2923,20 @@ function copyAllAlerts(){copyAlerts(alertItems.filter(a=>!getHiddenAlerts().incl
 
 // 관리자
 function goAdmin(){
-  renderAdminCafeList();
-  showScreen('scAdmin');
+  openAdminSettingsModal();
 }
 
-function renderAdminCafeList(){
-  const list=document.getElementById('adminCafeList');
+function openAdminSettingsModal(){
+  renderAdminCafeList('adminCafeListPopup');
+  document.getElementById('adminSettingsModal').classList.add('open');
+}
+function closeAdminSettingsModal(){
+  document.getElementById('adminSettingsModal').classList.remove('open');
+}
+
+function renderAdminCafeList(targetId='adminCafeList'){
+  const list=document.getElementById(targetId);
+  if(!list)return;
   if(!cafes.length){list.innerHTML=`<div style="padding:14px;font-size:12px;color:var(--t3);text-align:center">등록된 가게가 없어요</div>`;return;}
   list.innerHTML=cafes.map(c=>`<div class="admin-cafe-item"><div class="admin-cafe-main"><div class="admin-cafe-name">${c.name}</div><div class="admin-cafe-pw">매장 입장 비밀번호: ${c.password}</div><div class="admin-work-mode"><label>근로시간 등록 방식</label><div class="work-mode-radio"><label class="work-mode-option"><input type="radio" name="workMode_${c.id}" value="worker" ${(c.workEntryMode||'worker')==='worker'?'checked':''} onchange="updateCafeWorkEntryMode('${c.id}',this.value)"><div><span>개인별 캘린더에 등록</span><small>직원이 직접 등록할 때 유용</small></div></label><label class="work-mode-option"><input type="radio" name="workMode_${c.id}" value="calendar" ${c.workEntryMode==='calendar'?'checked':''} onchange="updateCafeWorkEntryMode('${c.id}',this.value)"><div><span>통합 캘린더에 등록</span><small>관리자가 직접 등록할 때 유용</small></div></label></div></div></div><div class="admin-cafe-actions"><button class="admin-copy-btn" onclick="copyInviteLink('${c.id}')">직원용 링크 복사</button><button class="admin-edit-btn" onclick="openEditCafe('${c.id}')">수정</button><button class="admin-del-btn" onclick="deleteCafe('${c.id}')">삭제</button></div></div>`).join('');
 }
@@ -2894,6 +2948,8 @@ async function updateCafeWorkEntryMode(id,mode){
   await db.collection('cafes').doc(id).update({workEntryMode:nextMode});
   cafe.workEntryMode=nextMode;
   if(currentCafe&&currentCafe.id===id){currentCafe={...currentCafe,workEntryMode:nextMode};updateWorkEntryModeUI();}
+  renderAdminCafeList();
+  renderAdminCafeList('adminCafeListPopup');
   showToast(nextMode==='calendar'?'통합 캘린더 등록 방식으로 저장했어요':'개인별 캘린더 등록 방식으로 저장했어요');
 }
 
@@ -2922,8 +2978,9 @@ function closeCafeEdit(){document.getElementById('cafeEditModal').classList.remo
 async function saveCafe(){const name=document.getElementById('cafeNameInput').value.trim();const pw=document.getElementById('cafePwInput').value.trim();if(!name){alert('가게 이름을 입력해 주세요');return;}if(!pw){alert('매장 입장 비밀번호를 입력해 주세요');return;}const order=parseInt(document.getElementById('cafeOrderInput').value)||99;
 const workEntryMode=getCafeWorkEntryModeInput();
 if(editingCafeId){await db.collection('cafes').doc(editingCafeId).update({name,password:pw,color:selectedColor,order,workEntryMode});if(currentCafe&&currentCafe.id===editingCafeId){currentCafe={...currentCafe,name,password:pw,color:selectedColor,order,workEntryMode};updateWorkEntryModeUI();}}
-else{await tenantAdd('cafes',{name,password:pw,masterPw:MASTER_PW||'0000',color:selectedColor,order,workEntryMode,createdAt:Date.now()});}closeCafeEdit();}
-async function deleteCafe(id){if(!confirm('가게를 삭제할까요?'))return;await db.collection('cafes').doc(id).delete();}
+else{await tenantAdd('cafes',{name,password:pw,masterPw:MASTER_PW||'0000',color:selectedColor,order,workEntryMode,createdAt:Date.now()});}
+renderAdminCafeList();renderAdminCafeList('adminCafeListPopup');closeCafeEdit();}
+async function deleteCafe(id){if(!confirm('가게를 삭제할까요?'))return;await db.collection('cafes').doc(id).delete();renderAdminCafeList();renderAdminCafeList('adminCafeListPopup');}
 
 // ===== 근로관리 =====
 async function cleanupRrnFields(){

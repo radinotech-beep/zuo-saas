@@ -47,6 +47,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .hdr{position:sticky;top:0;z-index:10;background:var(--green);padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between}
 .hdr-title{font-size:17px;font-weight:700;color:#fff}
 .hdr-sub{font-size:11px;color:rgba(255,255,255,0.75)}
+.hdr-centered{position:sticky}
+.hdr-centered>.hdr-title{position:absolute;left:50%;transform:translateX(-50%);max-width:58%;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .back-btn{background:none;border:none;color:rgba(255,255,255,0.9);font-size:13px;font-weight:500;cursor:pointer;padding:4px 0}
 /* 가게 선택 */
 .welcome{padding:28px 16px 12px;text-align:center}
@@ -871,7 +873,7 @@ input:focus{border-color:var(--green)}
 
 <!-- 화면7: 직원카드 등록 (마스터) -->
 <div class="screen" id="scEmpManage">
-  <div class="hdr">
+  <div class="hdr hdr-centered">
     <button class="back-btn" onclick="showScreen('scSvc')">← 뒤로</button>
     <div class="hdr-title">직원카드 등록</div>
     <div class="hdr-sub">관리자</div>
@@ -899,7 +901,7 @@ input:focus{border-color:var(--green)}
 
 <!-- 화면8: 직원 추가/수정 -->
 <div class="screen" id="scEmpAdd">
-  <div class="hdr">
+  <div class="hdr hdr-centered">
     <button class="back-btn" onclick="showScreen('scEmpManage')">← 뒤로</button>
     <div class="hdr-title" id="empAddTitle">직원 등록</div>
     <div style="width:40px"></div>
@@ -1809,7 +1811,7 @@ function tenantAdd(name,data){
 
 const DAYS=["일","월","화","수","목","금","토"];
 const MONTHS=["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
-const APP_VERSION="v2026.06.27.23";
+const APP_VERSION="v2026.06.27.24";
 const APP_URL="https://zuo-saas.firebaseapp.com";
 const INVITE_BASE_URL="https://radinotech-beep.github.io/zuo-saas/";
 const EMPLOYEE_INVITE_CAFE_ID=new URLSearchParams(location.search).get('store');

@@ -1183,6 +1183,20 @@ input:focus{border-color:var(--green)}
       <button class="alert-hide" id="laborHeadcountToggle" onclick="toggleLaborHeadcountEnabled(event)" style="margin:0">월상시 인원 표시 ON</button>
     </div>
     <div class="labor-basis" id="laborHeadcountBasis"></div>
+    <div class="labor-summary">
+      <div class="alert-stat">
+        <div class="alert-stat-num" id="laborStatusTotal">0h</div>
+        <div class="alert-stat-lbl">월 총 근무시간</div>
+      </div>
+      <div class="alert-stat">
+        <div class="alert-stat-num" id="laborStatusEmpCnt">0명</div>
+        <div class="alert-stat-lbl">근무 직원</div>
+      </div>
+      <div class="alert-stat">
+        <div class="alert-stat-num" id="laborStatusDayCnt">0일</div>
+        <div class="alert-stat-lbl">근무 등록일</div>
+      </div>
+    </div>
     <div class="wk-grid" id="laborStatusGrid"></div>
     <div style="background:#fff;border:1px solid var(--bd);border-radius:10px;padding:12px;margin-top:10px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
@@ -3419,6 +3433,7 @@ async function renderLaborStatus(){
 }
 function renderLaborStatusGrid(){
   const g=document.getElementById('laborStatusGrid');
+  if(!g)return;
   g.innerHTML=DAYS.map((d,i)=>`<div class="wk-hdr" style="${i===0?'color:var(--red)':i===6?'color:#185FA5':''}">${d}</div>`).join('');
   const first=new Date(laborStatusY,laborStatusM,1).getDay();
   const days=new Date(laborStatusY,laborStatusM+1,0).getDate();
@@ -3439,8 +3454,12 @@ function renderLaborStatusGrid(){
       ${totalMin?`<div class="labor-status-total"><span></span><span class="labor-status-hours">총 ${formatHours2(totalMin/60)}h</span></div>`:''}
     </div>`;
   }
-  document.getElementById('laborStatusTotal').textContent=`${formatHours2(monthMin/60)}h`;
-  document.getElementById('laborStatusEmpCnt').textContent=`${empSet.size}명`;
+  const totalEl=document.getElementById('laborStatusTotal');
+  const empCntEl=document.getElementById('laborStatusEmpCnt');
+  const dayCntEl=document.getElementById('laborStatusDayCnt');
+  if(totalEl)totalEl.textContent=`${formatHours2(monthMin/60)}h`;
+  if(empCntEl)empCntEl.textContent=`${empSet.size}명`;
+  if(dayCntEl)dayCntEl.textContent=`${dayCnt}일`;
   renderLaborHeadcountStats();
   if(laborStatusSelectedDay)renderLaborStatusDetail(laborStatusSelectedDay);
   else{document.getElementById('laborStatusDetailTitle').textContent='날짜를 선택하세요';document.getElementById('laborStatusDetail').textContent='날짜를 누르면 직원별 근로현황이 표시됩니다.';}

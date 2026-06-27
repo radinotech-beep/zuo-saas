@@ -268,6 +268,11 @@ input:focus{border-color:var(--green)}
 .admin-work-mode{margin-top:9px;background:#F6F9FE;border:1px solid #D8E6FA;border-radius:8px;padding:8px}
 .admin-work-mode label{display:block;font-size:10px;font-weight:700;color:var(--gd);margin-bottom:5px}
 .admin-work-mode select{width:100%;border:1px solid var(--bd);border-radius:7px;background:#fff;color:var(--t1);font-size:12px;padding:7px 8px;outline:none}
+.work-mode-radio{display:grid;gap:7px}
+.work-mode-option{display:flex!important;align-items:flex-start;gap:7px;background:#fff;border:1px solid var(--bd);border-radius:8px;padding:8px;cursor:pointer;margin:0!important}
+.work-mode-option input{margin-top:2px;accent-color:var(--green)}
+.work-mode-option span{display:block;font-size:12px;font-weight:800;color:var(--t1);line-height:1.25}
+.work-mode-option small{display:block;font-size:10px;font-weight:500;color:var(--t3);line-height:1.35;margin-top:2px}
 .admin-edit-btn{background:none;border:1px solid var(--bd);border-radius:7px;padding:4px 9px;font-size:11px;color:var(--t2);cursor:pointer;margin-right:5px}
 .admin-copy-btn{background:none;border:1px solid var(--green);border-radius:7px;padding:4px 9px;font-size:11px;color:var(--gd);cursor:pointer;margin-right:5px;white-space:nowrap}
 .admin-del-btn{background:none;border:1px solid #fca5a5;border-radius:7px;padding:4px 9px;font-size:11px;color:var(--red);cursor:pointer}
@@ -496,7 +501,7 @@ input:focus{border-color:var(--green)}
     <div onclick="enterAsWorker()" style="background:#fff;border:2px solid var(--green);border-radius:16px;padding:20px;margin-bottom:14px;cursor:pointer;text-align:center">
       <div style="font-size:32px;margin-bottom:8px">👤</div>
       <div style="font-size:17px;font-weight:700;color:var(--green);margin-bottom:4px">직원으로 입장</div>
-      <div style="font-size:12px;color:var(--t3)">공지사항 · 근무시간 입력 · 대타 · 보건증 열람</div>
+      <div style="font-size:12px;color:var(--t3)">공지사항 · 개인 근로 캘린더 · 대타 · 보건증 열람</div>
     </div>
     <!-- 관리자용 -->
     <div onclick="showAdminPwInput()" style="background:#fff;border:2px solid #534AB7;border-radius:16px;padding:20px;cursor:pointer;text-align:center">
@@ -530,7 +535,7 @@ input:focus{border-color:var(--green)}
     </div>
     <div class="svc-card" id="workerTimeCard" onclick="enterWorkerTimeInput()">
       <div class="svc-icon" style="background:#E6F1FB">📋</div>
-      <div><div class="svc-name">근무시간 입력</div><div class="svc-desc">본인 근무시간 입력</div></div>
+      <div><div class="svc-name">개인 근로 캘린더</div><div class="svc-desc">본인 근무시간 등록</div></div>
     </div>
     <div class="svc-card" onclick="enterSvc('sub')">
       <div class="svc-icon" id="svcIcon2" style="background:var(--gl)">🔄</div>
@@ -752,11 +757,11 @@ input:focus{border-color:var(--green)}
     <!-- 직원 메뉴 -->
     <div style="font-size:11px;font-weight:700;color:var(--t3);letter-spacing:0.5px;margin-bottom:8px;padding-left:2px">직원 메뉴</div>
     <div style="background:#fff;border-radius:12px;border:1px solid var(--bd);overflow:hidden;margin-bottom:20px">
-      <div onclick="enterWorkerMenu()" style="display:flex;align-items:center;gap:12px;padding:14px;cursor:pointer">
+      <div id="laborWorkerTimeMenu" onclick="enterWorkerMenu()" style="display:flex;align-items:center;gap:12px;padding:14px;cursor:pointer">
         <div style="width:40px;height:40px;border-radius:10px;background:#E6F1FB;display:flex;align-items:center;justify-content:center;font-size:20px">📋</div>
         <div>
-          <div style="font-size:14px;font-weight:600;color:var(--t1)">근무시간 입력</div>
-          <div style="font-size:11px;color:var(--t3);margin-top:2px">본인 이름 선택 후 근무시간 입력</div>
+          <div style="font-size:14px;font-weight:600;color:var(--t1)">개인 근로 캘린더</div>
+          <div style="font-size:11px;color:var(--t3);margin-top:2px">본인 이름 선택 후 근무시간 등록</div>
         </div>
         <div style="margin-left:auto;color:var(--t3);font-size:18px">›</div>
       </div>
@@ -783,7 +788,7 @@ input:focus{border-color:var(--green)}
       <div onclick="openMasterMenu('status')" style="display:flex;align-items:center;gap:12px;padding:14px;cursor:pointer;border-bottom:1px solid #f5f5f5">
         <div style="width:40px;height:40px;border-radius:10px;background:#E2EFDA;display:flex;align-items:center;justify-content:center;font-size:20px">📅</div>
         <div>
-          <div style="font-size:14px;font-weight:600;color:var(--t1)">근로현황 캘린더</div>
+          <div style="font-size:14px;font-weight:600;color:var(--t1)">통합 근로 캘린더</div>
           <div style="font-size:11px;color:var(--t3);margin-top:2px">날짜별 직원 근무 · 일별 합계</div>
         </div>
         <div style="margin-left:auto;color:var(--t3);font-size:18px">›</div>
@@ -800,13 +805,13 @@ input:focus{border-color:var(--green)}
   </div>
 </div>
 
-<!-- 화면6: 직원 근무시간 입력 -->
+<!-- 화면6: 직원 개인 근로 캘린더 -->
 <div class="screen" id="scWorkerInput">
   <div class="hdr" id="workerInputHdr">
     <button class="back-btn" onclick="goWorkerBack()">← 나가기</button>
     <div>
       <div class="hdr-title" id="workerInputName">이름</div>
-      <div class="hdr-sub">근무시간 입력</div>
+      <div class="hdr-sub">개인 근로 캘린더</div>
     </div>
     <button onclick="openChangePw()" style="background:rgba(255,255,255,0.2);border:none;color:#fff;font-size:11px;padding:4px 8px;border-radius:6px;cursor:pointer">🔑 비번변경</button>
   </div>
@@ -870,7 +875,7 @@ input:focus{border-color:var(--green)}
     <button onclick="quickNav('emp')" id="qnav_emp" style="flex:1;padding:9px 2px;border:none;background:none;font-size:10px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;color:var(--t3)">👥 직원카드 등록</button>
     <button onclick="quickNav('pay')" id="qnav_pay" style="flex:1;padding:9px 4px;border:none;background:none;font-size:11px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;color:var(--t3)">💰 급여관리</button>
     <button onclick="quickNav('table')" id="qnav_table" style="flex:1;padding:9px 4px;border:none;background:none;font-size:11px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;color:var(--t3)">📊 월급여</button>
-    <button onclick="quickNav('status')" id="qnav_status" style="flex:1;padding:9px 2px;border:none;background:none;font-size:10px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;color:var(--t3)">📅 근로현황 캘린더</button>
+    <button onclick="quickNav('status')" id="qnav_status" style="flex:1;padding:9px 2px;border:none;background:none;font-size:10px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;color:var(--t3)">📅 통합 근로 캘린더</button>
   </div>
   <div class="tabs">
     <button class="tab on" id="empTab1" onclick="switchEmpTab('active')">재직중</button>
@@ -926,7 +931,7 @@ input:focus{border-color:var(--green)}
     <div style="background:var(--gl);border-radius:8px;padding:10px;margin-bottom:12px;font-size:11px;color:var(--gd);line-height:1.6">💡 주휴수당 단가 × 급여명세서 횟수 = 주휴수당 합계</div>
     <div class="contract-card" id="contractScheduleCard">
       <div class="contract-title"><span>계약 근무시간</span><button type="button" class="contract-add" onclick="addContractBlock()">+ 근무시간 추가</button></div>
-      <div style="font-size:11px;color:var(--t3);line-height:1.5;margin-bottom:8px">요일별 기본 근무 패턴을 등록해두면 근로현황 캘린더에서 한 달치를 자동 적용할 수 있어요.</div>
+      <div style="font-size:11px;color:var(--t3);line-height:1.5;margin-bottom:8px">요일별 기본 근무 패턴을 등록해두면 통합 근로 캘린더에서 한 달치를 자동 적용할 수 있어요.</div>
       <div id="contractScheduleList"></div>
     </div>
 
@@ -949,7 +954,7 @@ input:focus{border-color:var(--green)}
     <button onclick="quickNav('emp')" id="qnav_emp" style="flex:1;padding:9px 2px;border:none;background:none;font-size:10px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;color:var(--t3)">👥 직원카드 등록</button>
     <button onclick="quickNav('pay')" id="qnav_pay" style="flex:1;padding:9px 4px;border:none;background:none;font-size:11px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;color:var(--t3)">💰 급여관리</button>
     <button onclick="quickNav('table')" id="qnav_table" style="flex:1;padding:9px 4px;border:none;background:none;font-size:11px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;color:var(--t3)">📊 월급여</button>
-    <button onclick="quickNav('status')" id="qnav_status" style="flex:1;padding:9px 2px;border:none;background:none;font-size:10px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;color:var(--t3)">📅 근로현황 캘린더</button>
+    <button onclick="quickNav('status')" id="qnav_status" style="flex:1;padding:9px 2px;border:none;background:none;font-size:10px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;color:var(--t3)">📅 통합 근로 캘린더</button>
   </div>
   <div style="padding:12px 14px;overflow-y:auto">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
@@ -1107,7 +1112,7 @@ input:focus{border-color:var(--green)}
     <button onclick="quickNav('emp')" id="qnav_emp" style="flex:1;padding:9px 2px;border:none;background:none;font-size:10px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;color:var(--t3)">👥 직원카드 등록</button>
     <button onclick="quickNav('pay')" id="qnav_pay" style="flex:1;padding:9px 4px;border:none;background:none;font-size:11px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;color:var(--t3)">💰 급여관리</button>
     <button onclick="quickNav('table')" id="qnav_table" style="flex:1;padding:9px 4px;border:none;background:none;font-size:11px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;color:var(--t3)">📊 월급여</button>
-    <button onclick="quickNav('status')" id="qnav_status" style="flex:1;padding:9px 2px;border:none;background:none;font-size:10px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;color:var(--t3)">📅 근로현황 캘린더</button>
+    <button onclick="quickNav('status')" id="qnav_status" style="flex:1;padding:9px 2px;border:none;background:none;font-size:10px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;color:var(--t3)">📅 통합 근로 캘린더</button>
   </div>
   <!-- 탭 -->
   <div class="tabs" style="margin:10px 14px">
@@ -1154,18 +1159,18 @@ input:focus{border-color:var(--green)}
   </div>
 </div>
 
-<!-- 근로현황 캘린더 -->
+<!-- 통합 근로 캘린더 -->
 <div class="screen" id="scLaborStatus">
   <div class="hdr">
     <button class="back-btn" onclick="showScreen('scLabor')">← 뒤로</button>
-    <div class="hdr-title">근로현황 캘린더</div>
+    <div class="hdr-title">통합 근로 캘린더</div>
     <div class="hdr-sub" id="laborStatusPeriod">2026년 5월</div>
   </div>
   <div style="display:flex;background:#fff;border-bottom:1px solid var(--bd)">
     <button onclick="quickNav('emp')" id="qnav_emp" style="flex:1;padding:9px 2px;border:none;background:none;font-size:10px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;color:var(--t3)">👥 직원카드 등록</button>
     <button onclick="quickNav('pay')" id="qnav_pay" style="flex:1;padding:9px 4px;border:none;background:none;font-size:11px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;color:var(--t3)">💰 급여관리</button>
     <button onclick="quickNav('table')" id="qnav_table" style="flex:1;padding:9px 4px;border:none;background:none;font-size:11px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;color:var(--t3)">📊 월급여</button>
-    <button onclick="quickNav('status')" id="qnav_status" style="flex:1;padding:9px 2px;border:none;background:none;font-size:10px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;color:var(--t3)">📅 근로현황 캘린더</button>
+    <button onclick="quickNav('status')" id="qnav_status" style="flex:1;padding:9px 2px;border:none;background:none;font-size:10px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;color:var(--t3)">📅 통합 근로 캘린더</button>
   </div>
   <div style="padding:12px 14px;overflow-y:auto">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
@@ -1176,7 +1181,7 @@ input:focus{border-color:var(--green)}
 
     <div class="labor-bulk-card" id="laborBulkCard">
       <div class="labor-bulk-title"><span>계약근무시간 일괄 관리</span></div>
-      <div class="labor-bulk-note">가게 설정이 근로현황 캘린더 방식일 때만 사용합니다. 이미 입력된 날짜는 덮어쓰지 않고 건너뜁니다.</div>
+      <div class="labor-bulk-note">가게 설정이 통합 캘린더 등록 방식일 때만 사용합니다. 이미 입력된 날짜는 덮어쓰지 않고 건너뜁니다.</div>
       <div class="labor-bulk-actions"><button class="labor-bulk-btn" onclick="openContractBulkModal('apply')">계약근무시간 일괄적용</button><button class="labor-bulk-del" onclick="openContractBulkModal('delete')">자동생성분 일괄삭제</button></div>
     </div>
     <div style="display:flex;justify-content:flex-end;margin:-4px 0 8px">
@@ -1611,14 +1616,14 @@ input:focus{border-color:var(--green)}
   </div>
 </div>
 
-<!-- 직원 선택 모달 (근무시간 입력) -->
+<!-- 직원 선택 모달 (개인 근로 캘린더) -->
 
 <div class="mbg" id="contractBulkModal"><div class="modal"><div class="mh"></div><div class="mt" id="contractBulkTitle">계약근무시간 일괄적용</div><div class="fr"><label class="fl">대상 월</label><input type="month" id="contractBulkMonth" style="width:100%"></div><div style="display:flex;gap:8px;margin-bottom:6px"><button class="alert-hide" style="flex:1;margin:0" onclick="setBulkEmployees(true)">전체 선택</button><button class="alert-hide" style="flex:1;margin:0" onclick="setBulkEmployees(false)">전체 해제</button></div><div class="bulk-emp-list" id="contractBulkEmpList"></div><div style="font-size:11px;color:var(--t3);line-height:1.5;margin-bottom:10px" id="contractBulkNote"></div><div class="mbtns"><button class="mcnl" onclick="closeContractBulkModal()">취소</button><button class="mok" id="contractBulkRunBtn" onclick="runContractBulk()">실행</button></div></div></div>
-<div class="mbg" id="laborManualModal"><div class="modal"><div class="mh"></div><div class="mt" id="laborManualTitle">근무시간 수동 수정</div><div class="labor-manual-grid"><div class="labor-manual-full"><label class="fl">직원</label><select id="laborManualEmp"></select></div><div><label class="fl">출근</label><select id="laborManualStart"></select></div><div><label class="fl">퇴근</label><select id="laborManualEnd"></select></div><div><label class="fl">휴게시간(분)</label><input type="number" id="laborManualBreak" min="0" step="10" value="0"></div><div><label class="fl">근무일</label><input type="text" id="laborManualDay" readonly></div><div class="labor-manual-full"><label class="fl">메모</label><input type="text" id="laborManualNote" placeholder="선택"></div></div><div class="mbtns"><button class="mcnl" onclick="closeLaborManualModal()">취소</button><button class="mok" onclick="saveLaborManualWork()">저장</button></div></div></div>
+<div class="mbg" id="laborManualModal"><div class="modal"><div class="mh"></div><div class="mt" id="laborManualTitle">통합 근로시간 수동 수정</div><div class="labor-manual-grid"><div class="labor-manual-full"><label class="fl">직원</label><select id="laborManualEmp"></select></div><div><label class="fl">출근</label><select id="laborManualStart"></select></div><div><label class="fl">퇴근</label><select id="laborManualEnd"></select></div><div><label class="fl">휴게시간(분)</label><input type="number" id="laborManualBreak" min="0" step="10" value="0"></div><div><label class="fl">근무일</label><input type="text" id="laborManualDay" readonly></div><div class="labor-manual-full"><label class="fl">메모</label><input type="text" id="laborManualNote" placeholder="선택"></div></div><div class="mbtns"><button class="mcnl" onclick="closeLaborManualModal()">취소</button><button class="mok" onclick="saveLaborManualWork()">저장</button></div></div></div>
 <div class="mbg" id="workerSelectModal">
   <div class="modal" style="padding-bottom:28px">
     <div class="mh"></div>
-    <div class="mt">근무시간 입력 - 직원 선택</div>
+    <div class="mt">개인 근로 캘린더 - 직원 선택</div>
     <div style="font-size:12px;color:var(--t3);margin-bottom:12px">본인 이름을 선택하고 내 락커룸 비밀번호를 입력하세요</div>
     <div id="workerSelectList" style="border:1px solid var(--bd);border-radius:10px;overflow:hidden;max-height:50vh;overflow-y:auto"></div>
     <div class="mbtns" style="margin-top:14px">
@@ -1642,7 +1647,7 @@ input:focus{border-color:var(--green)}
   </div>
 </div>
 
-<!-- 직원 비밀번호 모달 (근무시간 입력) -->
+<!-- 직원 비밀번호 모달 (개인 근로 캘린더) -->
 <div class="mbg" id="workerPwModal">
   <div class="modal">
     <div class="mh"></div>
@@ -1677,11 +1682,11 @@ input:focus{border-color:var(--green)}
 </div>
     <div class="fr">
       <label class="fl">근로시간 등록 방식</label>
-      <select id="cafeWorkEntryMode" style="width:100%;border:1px solid var(--bd);border-radius:8px;padding:9px 12px;font-size:14px;outline:none;background:#fff;color:var(--t1)">
-        <option value="worker">근로관리해ZUO - 직원 직접 입력</option>
-        <option value="calendar">근로현황 캘린더 - 계약시간 일괄 적용</option>
-      </select>
-      <div style="font-size:11px;color:var(--t3);line-height:1.5;margin-top:6px">기본값은 직원 직접 입력입니다. 캘린더 방식을 선택하면 직원용 근무시간 입력 메뉴가 숨겨집니다.</div>
+      <div class="work-mode-radio">
+        <label class="work-mode-option"><input type="radio" name="cafeWorkEntryMode" value="worker"><div><span>개인별 캘린더에 등록</span><small>직원이 직접 등록할 때 유용</small></div></label>
+        <label class="work-mode-option"><input type="radio" name="cafeWorkEntryMode" value="calendar"><div><span>통합 캘린더에 등록</span><small>관리자가 직접 등록할 때 유용</small></div></label>
+      </div>
+      <div style="font-size:11px;color:var(--t3);line-height:1.5;margin-top:6px">선택한 방식만 입력할 수 있고, 다른 입력 경로는 차단됩니다.</div>
     </div>
 
 
@@ -2095,7 +2100,7 @@ function enterAsWorker(){
   setTimeout(()=>enterWorkerMenu('entry'),employees.length?0:800);
 }
 function enterWorkerTimeInput(){
-  if(isCalendarWorkMode()){alert('이 가게는 캘린더에서 근무시간을 관리하도록 설정되어 있어요. 관리자에게 문의하세요.');return;}
+  if(isCalendarWorkMode()){alert('이 가게는 관리자가 통합 근로 캘린더에서 근무시간을 등록합니다.');return;}
   if(currentWorkerEmp&&!currentWorkerEmp.resigned){enterWorkerInput();return;}
   // 직원 선택 모달 표시
   workerAuthPurpose='time';
@@ -2748,10 +2753,10 @@ async function buildAlertItems(){
       category:'pay',
       type:'work',
       level:'normal',
-      title:`${label} 근무시간 입력 요청`,
+      title:`${label} 개인 근로 캘린더 확인 요청`,
       body:'월급여 계산 전까지 직원 근무시간 확인 필요',
       meta:'매월 1일',
-      copy:`${label} 근무시간 입력/확인 요청\n- 대상: ${names||'재직 직원'}\n- 월급여 계산 전까지 근무시간을 확인해주세요.`,
+      copy:`${label} 개인 근로 캘린더 입력/확인 요청\n- 대상: ${names||'재직 직원'}\n- 월급여 계산 전까지 근무시간을 확인해주세요.`,
       today:true
     });
   }
@@ -2879,7 +2884,7 @@ function goAdmin(){
 function renderAdminCafeList(){
   const list=document.getElementById('adminCafeList');
   if(!cafes.length){list.innerHTML=`<div style="padding:14px;font-size:12px;color:var(--t3);text-align:center">등록된 가게가 없어요</div>`;return;}
-  list.innerHTML=cafes.map(c=>`<div class="admin-cafe-item"><div class="admin-cafe-main"><div class="admin-cafe-name">${c.name}</div><div class="admin-cafe-pw">매장 입장 비밀번호: ${c.password}</div><div class="admin-work-mode"><label>근로시간 등록 방식</label><select onchange="updateCafeWorkEntryMode('${c.id}',this.value)"><option value="worker" ${(c.workEntryMode||'worker')==='worker'?'selected':''}>근로관리해ZUO - 직원 직접 입력</option><option value="calendar" ${c.workEntryMode==='calendar'?'selected':''}>근로현황 캘린더 - 계약시간 일괄 적용</option></select></div></div><div class="admin-cafe-actions"><button class="admin-copy-btn" onclick="copyInviteLink('${c.id}')">직원용 링크 복사</button><button class="admin-edit-btn" onclick="openEditCafe('${c.id}')">수정</button><button class="admin-del-btn" onclick="deleteCafe('${c.id}')">삭제</button></div></div>`).join('');
+  list.innerHTML=cafes.map(c=>`<div class="admin-cafe-item"><div class="admin-cafe-main"><div class="admin-cafe-name">${c.name}</div><div class="admin-cafe-pw">매장 입장 비밀번호: ${c.password}</div><div class="admin-work-mode"><label>근로시간 등록 방식</label><div class="work-mode-radio"><label class="work-mode-option"><input type="radio" name="workMode_${c.id}" value="worker" ${(c.workEntryMode||'worker')==='worker'?'checked':''} onchange="updateCafeWorkEntryMode('${c.id}',this.value)"><div><span>개인별 캘린더에 등록</span><small>직원이 직접 등록할 때 유용</small></div></label><label class="work-mode-option"><input type="radio" name="workMode_${c.id}" value="calendar" ${c.workEntryMode==='calendar'?'checked':''} onchange="updateCafeWorkEntryMode('${c.id}',this.value)"><div><span>통합 캘린더에 등록</span><small>관리자가 직접 등록할 때 유용</small></div></label></div></div></div><div class="admin-cafe-actions"><button class="admin-copy-btn" onclick="copyInviteLink('${c.id}')">직원용 링크 복사</button><button class="admin-edit-btn" onclick="openEditCafe('${c.id}')">수정</button><button class="admin-del-btn" onclick="deleteCafe('${c.id}')">삭제</button></div></div>`).join('');
 }
 
 async function updateCafeWorkEntryMode(id,mode){
@@ -2889,7 +2894,7 @@ async function updateCafeWorkEntryMode(id,mode){
   await db.collection('cafes').doc(id).update({workEntryMode:nextMode});
   cafe.workEntryMode=nextMode;
   if(currentCafe&&currentCafe.id===id){currentCafe={...currentCafe,workEntryMode:nextMode};updateWorkEntryModeUI();}
-  showToast(nextMode==='calendar'?'근로현황 캘린더 방식으로 저장했어요':'근로관리해ZUO 방식으로 저장했어요');
+  showToast(nextMode==='calendar'?'통합 캘린더 등록 방식으로 저장했어요':'개인별 캘린더 등록 방식으로 저장했어요');
 }
 
 function getInviteLink(cafeId){
@@ -2909,11 +2914,13 @@ function renderThemeDots(){
   picker.innerHTML=THEME_COLORS.map(c=>`<div class="color-dot ${selectedColor===c?'selected':''}" data-color="${c}" style="background:${colorMap[c].main}" onclick="selectColor('${c}',this)"></div>`).join('');
 }
 function selectColor(color,el){selectedColor=color;document.querySelectorAll('.color-dot').forEach(d=>d.classList.remove('selected'));if(el)el.classList.add('selected');}
-function openAddCafe(){editingCafeId=null;selectedColor='green';document.getElementById('cafeEditTitle').textContent='가게 추가';document.getElementById('cafeNameInput').value='';document.getElementById('cafePwInput').value='';document.getElementById('cafeOrderInput').value='';document.getElementById('cafeWorkEntryMode').value='worker';renderThemeDots();document.getElementById('cafeEditModal').classList.add('open');}
-function openEditCafe(id){const cafe=cafes.find(c=>c.id===id);if(!cafe)return;editingCafeId=id;selectedColor=cafe.color||'green';document.getElementById('cafeEditTitle').textContent='가게 수정';document.getElementById('cafeNameInput').value=cafe.name;document.getElementById('cafePwInput').value=cafe.password;document.getElementById('cafeOrderInput').value=cafe.order||'';document.getElementById('cafeWorkEntryMode').value=cafe.workEntryMode||'worker';renderThemeDots();document.getElementById('cafeEditModal').classList.add('open');}
+function setCafeWorkEntryModeInput(mode){document.querySelectorAll('input[name="cafeWorkEntryMode"]').forEach(el=>{el.checked=el.value===(mode==='calendar'?'calendar':'worker');});}
+function getCafeWorkEntryModeInput(){return document.querySelector('input[name="cafeWorkEntryMode"]:checked')?.value||'worker';}
+function openAddCafe(){editingCafeId=null;selectedColor='green';document.getElementById('cafeEditTitle').textContent='가게 추가';document.getElementById('cafeNameInput').value='';document.getElementById('cafePwInput').value='';document.getElementById('cafeOrderInput').value='';setCafeWorkEntryModeInput('worker');renderThemeDots();document.getElementById('cafeEditModal').classList.add('open');}
+function openEditCafe(id){const cafe=cafes.find(c=>c.id===id);if(!cafe)return;editingCafeId=id;selectedColor=cafe.color||'green';document.getElementById('cafeEditTitle').textContent='가게 수정';document.getElementById('cafeNameInput').value=cafe.name;document.getElementById('cafePwInput').value=cafe.password;document.getElementById('cafeOrderInput').value=cafe.order||'';setCafeWorkEntryModeInput(cafe.workEntryMode||'worker');renderThemeDots();document.getElementById('cafeEditModal').classList.add('open');}
 function closeCafeEdit(){document.getElementById('cafeEditModal').classList.remove('open');editingCafeId=null;}
 async function saveCafe(){const name=document.getElementById('cafeNameInput').value.trim();const pw=document.getElementById('cafePwInput').value.trim();if(!name){alert('가게 이름을 입력해 주세요');return;}if(!pw){alert('매장 입장 비밀번호를 입력해 주세요');return;}const order=parseInt(document.getElementById('cafeOrderInput').value)||99;
-const workEntryMode=document.getElementById('cafeWorkEntryMode').value||'worker';
+const workEntryMode=getCafeWorkEntryModeInput();
 if(editingCafeId){await db.collection('cafes').doc(editingCafeId).update({name,password:pw,color:selectedColor,order,workEntryMode});if(currentCafe&&currentCafe.id===editingCafeId){currentCafe={...currentCafe,name,password:pw,color:selectedColor,order,workEntryMode};updateWorkEntryModeUI();}}
 else{await tenantAdd('cafes',{name,password:pw,masterPw:MASTER_PW||'0000',color:selectedColor,order,workEntryMode,createdAt:Date.now()});}closeCafeEdit();}
 async function deleteCafe(id){if(!confirm('가게를 삭제할까요?'))return;await db.collection('cafes').doc(id).delete();}
@@ -2957,7 +2964,7 @@ function renderEmpListForWorker(){
   w.innerHTML=employees.filter(e=>!e.resigned).map((e,i)=>`
     <div class="emp-list-item" onclick="openWorkerPw('${e.id}')">
       <div class="emp-avatar" style="background:${colors[i%5]};color:${tcolors[i%5]}">${e.name.substring(0,2)}</div>
-      <div style="flex:1"><div class="emp-nm">${e.name}</div><div class="emp-info">탭하여 근무시간 입력</div></div>
+      <div style="flex:1"><div class="emp-nm">${e.name}</div><div class="emp-info">탭하여 개인 근로 캘린더 입력</div></div>
     </div>`).join('');
 }
 
@@ -3195,6 +3202,7 @@ function openWkTimePicker(which){
   updateWkTimeUi();
 }
 async function saveWkHours(){
+  if(isCalendarWorkMode()){alert('이 가게는 관리자가 통합 근로 캘린더에서 근무시간을 등록합니다.');return;}
   if(!wkSelDay)return;
   // 확정된 달이면 저장 불가
   const period=`${wkY}-${String(wkM+1).padStart(2,'0')}`;
@@ -3264,6 +3272,7 @@ function enterSvcWithMaster(type){
   document.getElementById('masterPwModal').classList.add('open');
 }
 function enterWorkerMenu(purpose='time'){
+  if(purpose==='time'&&isCalendarWorkMode()){alert('이 가게는 관리자가 통합 근로 캘린더에서 근무시간을 등록합니다.');return;}
   workerAuthPurpose=purpose;
   const colors=['var(--gl)','#EEEDFE','#FBEAF0','#E6F1FB','var(--al)'];
   const tcolors=['var(--gd)','#3C3489','#72243E','#0C447C','var(--ad)'];
@@ -3271,9 +3280,9 @@ function enterWorkerMenu(purpose='time'){
   const active=employees.filter(e=>!e.resigned);
   const title=document.querySelector('#workerSelectModal .mt');
   const sub=document.querySelector('#workerSelectModal .mt + div');
-  if(title)title.textContent=purpose==='entry'?'직원 입장 - 본인 선택':'근무시간 입력 - 직원 선택';
+  if(title)title.textContent=purpose==='entry'?'직원 입장 - 본인 선택':'개인 근로 캘린더 - 직원 선택';
   if(sub)sub.textContent=purpose==='entry'?'본인 이름을 선택하고 비밀번호를 입력하세요':'본인 이름을 선택하세요';
-  if(title)title.textContent=purpose==='entry'?'직원 입장 - 본인 선택':'근무시간 입력 - 직원 선택';
+  if(title)title.textContent=purpose==='entry'?'직원 입장 - 본인 선택':'개인 근로 캘린더 - 직원 선택';
   if(sub)sub.textContent=purpose==='entry'?'본인 이름을 선택하고 내 락커룸 비밀번호를 입력하세요':'본인 이름을 선택하세요';
   if(!active.length){
     w.innerHTML=`<div style="text-align:center;padding:24px;font-size:13px;color:var(--t3)">등록된 직원이 없어요</div>`;
@@ -5201,6 +5210,8 @@ function updateWorkEntryModeUI(){
   const calendarMode=isCalendarWorkMode();
   const card=document.getElementById("workerTimeCard");
   if(card)card.style.display=calendarMode?"none":"";
+  const laborWorkerMenu=document.getElementById("laborWorkerTimeMenu");
+  if(laborWorkerMenu)laborWorkerMenu.style.display=calendarMode?"none":"flex";
   const bulk=document.getElementById("laborBulkCard");
   if(bulk){
     bulk.hidden=!calendarMode;
@@ -5217,7 +5228,7 @@ function periodFromYM(y,m){return y+"-"+String(m+1).padStart(2,"0");}
 function daysInMonth(y,m){return new Date(y,m+1,0).getDate();}
 async function getActiveEmployeesForBulk(){const snap=await tenantCollection("employees").where("cafeId","==",currentCafe.id).get();const list=[];snap.forEach(d=>{const e={id:d.id,...d.data()};if(!e.resigned)list.push(e);});list.sort((a,b)=>(a.name||"").localeCompare(b.name||""));return list;}
 async function openContractBulkModal(action){
-  if(!isCalendarWorkMode()){alert("근로시간 등록 방식이 캘린더 방식일 때만 사용할 수 있어요.");return;}
+  if(!isCalendarWorkMode()){alert("근로시간 등록 방식이 통합 캘린더 등록일 때만 사용할 수 있어요.");return;}
   contractBulkAction=action;
   document.getElementById("contractBulkTitle").textContent=action==="apply"?"계약근무시간 일괄적용":"계약근무시간 일괄삭제";
   document.getElementById("contractBulkRunBtn").textContent=action==="apply"?"적용":"삭제";
@@ -5229,10 +5240,10 @@ async function openContractBulkModal(action){
 }
 function closeContractBulkModal(){document.getElementById("contractBulkModal").classList.remove("open");}
 function setBulkEmployees(on){document.querySelectorAll(".bulkEmpPick").forEach(el=>el.checked=on);}
-async function runContractBulk(){const month=document.getElementById("contractBulkMonth").value;if(!month){alert("대상 월을 선택하세요.");return;}const picked=[...document.querySelectorAll(".bulkEmpPick:checked")].map(el=>el.value);if(!picked.length){alert("직원을 선택하세요.");return;}if(contractBulkAction==="delete"&&!confirm("자동 생성된 근무시간만 삭제합니다. 직접 수정한 근무는 유지됩니다. 삭제할까요?"))return;const parts=month.split("-").map(Number),y=parts[0],m=parts[1]-1,period=month;const emps=await getActiveEmployeesForBulk();if(contractBulkAction==="apply"){const existingSnap=await tenantCollection("workHours").where("cafeId","==",currentCafe.id).where("period","==",period).get();const existing=new Set();existingSnap.forEach(d=>{const x=d.data();existing.add(x.empId+"_"+x.day);});let added=0,skipped=0,noSchedule=0;for(const emp of emps.filter(e=>picked.includes(e.id))){const blocks=normalizeContractSchedule(emp.contractSchedule);if(!blocks.length){noSchedule++;continue;}for(let day=1;day<=daysInMonth(y,m);day++){const dow=new Date(y,m,day).getDay();for(const b of blocks.filter(x=>x.days.includes(dow))){const key=emp.id+"_"+day;if(existing.has(key)){skipped++;continue;}const raw=Math.max(0,getTimeMinutes(b.end)-getTimeMinutes(b.start));const breakMin=Math.max(0,Math.min(raw,Number(b.breakMinutes)||0));const workMin=Math.max(0,raw-breakMin);if(workMin<=0){skipped++;continue;}await tenantAdd("workHours",{cafeId:currentCafe.id,empId:emp.id,name:emp.name,period,day,startTime:b.start,endTime:b.end,breakMin,workMin,hours:workMin/60,note:"계약근무 자동적용",source:"contractBulk",manuallyEdited:false,contractAppliedAt:Date.now(),createdAt:Date.now(),updatedAt:Date.now()});existing.add(key);added++;}}}showToast("자동적용 "+added+"건 · 기존값 건너뜀 "+skipped+"건 · 패턴 없음 "+noSchedule+"명");}else{const snap=await tenantCollection("workHours").where("cafeId","==",currentCafe.id).where("period","==",period).get();let del=0;for(const doc of snap.docs){const x=doc.data();if(picked.includes(x.empId)&&x.source==="contractBulk"&&x.manuallyEdited!==true){await db.collection("workHours").doc(doc.id).delete();del++;}}showToast("자동 생성 근무 "+del+"건 삭제");}closeContractBulkModal();await renderLaborStatus();}
-function openLaborManualModal(day,empId=null){laborManualEditingDay=day;laborManualEditingDocId=null;document.getElementById("laborManualEmp").innerHTML=employees.filter(e=>!e.resigned).map(e=>"<option value=\""+e.id+"\">"+e.name+"</option>").join("");document.getElementById("laborManualStart").innerHTML=buildTimeOptions("09:00");document.getElementById("laborManualEnd").innerHTML=buildTimeOptions("18:00");document.getElementById("laborManualBreak").value=0;document.getElementById("laborManualNote").value="";document.getElementById("laborManualDay").value=periodFromYM(laborStatusY,laborStatusM)+"-"+String(day).padStart(2,"0");if(empId){const row=(laborStatusData[day]||[]).find(x=>x.empId===empId);if(row){laborManualEditingDocId=row.id||row.docId||null;document.getElementById("laborManualEmp").value=row.empId;document.getElementById("laborManualStart").value=row.startTime||"09:00";document.getElementById("laborManualEnd").value=row.endTime||"18:00";document.getElementById("laborManualBreak").value=Number(row.breakMin)||0;document.getElementById("laborManualNote").value=row.note||"";}}document.getElementById("laborManualModal").classList.add("open");}
+async function runContractBulk(){if(!isCalendarWorkMode()){alert("개인별 캘린더 등록 방식에서는 통합 캘린더 일괄 기능을 사용할 수 없어요.");closeContractBulkModal();return;}const month=document.getElementById("contractBulkMonth").value;if(!month){alert("대상 월을 선택하세요.");return;}const picked=[...document.querySelectorAll(".bulkEmpPick:checked")].map(el=>el.value);if(!picked.length){alert("직원을 선택하세요.");return;}if(contractBulkAction==="delete"&&!confirm("자동 생성된 근무시간만 삭제합니다. 직접 수정한 근무는 유지됩니다. 삭제할까요?"))return;const parts=month.split("-").map(Number),y=parts[0],m=parts[1]-1,period=month;const emps=await getActiveEmployeesForBulk();if(contractBulkAction==="apply"){const existingSnap=await tenantCollection("workHours").where("cafeId","==",currentCafe.id).where("period","==",period).get();const existing=new Set();existingSnap.forEach(d=>{const x=d.data();existing.add(x.empId+"_"+x.day);});let added=0,skipped=0,noSchedule=0;for(const emp of emps.filter(e=>picked.includes(e.id))){const blocks=normalizeContractSchedule(emp.contractSchedule);if(!blocks.length){noSchedule++;continue;}for(let day=1;day<=daysInMonth(y,m);day++){const dow=new Date(y,m,day).getDay();for(const b of blocks.filter(x=>x.days.includes(dow))){const key=emp.id+"_"+day;if(existing.has(key)){skipped++;continue;}const raw=Math.max(0,getTimeMinutes(b.end)-getTimeMinutes(b.start));const breakMin=Math.max(0,Math.min(raw,Number(b.breakMinutes)||0));const workMin=Math.max(0,raw-breakMin);if(workMin<=0){skipped++;continue;}await tenantAdd("workHours",{cafeId:currentCafe.id,empId:emp.id,name:emp.name,period,day,startTime:b.start,endTime:b.end,breakMin,workMin,hours:workMin/60,note:"계약근무 자동적용",source:"contractBulk",manuallyEdited:false,contractAppliedAt:Date.now(),createdAt:Date.now(),updatedAt:Date.now()});existing.add(key);added++;}}}showToast("자동적용 "+added+"건 · 기존값 건너뜀 "+skipped+"건 · 패턴 없음 "+noSchedule+"명");}else{const snap=await tenantCollection("workHours").where("cafeId","==",currentCafe.id).where("period","==",period).get();let del=0;for(const doc of snap.docs){const x=doc.data();if(picked.includes(x.empId)&&x.source==="contractBulk"&&x.manuallyEdited!==true){await db.collection("workHours").doc(doc.id).delete();del++;}}showToast("자동 생성 근무 "+del+"건 삭제");}closeContractBulkModal();await renderLaborStatus();}
+function openLaborManualModal(day,empId=null){if(!isCalendarWorkMode()){alert("개인별 캘린더 등록 방식에서는 통합 캘린더에서 직접 입력할 수 없어요.");return;}laborManualEditingDay=day;laborManualEditingDocId=null;document.getElementById("laborManualEmp").innerHTML=employees.filter(e=>!e.resigned).map(e=>"<option value=\""+e.id+"\">"+e.name+"</option>").join("");document.getElementById("laborManualStart").innerHTML=buildTimeOptions("09:00");document.getElementById("laborManualEnd").innerHTML=buildTimeOptions("18:00");document.getElementById("laborManualBreak").value=0;document.getElementById("laborManualNote").value="";document.getElementById("laborManualDay").value=periodFromYM(laborStatusY,laborStatusM)+"-"+String(day).padStart(2,"0");if(empId){const row=(laborStatusData[day]||[]).find(x=>x.empId===empId);if(row){laborManualEditingDocId=row.id||row.docId||null;document.getElementById("laborManualEmp").value=row.empId;document.getElementById("laborManualStart").value=row.startTime||"09:00";document.getElementById("laborManualEnd").value=row.endTime||"18:00";document.getElementById("laborManualBreak").value=Number(row.breakMin)||0;document.getElementById("laborManualNote").value=row.note||"";}}document.getElementById("laborManualModal").classList.add("open");}
 function closeLaborManualModal(){document.getElementById("laborManualModal").classList.remove("open");laborManualEditingDocId=null;}
-async function saveLaborManualWork(){const empId=document.getElementById("laborManualEmp").value;const emp=employees.find(e=>e.id===empId);if(!emp){alert("직원을 선택하세요.");return;}const st=document.getElementById("laborManualStart").value,en=document.getElementById("laborManualEnd").value;const raw=getTimeMinutes(en)-getTimeMinutes(st);if(raw<=0){alert("종료시간은 시작시간보다 늦어야 합니다.");return;}const breakMin=Math.max(0,Math.min(raw,parseInt(document.getElementById("laborManualBreak").value)||0));const workMin=Math.max(0,raw-breakMin);const period=periodFromYM(laborStatusY,laborStatusM);const data={cafeId:currentCafe.id,empId,name:emp.name,period,day:laborManualEditingDay,startTime:st,endTime:en,breakMin,workMin,hours:workMin/60,note:document.getElementById("laborManualNote").value.trim(),source:"manual",manuallyEdited:true,updatedAt:Date.now()};if(laborManualEditingDocId)await db.collection("workHours").doc(laborManualEditingDocId).update(data);else{const ex=await tenantCollection("workHours").where("cafeId","==",currentCafe.id).where("empId","==",empId).where("period","==",period).where("day","==",laborManualEditingDay).get();if(!ex.empty)await db.collection("workHours").doc(ex.docs[0].id).update(data);else await tenantAdd("workHours",{...data,createdAt:Date.now()});}closeLaborManualModal();await renderLaborStatus();}
+async function saveLaborManualWork(){if(!isCalendarWorkMode()){alert("개인별 캘린더 등록 방식에서는 통합 캘린더에서 직접 입력할 수 없어요.");closeLaborManualModal();return;}const empId=document.getElementById("laborManualEmp").value;const emp=employees.find(e=>e.id===empId);if(!emp){alert("직원을 선택하세요.");return;}const st=document.getElementById("laborManualStart").value,en=document.getElementById("laborManualEnd").value;const raw=getTimeMinutes(en)-getTimeMinutes(st);if(raw<=0){alert("종료시간은 시작시간보다 늦어야 합니다.");return;}const breakMin=Math.max(0,Math.min(raw,parseInt(document.getElementById("laborManualBreak").value)||0));const workMin=Math.max(0,raw-breakMin);const period=periodFromYM(laborStatusY,laborStatusM);const data={cafeId:currentCafe.id,empId,name:emp.name,period,day:laborManualEditingDay,startTime:st,endTime:en,breakMin,workMin,hours:workMin/60,note:document.getElementById("laborManualNote").value.trim(),source:"manual",manuallyEdited:true,updatedAt:Date.now()};if(laborManualEditingDocId)await db.collection("workHours").doc(laborManualEditingDocId).update(data);else{const ex=await tenantCollection("workHours").where("cafeId","==",currentCafe.id).where("empId","==",empId).where("period","==",period).where("day","==",laborManualEditingDay).get();if(!ex.empty)await db.collection("workHours").doc(ex.docs[0].id).update(data);else await tenantAdd("workHours",{...data,createdAt:Date.now()});}closeLaborManualModal();await renderLaborStatus();}
 document.getElementById('adminPwInput2').addEventListener('keyup',e=>{if(e.key==='Enter')checkAdminModePw();});
 
 if(auth.currentUser){currentUser=auth.currentUser;loadCafes();}

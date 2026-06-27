@@ -882,10 +882,9 @@ input:focus{border-color:var(--green)}
 
 <!-- 화면7: 직원카드 등록 (마스터) -->
 <div class="screen" id="scEmpManage">
-  <div class="hdr hdr-centered">
+  <div class="hdr">
     <button class="back-btn" onclick="showScreen('scSvc')">← 뒤로</button>
-    <div class="hdr-title">직원카드 등록</div>
-    <div class="hdr-sub">관리자</div>
+    <div><div class="hdr-title" id="empManageCafeName">가게</div><div class="hdr-sub">직원카드 등록</div></div>
   </div>  <!-- 관리자 빠른 이동 탭 -->
   <div style="display:flex;background:#fff;border-bottom:1px solid var(--bd)">
     <button onclick="quickNav('emp')" id="qnav_emp" style="flex:1;padding:9px 2px;border:none;background:none;font-size:10px;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;color:var(--t3)">👥 직원카드 등록</button>
@@ -1820,7 +1819,7 @@ function tenantAdd(name,data){
 
 const DAYS=["일","월","화","수","목","금","토"];
 const MONTHS=["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
-const APP_VERSION="v2026.06.27.26";
+const APP_VERSION="v2026.06.27.27";
 const APP_URL="https://zuo-saas.firebaseapp.com";
 const INVITE_BASE_URL="https://radinotech-beep.github.io/zuo-saas/";
 const EMPLOYEE_INVITE_CAFE_ID=new URLSearchParams(location.search).get('store');
@@ -1903,7 +1902,23 @@ function updateAdminHeaderButtons(){
   if(!hdr)return;
   hdr.classList.add('hdr-admin-layout');
   const titleEl=hdr.querySelector('.hdr-title');
-  const centerSlot=titleEl?(titleEl.parentElement===hdr?titleEl:titleEl.parentElement):null;
+  let centerSlot=null;
+  if(titleEl){
+    if(titleEl.parentElement===hdr){
+      centerSlot=document.createElement('div');
+      centerSlot.className='hdr-center-slot';
+      hdr.insertBefore(centerSlot,titleEl);
+      centerSlot.appendChild(titleEl);
+      let next=centerSlot.nextElementSibling;
+      while(next&&next.classList.contains('hdr-sub')){
+        const move=next;
+        next=next.nextElementSibling;
+        centerSlot.appendChild(move);
+      }
+    }else{
+      centerSlot=titleEl.parentElement;
+    }
+  }
   if(centerSlot)centerSlot.classList.add('hdr-center-slot');
   let actions=hdr.querySelector(':scope > .hdr-actions');
   if(!actions){
@@ -2165,7 +2180,7 @@ function checkAdminModePw(){
 }
 function setCafeHeaderNames(){
   if(!currentCafe)return;
-  ['svcCafeName','svcWorkerCafeName','laborCafeName','appCafeName','noticeCafeName','healthCafeName','supplyCafeName','profitCafeName','alertsCafeName','scheduleCafeName'].forEach(id=>{
+  ['svcCafeName','svcWorkerCafeName','laborCafeName','appCafeName','noticeCafeName','healthCafeName','supplyCafeName','profitCafeName','alertsCafeName','scheduleCafeName','empManageCafeName'].forEach(id=>{
     const el=document.getElementById(id);
     if(el)el.textContent=currentCafe.name;
   });

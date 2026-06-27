@@ -344,9 +344,12 @@ input:focus{border-color:var(--green)}
 .labor-status-date{font-size:10px;font-weight:700;color:var(--t3);margin-bottom:2px}
 .labor-status-lines{flex:1;min-height:0}
 .labor-status-line{font-size:9px;color:var(--t2);line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.labor-status-total{font-size:9.5px;font-weight:800;margin-top:auto;padding-top:2px;display:flex;justify-content:space-between;gap:2px;white-space:nowrap}
+.labor-status-total{font-size:9.5px;font-weight:500;margin-top:auto;padding-top:2px;display:flex;justify-content:space-between;gap:2px;white-space:nowrap}
 .labor-status-count{color:var(--gd)}
 .labor-status-hours{color:var(--green)}
+.labor-status-pay{color:var(--t2);font-weight:500}
+.labor-pay-note{font-size:10px;color:var(--t3);line-height:1.45;margin:-2px 0 8px;text-align:right}
+.labor-pay-muted{font-size:11px;color:var(--t3);white-space:nowrap}
 .labor-status-top{display:flex;align-items:center;justify-content:space-between;gap:3px;margin-bottom:2px}
 .labor-status-people{font-size:9px;font-weight:900;color:var(--gd);white-space:nowrap}
 .labor-status-selected{border:2px solid var(--green);background:var(--gl)}
@@ -1218,6 +1221,7 @@ input:focus{border-color:var(--green)}
       </div>
     </div>
     <div class="wk-grid" id="laborStatusGrid"></div>
+    <div class="labor-pay-note">인건비는 순수 시급 기준이며 주휴수당은 제외됩니다.</div>
     <div style="background:#fff;border:1px solid var(--bd);border-radius:10px;padding:12px;margin-top:10px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
         <div style="font-size:14px;font-weight:800;color:var(--t1)" id="laborStatusDetailTitle">날짜를 선택하세요</div>
@@ -1819,7 +1823,7 @@ function tenantAdd(name,data){
 
 const DAYS=["일","월","화","수","목","금","토"];
 const MONTHS=["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
-const APP_VERSION="v2026.06.27.27";
+const APP_VERSION="v2026.06.27.28";
 const APP_URL="https://zuo-saas.firebaseapp.com";
 const INVITE_BASE_URL="https://radinotech-beep.github.io/zuo-saas/";
 const EMPLOYEE_INVITE_CAFE_ID=new URLSearchParams(location.search).get('store');
@@ -3165,6 +3169,12 @@ function getWorkMinutes(dat){
 }
 function getWorkHours(dat){return getWorkMinutes(dat)/60;}
 function formatHours2(v){return (Number(v)||0).toFixed(2);}
+function formatLaborMoney(v){return `${Math.round(Number(v)||0).toLocaleString()}원`;}
+function calcLaborHourlyPay(row){
+  const rate=Number(row?.rate)||0;
+  if(rate<=0)return null;
+  return Math.round(getWorkHours(row)*rate);
+}
 function formatWorkMinText(min){
   min=Math.max(0,Math.round(min||0));
   const h=Math.floor(min/60),m=min%60;
@@ -3531,8 +3541,12 @@ async function renderLaborStatus(){
   document.getElementById('laborStatusMonthTitle').textContent=`${laborStatusY}년 ${MONTHS[laborStatusM]}`;
   updateWorkEntryModeUI();
   const empSnap=await tenantCollection('employees').where('cafeId','==',currentCafe.id).get();
-  const empMap={};
-  empSnap.forEach(d=>{const e=d.data();empMap[d.id]=e.name||'이름없음';});
+  const empMap={},empInfoMap={};
+  empSnap.forEach(d=>{
+    const e=d.data();
+    empMap[d.id]=e.name||'이름없음';
+    empInfoMap[d.id]={name:e.name||'이름없음',rate:Number(e.rate)||0,empType:e.empType||''};
+  });
   const snap=await tenantCollection('workHours').where('cafeId','==',currentCafe.id).where('period','==',period).get();
   const latest={};
   snap.forEach(doc=>{
@@ -3547,7 +3561,8 @@ async function renderLaborStatus(){
     if(getWorkMinutes(dat)<=0)return;
     const day=Number(dat.day);if(!day)return;
     if(!laborStatusData[day])laborStatusData[day]=[];
-    laborStatusData[day].push({...dat,empName:empMap[dat.empId]||dat.name});
+    const info=empInfoMap[dat.empId]||{};
+    laborStatusData[day].push({...dat,empName:info.name||empMap[dat.empId]||dat.name,rate:info.rate||Number(dat.rate)||0,empType:info.empType||dat.empType||''});
   });
   Object.values(laborStatusData).forEach(list=>list.sort((a,b)=>(a.empName||'').localeCompare(b.empName||'')));
   renderLaborStatusGrid();
@@ -3564,6 +3579,7 @@ function renderLaborStatusGrid(){
   for(let d=1;d<=days;d++){
     const list=laborStatusData[d]||[];
     const totalMin=list.reduce((sum,x)=>sum+getWorkMinutes(x),0);
+    const totalPay=list.reduce((sum,x)=>sum+(calcLaborHourlyPay(x)||0),0);
     monthMin+=totalMin;
     if(list.length)dayCnt++;
     list.forEach(x=>empSet.add(x.empId||x.empName));
@@ -3573,7 +3589,7 @@ function renderLaborStatusGrid(){
     g.innerHTML+=`<div class="labor-status-cell ${laborStatusSelectedDay===d?'labor-status-selected':''}" onclick="selectLaborStatusDay(${d})">
       <div class="labor-status-top"><div class="labor-status-date">${d}</div>${peopleCnt?`<div class="labor-status-people">총${peopleCnt}명</div>`:''}</div>
       <div class="labor-status-lines">${lines}${more}</div>
-      ${totalMin?`<div class="labor-status-total"><span></span><span class="labor-status-hours">총 ${formatHours2(totalMin/60)}h</span></div>`:''}
+      ${totalMin?`<div class="labor-status-total"><span></span><span class="labor-status-hours">총 ${formatHours2(totalMin/60)}h${totalPay?` / <span class="labor-status-pay">${formatLaborMoney(totalPay)}</span>`:''}</span></div>`:''}
     </div>`;
   }
   const totalEl=document.getElementById('laborStatusTotal');
@@ -3593,12 +3609,15 @@ function renderLaborStatusDetail(day){
   const addBtn=isCalendarWorkMode()?'<button class="labor-edit-btn" onclick="openLaborManualModal('+day+')">+ 수동 입력</button>':'';
   if(!list.length){document.getElementById('laborStatusDetail').innerHTML=addBtn+'<div style="margin-top:8px">등록된 근무가 없습니다.</div>';return;}
   const totalMin=list.reduce((sum,x)=>sum+getWorkMinutes(x),0);
+  const totalPay=list.reduce((sum,x)=>sum+(calcLaborHourlyPay(x)||0),0);
   document.getElementById('laborStatusDetail').innerHTML=addBtn+list.map(x=>{
     const time=x.startTime&&x.endTime?x.startTime+'~'+x.endTime:'시간 없음';
     const tag=x.source==='contractBulk'&&!x.manuallyEdited?' · 자동':' · 수동';
     const edit=isCalendarWorkMode()?'<button class="labor-edit-btn" onclick="openLaborManualModal('+day+',\''+x.empId+'\')">수정</button>':'';
-    return '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;border-bottom:1px solid #f2f2f2;padding:6px 0"><span>'+x.empName+' · '+time+' · 휴게 '+(Number(x.breakMin)||0)+'분'+tag+'</span><span style="display:flex;align-items:center;gap:6px"><b>'+formatHours2(getWorkHours(x))+'h</b>'+edit+'</span></div>';
-  }).join('')+'<div style="display:flex;justify-content:space-between;margin-top:8px;font-weight:800;color:var(--green)"><span>근무 인원</span><span>'+new Set(list.map(x=>x.empId||x.empName)).size+'명</span></div><div style="display:flex;justify-content:space-between;margin-top:6px;font-weight:800;color:var(--green)"><span>총 근무시간</span><span>'+formatHours2(totalMin/60)+'h</span></div>';
+    const pay=calcLaborHourlyPay(x);
+    const payText=pay===null?'<span class="labor-pay-muted">시급 미등록</span>':'<span class="labor-pay-muted">'+formatLaborMoney(pay)+'</span>';
+    return '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;border-bottom:1px solid #f2f2f2;padding:6px 0"><span>'+x.empName+' · '+time+' · 휴게 '+(Number(x.breakMin)||0)+'분'+tag+'</span><span style="display:flex;align-items:center;gap:6px;white-space:nowrap"><b>'+formatHours2(getWorkHours(x))+'h</b>'+payText+edit+'</span></div>';
+  }).join('')+'<div style="display:flex;justify-content:space-between;margin-top:8px;font-weight:800;color:var(--green)"><span>근무 인원</span><span>'+new Set(list.map(x=>x.empId||x.empName)).size+'명</span></div><div style="display:flex;justify-content:space-between;margin-top:6px;font-weight:800;color:var(--green)"><span>총 근무시간</span><span>'+formatHours2(totalMin/60)+'h</span></div><div style="display:flex;justify-content:space-between;margin-top:6px;font-weight:800;color:var(--green)"><span>시급 기준 인건비</span><span>'+formatLaborMoney(totalPay)+'</span></div><div style="font-size:10px;color:var(--t3);text-align:right;margin-top:4px">주휴수당 제외</div>';
 }
 
 let currentEmpTab='active';

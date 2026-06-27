@@ -259,10 +259,15 @@ input:focus{border-color:var(--green)}
 .admin-wrap{padding:14px}
 .admin-section{background:#fff;border-radius:12px;border:1px solid var(--bd);margin-bottom:14px;overflow:hidden}
 .admin-section-title{padding:12px 14px;font-size:13px;font-weight:600;color:var(--t1);border-bottom:1px solid var(--bd);background:#fafafa}
-.admin-cafe-item{display:flex;align-items:center;gap:10px;padding:11px 14px;border-bottom:1px solid #f0f0f0}
+.admin-cafe-item{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-bottom:1px solid #f0f0f0}
 .admin-cafe-item:last-child{border-bottom:none}
 .admin-cafe-name{flex:1;font-size:13px;font-weight:500;color:var(--t1)}
 .admin-cafe-pw{font-size:10px;color:var(--t3);margin-top:2px}
+.admin-cafe-main{flex:1;min-width:0}
+.admin-cafe-actions{display:flex;align-items:center;gap:5px;flex-wrap:wrap;justify-content:flex-end}
+.admin-work-mode{margin-top:9px;background:#F6F9FE;border:1px solid #D8E6FA;border-radius:8px;padding:8px}
+.admin-work-mode label{display:block;font-size:10px;font-weight:700;color:var(--gd);margin-bottom:5px}
+.admin-work-mode select{width:100%;border:1px solid var(--bd);border-radius:7px;background:#fff;color:var(--t1);font-size:12px;padding:7px 8px;outline:none}
 .admin-edit-btn{background:none;border:1px solid var(--bd);border-radius:7px;padding:4px 9px;font-size:11px;color:var(--t2);cursor:pointer;margin-right:5px}
 .admin-copy-btn{background:none;border:1px solid var(--green);border-radius:7px;padding:4px 9px;font-size:11px;color:var(--gd);cursor:pointer;margin-right:5px;white-space:nowrap}
 .admin-del-btn{background:none;border:1px solid #fca5a5;border-radius:7px;padding:4px 9px;font-size:11px;color:var(--red);cursor:pointer}
@@ -2860,7 +2865,17 @@ function goAdmin(){
 function renderAdminCafeList(){
   const list=document.getElementById('adminCafeList');
   if(!cafes.length){list.innerHTML=`<div style="padding:14px;font-size:12px;color:var(--t3);text-align:center">등록된 가게가 없어요</div>`;return;}
-  list.innerHTML=cafes.map(c=>`<div class="admin-cafe-item"><div style="flex:1"><div class="admin-cafe-name">${c.name}</div><div class="admin-cafe-pw">매장 입장 비밀번호: ${c.password}</div></div><button class="admin-copy-btn" onclick="copyInviteLink('${c.id}')">직원용 링크 복사</button><button class="admin-edit-btn" onclick="openEditCafe('${c.id}')">수정</button><button class="admin-del-btn" onclick="deleteCafe('${c.id}')">삭제</button></div>`).join('');
+  list.innerHTML=cafes.map(c=>`<div class="admin-cafe-item"><div class="admin-cafe-main"><div class="admin-cafe-name">${c.name}</div><div class="admin-cafe-pw">매장 입장 비밀번호: ${c.password}</div><div class="admin-work-mode"><label>근로시간 등록 방식</label><select onchange="updateCafeWorkEntryMode('${c.id}',this.value)"><option value="worker" ${(c.workEntryMode||'worker')==='worker'?'selected':''}>근로관리해ZUO - 직원 직접 입력</option><option value="calendar" ${c.workEntryMode==='calendar'?'selected':''}>근로현황 캘린더 - 계약시간 일괄 적용</option></select></div></div><div class="admin-cafe-actions"><button class="admin-copy-btn" onclick="copyInviteLink('${c.id}')">직원용 링크 복사</button><button class="admin-edit-btn" onclick="openEditCafe('${c.id}')">수정</button><button class="admin-del-btn" onclick="deleteCafe('${c.id}')">삭제</button></div></div>`).join('');
+}
+
+async function updateCafeWorkEntryMode(id,mode){
+  const cafe=cafes.find(c=>c.id===id);
+  if(!cafe)return;
+  const nextMode=mode==='calendar'?'calendar':'worker';
+  await db.collection('cafes').doc(id).update({workEntryMode:nextMode});
+  cafe.workEntryMode=nextMode;
+  if(currentCafe&&currentCafe.id===id){currentCafe={...currentCafe,workEntryMode:nextMode};updateWorkEntryModeUI();}
+  showToast(nextMode==='calendar'?'근로현황 캘린더 방식으로 저장했어요':'근로관리해ZUO 방식으로 저장했어요');
 }
 
 function getInviteLink(cafeId){

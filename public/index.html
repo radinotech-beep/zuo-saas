@@ -391,6 +391,27 @@ input:focus{border-color:var(--green)}
 
 .install-banner{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);width:calc(100% - 28px);max-width:452px;background:#fff;border:1px solid var(--bd);box-shadow:0 8px 24px rgba(0,0,0,.16);border-radius:12px;padding:10px 10px 10px 12px;z-index:350;display:flex;align-items:center;gap:8px}.install-copy{flex:1;font-size:12px;font-weight:700;color:var(--t1);line-height:1.35}.install-add{border:none;background:var(--green);color:#fff;border-radius:8px;padding:8px 10px;font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap}.install-close{border:none;background:#f4f4f4;color:var(--t2);width:28px;height:28px;border-radius:50%;font-size:16px;line-height:1;cursor:pointer;flex-shrink:0}
 .supply-history-table{border:1px solid var(--bd);border-radius:10px;overflow:hidden;background:#fff}.supply-history-row{display:grid;grid-template-columns:82px 58px 72px minmax(0,1fr);align-items:center;border-top:1px solid #eee;font-size:11px;color:var(--t2);cursor:pointer}.supply-history-row:first-child{border-top:none}.supply-history-row>*{padding:8px 6px;min-width:0;border-left:1px solid #f1f1f1}.supply-history-row>*:first-child{border-left:none}.supply-history-row.head{background:var(--gl);color:var(--gd);font-weight:900;cursor:default}.supply-history-row b{font-size:11px;color:#111}.supply-history-sub{line-height:1.35;word-break:break-word}.supply-history-note{grid-column:1/-1;border-left:none!important;border-top:1px dashed #eee;background:#fafafa;color:#666;line-height:1.45}.supply-history-tools{grid-column:1/-1;display:flex;gap:5px;justify-content:flex-end;border-left:none!important;border-top:1px solid #f5f5f5;background:#fff}.supply-history-tools button{border:1px solid var(--bd);background:#fff;border-radius:6px;padding:4px 8px;font-size:10px;color:#555}.supply-history-tools button:last-child{border-color:#fca5a5;color:var(--red)}
+
+.contract-card,.labor-bulk-card{background:#fff;border:1px solid var(--bd);border-radius:12px;padding:12px;margin-bottom:12px}
+.contract-title,.labor-bulk-title{font-size:13px;font-weight:800;color:var(--t1);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.contract-block{border:1px solid var(--bd);border-radius:10px;padding:10px;margin-top:8px;background:#fafafa}
+.contract-days{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-bottom:8px}
+.contract-day{border:1px solid var(--bd);background:#fff;border-radius:8px;padding:7px 0;font-size:11px;font-weight:800;color:var(--t2);cursor:pointer}
+.contract-day.on{background:var(--green);border-color:var(--green);color:#fff}
+.contract-row{display:grid;grid-template-columns:1fr 1fr 88px;gap:6px;align-items:end}
+.contract-row label{font-size:10px;color:var(--t3);font-weight:700;display:block;margin-bottom:3px}
+.contract-row select,.contract-row input,.labor-bulk-card select,.labor-manual-grid select,.labor-manual-grid input{width:100%;border:1px solid var(--bd);border-radius:8px;padding:8px 9px;font-size:12px;background:#fff;color:var(--t1);outline:none}
+.contract-actions,.labor-bulk-actions{display:flex;gap:8px;margin-top:8px}
+.contract-add,.labor-bulk-btn{border:none;border-radius:9px;background:var(--green);color:#fff;font-size:12px;font-weight:800;padding:9px 10px;cursor:pointer}
+.contract-del,.labor-bulk-del{border:1px solid var(--bd);border-radius:9px;background:#fff;color:var(--red);font-size:12px;font-weight:800;padding:9px 10px;cursor:pointer}
+.labor-bulk-card{display:none;background:var(--gl);border-color:var(--gm)}
+.labor-bulk-note{font-size:11px;color:var(--gd);line-height:1.55;margin-bottom:8px}
+.bulk-emp-list{max-height:220px;overflow:auto;border:1px solid var(--bd);border-radius:10px;padding:8px;background:#fff;margin:8px 0}
+.bulk-emp-list label{display:flex;align-items:center;gap:8px;padding:7px 4px;font-size:13px;color:var(--t1);border-bottom:1px solid #f4f4f4}
+.bulk-emp-list label:last-child{border-bottom:none}
+.labor-manual-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.labor-manual-full{grid-column:1/-1}
+.labor-edit-btn{border:none;background:var(--gl);color:var(--gd);border-radius:7px;padding:5px 8px;font-size:11px;font-weight:800;cursor:pointer;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -502,7 +523,7 @@ input:focus{border-color:var(--green)}
       <div class="svc-icon" style="background:#FFF2CC">📢</div>
       <div><div class="svc-name">공지사항 읽어ZUO</div><div class="svc-desc">매장 공지 확인</div></div>
     </div>
-    <div class="svc-card" onclick="enterWorkerTimeInput()">
+    <div class="svc-card" id="workerTimeCard" onclick="enterWorkerTimeInput()">
       <div class="svc-icon" style="background:#E6F1FB">📋</div>
       <div><div class="svc-name">근무시간 입력</div><div class="svc-desc">본인 근무시간 입력</div></div>
     </div>
@@ -898,6 +919,12 @@ input:focus{border-color:var(--green)}
     </div>
     <div style="background:var(--al);border-radius:8px;padding:10px;margin-bottom:4px;font-size:11px;color:var(--ad);line-height:1.6">⚠️ 주휴수당 미적용 직원은 <b>0</b> 또는 <b>빈칸</b>으로 두세요</div>
     <div style="background:var(--gl);border-radius:8px;padding:10px;margin-bottom:12px;font-size:11px;color:var(--gd);line-height:1.6">💡 주휴수당 단가 × 급여명세서 횟수 = 주휴수당 합계</div>
+    <div class="contract-card" id="contractScheduleCard">
+      <div class="contract-title"><span>계약 근무시간</span><button type="button" class="contract-add" onclick="addContractBlock()">+ 근무시간 추가</button></div>
+      <div style="font-size:11px;color:var(--t3);line-height:1.5;margin-bottom:8px">요일별 기본 근무 패턴을 등록해두면 근로현황 캘린더에서 한 달치를 자동 적용할 수 있어요.</div>
+      <div id="contractScheduleList"></div>
+    </div>
+
     <div class="fr"><label class="fl">초기 내 락커룸 비밀번호</label><input type="password" id="empPw" placeholder="직원이 사용할 내 락커룸 비밀번호"></div>
     <div class="fbtns">
       <button class="fcnl" onclick="showScreen('scEmpManage')">취소</button>
@@ -1141,10 +1168,11 @@ input:focus{border-color:var(--green)}
       <div style="font-size:14px;font-weight:700;color:var(--t1)" id="laborStatusMonthTitle">2026년 5월</div>
       <button class="btn-outline-s" onclick="changeLaborStatusMonth(1)">▶</button>
     </div>
-    <div class="labor-summary">
-      <div class="alert-stat"><div class="alert-stat-lbl" style="margin:0 0 5px">총 근무시간</div><div class="alert-stat-num" id="laborStatusTotal">0.00h</div></div>
-      <div class="alert-stat"><div class="alert-stat-lbl" style="margin:0 0 5px">총 근무 직원수</div><div class="alert-stat-num" id="laborStatusEmpCnt">0명</div></div>
-      <div class="alert-stat labor-headcount-card" id="laborHeadcountCard" onclick="toggleLaborHeadcountBasis()"><div class="alert-stat-lbl" style="margin:0 0 5px">월상시 인원</div><div class="alert-stat-num" id="laborStatusRegularCnt">0명</div><div id="laborStatusRegularBadge" class="labor-badge ok">5인 미만</div></div>
+
+    <div class="labor-bulk-card" id="laborBulkCard">
+      <div class="labor-bulk-title"><span>계약근무시간 일괄 관리</span></div>
+      <div class="labor-bulk-note">가게 설정이 근로현황 캘린더 방식일 때만 사용합니다. 이미 입력된 날짜는 덮어쓰지 않고 건너뜁니다.</div>
+      <div class="labor-bulk-actions"><button class="labor-bulk-btn" onclick="openContractBulkModal('apply')">계약근무시간 일괄적용</button><button class="labor-bulk-del" onclick="openContractBulkModal('delete')">자동생성분 일괄삭제</button></div>
     </div>
     <div style="display:flex;justify-content:flex-end;margin:-4px 0 8px">
       <button class="alert-hide" id="laborHeadcountToggle" onclick="toggleLaborHeadcountEnabled(event)" style="margin:0">월상시 인원 표시 ON</button>
@@ -1565,6 +1593,9 @@ input:focus{border-color:var(--green)}
 </div>
 
 <!-- 직원 선택 모달 (근무시간 입력) -->
+
+<div class="mbg" id="contractBulkModal"><div class="modal"><div class="mh"></div><div class="mt" id="contractBulkTitle">계약근무시간 일괄적용</div><div class="fr"><label class="fl">대상 월</label><input type="month" id="contractBulkMonth" style="width:100%"></div><div style="display:flex;gap:8px;margin-bottom:6px"><button class="alert-hide" style="flex:1;margin:0" onclick="setBulkEmployees(true)">전체 선택</button><button class="alert-hide" style="flex:1;margin:0" onclick="setBulkEmployees(false)">전체 해제</button></div><div class="bulk-emp-list" id="contractBulkEmpList"></div><div style="font-size:11px;color:var(--t3);line-height:1.5;margin-bottom:10px" id="contractBulkNote"></div><div class="mbtns"><button class="mcnl" onclick="closeContractBulkModal()">취소</button><button class="mok" id="contractBulkRunBtn" onclick="runContractBulk()">실행</button></div></div></div>
+<div class="mbg" id="laborManualModal"><div class="modal"><div class="mh"></div><div class="mt" id="laborManualTitle">근무시간 수동 수정</div><div class="labor-manual-grid"><div class="labor-manual-full"><label class="fl">직원</label><select id="laborManualEmp"></select></div><div><label class="fl">출근</label><select id="laborManualStart"></select></div><div><label class="fl">퇴근</label><select id="laborManualEnd"></select></div><div><label class="fl">휴게시간(분)</label><input type="number" id="laborManualBreak" min="0" step="10" value="0"></div><div><label class="fl">근무일</label><input type="text" id="laborManualDay" readonly></div><div class="labor-manual-full"><label class="fl">메모</label><input type="text" id="laborManualNote" placeholder="선택"></div></div><div class="mbtns"><button class="mcnl" onclick="closeLaborManualModal()">취소</button><button class="mok" onclick="saveLaborManualWork()">저장</button></div></div></div>
 <div class="mbg" id="workerSelectModal">
   <div class="modal" style="padding-bottom:28px">
     <div class="mh"></div>
@@ -1625,6 +1656,15 @@ input:focus{border-color:var(--green)}
   <label class="fl">노출 순서</label>
   <input type="number" id="cafeOrderInput" placeholder="1" min="1" style="width:100%">
 </div>
+    <div class="fr">
+      <label class="fl">근로시간 등록 방식</label>
+      <select id="cafeWorkEntryMode" style="width:100%;border:1px solid var(--bd);border-radius:8px;padding:9px 12px;font-size:14px;outline:none;background:#fff;color:var(--t1)">
+        <option value="worker">근로관리해ZUO - 직원 직접 입력</option>
+        <option value="calendar">근로현황 캘린더 - 계약시간 일괄 적용</option>
+      </select>
+      <div style="font-size:11px;color:var(--t3);line-height:1.5;margin-top:6px">기본값은 직원 직접 입력입니다. 캘린더 방식을 선택하면 직원용 근무시간 입력 메뉴가 숨겨집니다.</div>
+    </div>
+
 
 <!-- 내 정보 모달 -->
 
@@ -1953,6 +1993,7 @@ function enterAsAdminDirect(){
   document.getElementById('svcIcon1').style.background=cm.light;
   loadEmployees();
   showScreen('scSvc');
+  updateWorkEntryModeUI();
   normalizeAdminServiceCards();
   refreshSvcAlertBadge();
   setTimeout(()=>{subscribePush();checkAndNotify();},1500);
@@ -2031,9 +2072,11 @@ function enterAsWorker(){
   document.getElementById('svcIcon2').style.background=cm.light;
   loadEmployees();
   workerAuthPurpose='entry';
+  updateWorkEntryModeUI();
   setTimeout(()=>enterWorkerMenu('entry'),employees.length?0:800);
 }
 function enterWorkerTimeInput(){
+  if(isCalendarWorkMode()){alert('이 가게는 캘린더에서 근무시간을 관리하도록 설정되어 있어요. 관리자에게 문의하세요.');return;}
   if(currentWorkerEmp&&!currentWorkerEmp.resigned){enterWorkerInput();return;}
   // 직원 선택 모달 표시
   workerAuthPurpose='time';
@@ -2837,12 +2880,13 @@ function renderThemeDots(){
   picker.innerHTML=THEME_COLORS.map(c=>`<div class="color-dot ${selectedColor===c?'selected':''}" data-color="${c}" style="background:${colorMap[c].main}" onclick="selectColor('${c}',this)"></div>`).join('');
 }
 function selectColor(color,el){selectedColor=color;document.querySelectorAll('.color-dot').forEach(d=>d.classList.remove('selected'));if(el)el.classList.add('selected');}
-function openAddCafe(){editingCafeId=null;selectedColor='green';document.getElementById('cafeEditTitle').textContent='가게 추가';document.getElementById('cafeNameInput').value='';document.getElementById('cafePwInput').value='';document.getElementById('cafeOrderInput').value='';renderThemeDots();document.getElementById('cafeEditModal').classList.add('open');}
-function openEditCafe(id){const cafe=cafes.find(c=>c.id===id);if(!cafe)return;editingCafeId=id;selectedColor=cafe.color||'green';document.getElementById('cafeEditTitle').textContent='가게 수정';document.getElementById('cafeNameInput').value=cafe.name;document.getElementById('cafePwInput').value=cafe.password;document.getElementById('cafeOrderInput').value=cafe.order||'';renderThemeDots();document.getElementById('cafeEditModal').classList.add('open');}
+function openAddCafe(){editingCafeId=null;selectedColor='green';document.getElementById('cafeEditTitle').textContent='가게 추가';document.getElementById('cafeNameInput').value='';document.getElementById('cafePwInput').value='';document.getElementById('cafeOrderInput').value='';document.getElementById('cafeWorkEntryMode').value='worker';renderThemeDots();document.getElementById('cafeEditModal').classList.add('open');}
+function openEditCafe(id){const cafe=cafes.find(c=>c.id===id);if(!cafe)return;editingCafeId=id;selectedColor=cafe.color||'green';document.getElementById('cafeEditTitle').textContent='가게 수정';document.getElementById('cafeNameInput').value=cafe.name;document.getElementById('cafePwInput').value=cafe.password;document.getElementById('cafeOrderInput').value=cafe.order||'';document.getElementById('cafeWorkEntryMode').value=cafe.workEntryMode||'worker';renderThemeDots();document.getElementById('cafeEditModal').classList.add('open');}
 function closeCafeEdit(){document.getElementById('cafeEditModal').classList.remove('open');editingCafeId=null;}
 async function saveCafe(){const name=document.getElementById('cafeNameInput').value.trim();const pw=document.getElementById('cafePwInput').value.trim();if(!name){alert('가게 이름을 입력해 주세요');return;}if(!pw){alert('매장 입장 비밀번호를 입력해 주세요');return;}const order=parseInt(document.getElementById('cafeOrderInput').value)||99;
-if(editingCafeId){await db.collection('cafes').doc(editingCafeId).update({name,password:pw,color:selectedColor,order});}
-else{await tenantAdd('cafes',{name,password:pw,masterPw:MASTER_PW||'0000',color:selectedColor,order,createdAt:Date.now()});}closeCafeEdit();}
+const workEntryMode=document.getElementById('cafeWorkEntryMode').value||'worker';
+if(editingCafeId){await db.collection('cafes').doc(editingCafeId).update({name,password:pw,color:selectedColor,order,workEntryMode});if(currentCafe&&currentCafe.id===editingCafeId){currentCafe={...currentCafe,name,password:pw,color:selectedColor,order,workEntryMode};updateWorkEntryModeUI();}}
+else{await tenantAdd('cafes',{name,password:pw,masterPw:MASTER_PW||'0000',color:selectedColor,order,workEntryMode,createdAt:Date.now()});}closeCafeEdit();}
 async function deleteCafe(id){if(!confirm('가게를 삭제할까요?'))return;await db.collection('cafes').doc(id).delete();}
 
 // ===== 근로관리 =====
@@ -2871,7 +2915,7 @@ function loadEmployees(){
   empUnsubscribe=tenantCollection('employees').where('cafeId','==',currentCafe.id).onSnapshot(snap=>{
     employees=[];snap.forEach(d=>employees.push({id:d.id,...d.data()}));
     employees.sort((a,b)=>(a.createdAt||0)-(b.createdAt||0));
-    renderEmpListForWorker();renderEmpManageList();renderPayEmpList();
+    renderEmpListForWorker();renderEmpManageList();renderPayEmpList();updateWorkEntryModeUI();
   });
 }
 
@@ -3266,6 +3310,7 @@ function toggleLaborHeadcountEnabled(e){
   if(e)e.stopPropagation();
   localStorage.setItem(getLaborHeadcountKey(),isLaborHeadcountEnabled()?'off':'on');
   laborHeadcountOpen=false;
+  updateWorkEntryModeUI();
   renderLaborStatusGrid();
 }
 function toggleLaborHeadcountBasis(){
@@ -3388,13 +3433,16 @@ function renderLaborStatusGrid(){
 function selectLaborStatusDay(day){laborStatusSelectedDay=day;renderLaborStatusGrid();}
 function renderLaborStatusDetail(day){
   const list=laborStatusData[day]||[];
-  document.getElementById('laborStatusDetailTitle').textContent=`${laborStatusM+1}월 ${day}일 근로현황`;
-  if(!list.length){document.getElementById('laborStatusDetail').innerHTML='입력된 근무시간이 없어요.';return;}
+  document.getElementById('laborStatusDetailTitle').textContent=(laborStatusM+1)+'월 '+day+'일 근로현황';
+  const addBtn=isCalendarWorkMode()?'<button class="labor-edit-btn" onclick="openLaborManualModal('+day+')">+ 수동 입력</button>':'';
+  if(!list.length){document.getElementById('laborStatusDetail').innerHTML=addBtn+'<div style="margin-top:8px">등록된 근무가 없습니다.</div>';return;}
   const totalMin=list.reduce((sum,x)=>sum+getWorkMinutes(x),0);
-  document.getElementById('laborStatusDetail').innerHTML=list.map(x=>{
-    const time=x.startTime&&x.endTime?`${x.startTime}~${x.endTime}`:'시간만 기록';
-    return `<div style="display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid #f2f2f2;padding:5px 0"><span>${x.empName} · ${time}</span><b>${formatHours2(getWorkHours(x))}h</b></div>`;
-  }).join('')+`<div style="display:flex;justify-content:space-between;margin-top:8px;font-weight:800;color:var(--green)"><span>근무 인원</span><span>${new Set(list.map(x=>x.empId||x.empName)).size}명</span></div><div style="display:flex;justify-content:space-between;margin-top:6px;font-weight:800;color:var(--green)"><span>총 근로시간</span><span>${formatHours2(totalMin/60)}h</span></div>`;
+  document.getElementById('laborStatusDetail').innerHTML=addBtn+list.map(x=>{
+    const time=x.startTime&&x.endTime?x.startTime+'~'+x.endTime:'시간 없음';
+    const tag=x.source==='contractBulk'&&!x.manuallyEdited?' · 자동':' · 수동';
+    const edit=isCalendarWorkMode()?'<button class="labor-edit-btn" onclick="openLaborManualModal('+day+',\''+x.empId+'\')">수정</button>':'';
+    return '<div style="display:flex;justify-content:space-between;align-items:center;gap:8px;border-bottom:1px solid #f2f2f2;padding:6px 0"><span>'+x.empName+' · '+time+' · 휴게 '+(Number(x.breakMin)||0)+'분'+tag+'</span><span style="display:flex;align-items:center;gap:6px"><b>'+formatHours2(getWorkHours(x))+'h</b>'+edit+'</span></div>';
+  }).join('')+'<div style="display:flex;justify-content:space-between;margin-top:8px;font-weight:800;color:var(--green)"><span>근무 인원</span><span>'+new Set(list.map(x=>x.empId||x.empName)).size+'명</span></div><div style="display:flex;justify-content:space-between;margin-top:6px;font-weight:800;color:var(--green)"><span>총 근무시간</span><span>'+formatHours2(totalMin/60)+'h</span></div>';
 }
 
 let currentEmpTab='active';
@@ -3479,6 +3527,7 @@ function setupEmpAdd(){
   document.getElementById('empRate').value='10320';
   document.getElementById('empHoliRate').value='';
   document.getElementById('empType').value='정규직';
+  initContractScheduleUI([]);
 }
 function setupEmpEdit(id){
   const emp=employees.find(e=>e.id===id);if(!emp)return;
@@ -3493,6 +3542,7 @@ function setupEmpEdit(id){
   document.getElementById('empHoliRate').value=(emp.holidayRate!==undefined&&emp.holidayRate!==null)?emp.holidayRate:'';
   document.getElementById('empType').value=emp.empType||'정규직';
   document.getElementById('empPw').value='';
+  initContractScheduleUI(emp.contractSchedule||[]);
   showScreen('scEmpAdd');
 }
 async function saveEmp(){
@@ -3500,7 +3550,7 @@ async function saveEmp(){
   if(!name){alert('이름을 입력해주세요');return;}
   const holiRateRaw=document.getElementById('empHoliRate').value;
   const holiRate=holiRateRaw===''?null:parseInt(holiRateRaw);
-  const data={cafeId:currentCafe.id,name,empType:document.getElementById('empType').value,phone:document.getElementById('empPhone').value.trim(),addr:document.getElementById('empAddr').value.trim(),bank:document.getElementById('empBank').value.trim(),acct:document.getElementById('empAcct').value.trim(),rate:parseInt(document.getElementById('empRate').value)||10320,holidayRate:holiRate};
+  const data={cafeId:currentCafe.id,name,empType:document.getElementById('empType').value,phone:document.getElementById('empPhone').value.trim(),addr:document.getElementById('empAddr').value.trim(),bank:document.getElementById('empBank').value.trim(),acct:document.getElementById('empAcct').value.trim(),rate:parseInt(document.getElementById('empRate').value)||10320,holidayRate:holiRate,contractSchedule:getContractScheduleFromUI()};
   const pw=document.getElementById('empPw').value.trim();
   if(pw)data.password=pw;
   if(!editingEmpId&&!pw){alert('초기 내 락커룸 비밀번호를 입력해주세요');return;}
@@ -5087,6 +5137,51 @@ async function testPushNotification(){
     alert('서비스워커가 준비중이에요.\n페이지를 새로고침 후 다시 시도해주세요!');
   }
 }
+
+// ===== 계약 근무시간 / 캘린더 일괄 적용 =====
+let contractScheduleDraft=[],contractBulkAction="apply",laborManualEditingDocId=null,laborManualEditingDay=null;
+const CONTRACT_DAYS=[0,1,2,3,4,5,6];
+function buildTimeOptions(selected){let html="";for(let m=0;m<24*60;m+=10){const v=setTimeFromMinutes(m);html+="<option value=\""+v+"\" "+(v===selected?"selected":"")+">"+v+"</option>";}return html;}
+function normalizeContractSchedule(list){return Array.isArray(list)?list.map(b=>({days:(b.days||[]).map(Number).filter(d=>d>=0&&d<=6),start:b.start||b.timeStart||"09:00",end:b.end||b.timeEnd||"18:00",breakMinutes:Number(b.breakMinutes??b.breakMin??0)||0})).filter(b=>b.days.length&&getTimeMinutes(b.end)>getTimeMinutes(b.start)):[];}
+function initContractScheduleUI(list=[]){contractScheduleDraft=normalizeContractSchedule(list);if(!contractScheduleDraft.length)contractScheduleDraft=[{days:[1,2,3,4,5],start:"09:00",end:"18:00",breakMinutes:60}];renderContractSchedule();}
+function renderContractSchedule(){
+  const wrap=document.getElementById('contractScheduleList');
+  if(!wrap)return;
+  wrap.innerHTML=contractScheduleDraft.map((b,i)=>'<div class="contract-block"><div class="contract-days">'+
+    CONTRACT_DAYS.map(d=>'<button type="button" class="contract-day '+(b.days.includes(d)?'on':'')+'" onclick="toggleContractDay('+i+','+d+')">'+DAYS[d]+'</button>').join('')+
+    '</div><div class="contract-row"><div><label>시작</label><select onchange="updateContractBlock('+i+',\'start\',this.value)">'+buildTimeOptions(b.start)+'</select></div>'+
+    '<div><label>종료</label><select onchange="updateContractBlock('+i+',\'end\',this.value)">'+buildTimeOptions(b.end)+'</select></div>'+
+    '<div><label>휴게(분)</label><input type="number" min="0" step="10" value="'+b.breakMinutes+'" oninput="updateContractBlock('+i+',\'breakMinutes\',this.value)"></div></div>'+
+    '<div class="contract-actions"><button type="button" class="contract-del" onclick="removeContractBlock('+i+')">삭제</button></div></div>').join('');
+}
+function toggleContractDay(i,d){const b=contractScheduleDraft[i];if(!b)return;b.days=b.days.includes(d)?b.days.filter(x=>x!==d):[...b.days,d].sort((a,b)=>a-b);renderContractSchedule();}
+function updateContractBlock(i,k,v){const b=contractScheduleDraft[i];if(!b)return;b[k]=k==="breakMinutes"?(parseInt(v)||0):v;if(getTimeMinutes(b.end)<=getTimeMinutes(b.start))b.end=setTimeFromMinutes(getTimeMinutes(b.start)+60);renderContractSchedule();}
+function addContractBlock(){contractScheduleDraft.push({days:[],start:"09:00",end:"18:00",breakMinutes:60});renderContractSchedule();}
+function removeContractBlock(i){contractScheduleDraft.splice(i,1);if(!contractScheduleDraft.length)addContractBlock();else renderContractSchedule();}
+function getContractScheduleFromUI(){return normalizeContractSchedule(contractScheduleDraft);}
+function getWorkEntryMode(){return currentCafe?.workEntryMode||"worker";}
+function isCalendarWorkMode(){return getWorkEntryMode()==="calendar";}
+function updateWorkEntryModeUI(){const card=document.getElementById("workerTimeCard");if(card)card.style.display=isCalendarWorkMode()?"none":"";const bulk=document.getElementById("laborBulkCard");if(bulk)bulk.style.display=isCalendarWorkMode()?"block":"none";}
+function periodFromYM(y,m){return y+"-"+String(m+1).padStart(2,"0");}
+function daysInMonth(y,m){return new Date(y,m+1,0).getDate();}
+async function getActiveEmployeesForBulk(){const snap=await tenantCollection("employees").where("cafeId","==",currentCafe.id).get();const list=[];snap.forEach(d=>{const e={id:d.id,...d.data()};if(!e.resigned)list.push(e);});list.sort((a,b)=>(a.name||"").localeCompare(b.name||""));return list;}
+async function openContractBulkModal(action){
+  if(!isCalendarWorkMode()){alert("근로시간 등록 방식이 캘린더 방식일 때만 사용할 수 있어요.");return;}
+  contractBulkAction=action;
+  document.getElementById("contractBulkTitle").textContent=action==="apply"?"계약근무시간 일괄적용":"계약근무시간 일괄삭제";
+  document.getElementById("contractBulkRunBtn").textContent=action==="apply"?"적용":"삭제";
+  document.getElementById("contractBulkMonth").value=periodFromYM(laborStatusY,laborStatusM);
+  document.getElementById("contractBulkNote").textContent=action==="apply"?"이미 등록된 날짜는 덮어쓰지 않고 건너뜁니다.":"자동 생성된 근무시간만 삭제합니다. 직접 수정한 근무는 유지됩니다.";
+  const emps=await getActiveEmployeesForBulk();
+  document.getElementById("contractBulkEmpList").innerHTML=emps.map(e=>'<label><input type="checkbox" class="bulkEmpPick" value="'+e.id+'" checked><span>'+e.name+'</span><small style="margin-left:auto;color:var(--t3)">'+normalizeContractSchedule(e.contractSchedule).length+'개 패턴</small></label>').join('')||'<div style="padding:18px;text-align:center;color:var(--t3);font-size:12px">등록된 직원이 없습니다.</div>';
+  document.getElementById("contractBulkModal").classList.add("open");
+}
+function closeContractBulkModal(){document.getElementById("contractBulkModal").classList.remove("open");}
+function setBulkEmployees(on){document.querySelectorAll(".bulkEmpPick").forEach(el=>el.checked=on);}
+async function runContractBulk(){const month=document.getElementById("contractBulkMonth").value;if(!month){alert("대상 월을 선택하세요.");return;}const picked=[...document.querySelectorAll(".bulkEmpPick:checked")].map(el=>el.value);if(!picked.length){alert("직원을 선택하세요.");return;}if(contractBulkAction==="delete"&&!confirm("자동 생성된 근무시간만 삭제합니다. 직접 수정한 근무는 유지됩니다. 삭제할까요?"))return;const parts=month.split("-").map(Number),y=parts[0],m=parts[1]-1,period=month;const emps=await getActiveEmployeesForBulk();if(contractBulkAction==="apply"){const existingSnap=await tenantCollection("workHours").where("cafeId","==",currentCafe.id).where("period","==",period).get();const existing=new Set();existingSnap.forEach(d=>{const x=d.data();existing.add(x.empId+"_"+x.day);});let added=0,skipped=0,noSchedule=0;for(const emp of emps.filter(e=>picked.includes(e.id))){const blocks=normalizeContractSchedule(emp.contractSchedule);if(!blocks.length){noSchedule++;continue;}for(let day=1;day<=daysInMonth(y,m);day++){const dow=new Date(y,m,day).getDay();for(const b of blocks.filter(x=>x.days.includes(dow))){const key=emp.id+"_"+day;if(existing.has(key)){skipped++;continue;}const raw=Math.max(0,getTimeMinutes(b.end)-getTimeMinutes(b.start));const breakMin=Math.max(0,Math.min(raw,Number(b.breakMinutes)||0));const workMin=Math.max(0,raw-breakMin);if(workMin<=0){skipped++;continue;}await tenantAdd("workHours",{cafeId:currentCafe.id,empId:emp.id,name:emp.name,period,day,startTime:b.start,endTime:b.end,breakMin,workMin,hours:workMin/60,note:"계약근무 자동적용",source:"contractBulk",manuallyEdited:false,contractAppliedAt:Date.now(),createdAt:Date.now(),updatedAt:Date.now()});existing.add(key);added++;}}}showToast("자동적용 "+added+"건 · 기존값 건너뜀 "+skipped+"건 · 패턴 없음 "+noSchedule+"명");}else{const snap=await tenantCollection("workHours").where("cafeId","==",currentCafe.id).where("period","==",period).get();let del=0;for(const doc of snap.docs){const x=doc.data();if(picked.includes(x.empId)&&x.source==="contractBulk"&&x.manuallyEdited!==true){await db.collection("workHours").doc(doc.id).delete();del++;}}showToast("자동 생성 근무 "+del+"건 삭제");}closeContractBulkModal();await renderLaborStatus();}
+function openLaborManualModal(day,empId=null){laborManualEditingDay=day;laborManualEditingDocId=null;document.getElementById("laborManualEmp").innerHTML=employees.filter(e=>!e.resigned).map(e=>"<option value=\""+e.id+"\">"+e.name+"</option>").join("");document.getElementById("laborManualStart").innerHTML=buildTimeOptions("09:00");document.getElementById("laborManualEnd").innerHTML=buildTimeOptions("18:00");document.getElementById("laborManualBreak").value=0;document.getElementById("laborManualNote").value="";document.getElementById("laborManualDay").value=periodFromYM(laborStatusY,laborStatusM)+"-"+String(day).padStart(2,"0");if(empId){const row=(laborStatusData[day]||[]).find(x=>x.empId===empId);if(row){laborManualEditingDocId=row.id||row.docId||null;document.getElementById("laborManualEmp").value=row.empId;document.getElementById("laborManualStart").value=row.startTime||"09:00";document.getElementById("laborManualEnd").value=row.endTime||"18:00";document.getElementById("laborManualBreak").value=Number(row.breakMin)||0;document.getElementById("laborManualNote").value=row.note||"";}}document.getElementById("laborManualModal").classList.add("open");}
+function closeLaborManualModal(){document.getElementById("laborManualModal").classList.remove("open");laborManualEditingDocId=null;}
+async function saveLaborManualWork(){const empId=document.getElementById("laborManualEmp").value;const emp=employees.find(e=>e.id===empId);if(!emp){alert("직원을 선택하세요.");return;}const st=document.getElementById("laborManualStart").value,en=document.getElementById("laborManualEnd").value;const raw=getTimeMinutes(en)-getTimeMinutes(st);if(raw<=0){alert("종료시간은 시작시간보다 늦어야 합니다.");return;}const breakMin=Math.max(0,Math.min(raw,parseInt(document.getElementById("laborManualBreak").value)||0));const workMin=Math.max(0,raw-breakMin);const period=periodFromYM(laborStatusY,laborStatusM);const data={cafeId:currentCafe.id,empId,name:emp.name,period,day:laborManualEditingDay,startTime:st,endTime:en,breakMin,workMin,hours:workMin/60,note:document.getElementById("laborManualNote").value.trim(),source:"manual",manuallyEdited:true,updatedAt:Date.now()};if(laborManualEditingDocId)await db.collection("workHours").doc(laborManualEditingDocId).update(data);else{const ex=await tenantCollection("workHours").where("cafeId","==",currentCafe.id).where("empId","==",empId).where("period","==",period).where("day","==",laborManualEditingDay).get();if(!ex.empty)await db.collection("workHours").doc(ex.docs[0].id).update(data);else await tenantAdd("workHours",{...data,createdAt:Date.now()});}closeLaborManualModal();await renderLaborStatus();}
 document.getElementById('adminPwInput2').addEventListener('keyup',e=>{if(e.key==='Enter')checkAdminModePw();});
 
 if(auth.currentUser){currentUser=auth.currentUser;loadCafes();}

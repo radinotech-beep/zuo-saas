@@ -47,6 +47,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .hdr{position:sticky;top:0;z-index:10;background:var(--green);padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between}
 .hdr-title{font-size:17px;font-weight:700;color:#fff}
 .hdr-sub{font-size:11px;color:rgba(255,255,255,0.75)}
+.hdr-admin-layout{position:sticky;min-height:58px}
+.hdr-admin-layout .back-btn{position:relative;z-index:2;justify-self:flex-start}
+.hdr-admin-layout .hdr-center-slot{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:46%;max-width:220px;text-align:center;z-index:1;pointer-events:none}
+.hdr-admin-layout .hdr-center-slot .hdr-title,.hdr-admin-layout .hdr-center-slot .hdr-sub{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hdr-admin-layout>.hdr-actions{margin-left:auto;justify-content:flex-end;position:relative;z-index:2;max-width:42%;min-width:72px}
+.hdr-admin-layout>.hdr-actions .top-small-btn{white-space:nowrap}
 .hdr-centered{position:sticky}
 .hdr-centered>.hdr-title{position:absolute;left:50%;transform:translateX(-50%);max-width:58%;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .back-btn{background:none;border:none;color:rgba(255,255,255,0.9);font-size:13px;font-weight:500;cursor:pointer;padding:4px 0}
@@ -1814,7 +1820,7 @@ function tenantAdd(name,data){
 
 const DAYS=["일","월","화","수","목","금","토"];
 const MONTHS=["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
-const APP_VERSION="v2026.06.27.25";
+const APP_VERSION="v2026.06.27.26";
 const APP_URL="https://zuo-saas.firebaseapp.com";
 const INVITE_BASE_URL="https://radinotech-beep.github.io/zuo-saas/";
 const EMPLOYEE_INVITE_CAFE_ID=new URLSearchParams(location.search).get('store');
@@ -1895,15 +1901,27 @@ function updateAdminHeaderButtons(){
   if(!active||['scLogin','scHome','scSvcWorker','scWorkerInput'].includes(active.id))return;
   const hdr=active.querySelector('.hdr');
   if(!hdr)return;
+  hdr.classList.add('hdr-admin-layout');
+  const titleEl=hdr.querySelector('.hdr-title');
+  const centerSlot=titleEl?(titleEl.parentElement===hdr?titleEl:titleEl.parentElement):null;
+  if(centerSlot)centerSlot.classList.add('hdr-center-slot');
+  let actions=hdr.querySelector(':scope > .hdr-actions');
+  if(!actions){
+    actions=document.createElement('div');
+    actions.className='hdr-actions';
+    hdr.appendChild(actions);
+  }
+  Array.from(hdr.children).forEach(child=>{
+    if(child===actions||child===centerSlot||child.classList.contains('back-btn'))return;
+    actions.appendChild(child);
+  });
   const btn=document.createElement('button');
   btn.type='button';
   btn.className='hdr-icon-btn admin-gear-btn';
   btn.title='관리자 설정';
   btn.textContent='⚙️';
   btn.onclick=openAdminSettingsModal;
-  const actions=hdr.querySelector('.hdr-actions');
-  if(actions)actions.prepend(btn);
-  else hdr.appendChild(btn);
+  actions.prepend(btn);
 }
 
 function applyTheme(color){

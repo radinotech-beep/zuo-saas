@@ -365,10 +365,11 @@ input:focus{border-color:var(--green)}
 .labor-basis-line:before{content:"-";position:absolute;left:0;color:#9b6a26;font-weight:900}
 .labor-basis strong{color:#BA7517;font-weight:900}
 .labor-basis-result{font-weight:900}
-.labor-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.labor-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:10px}
 .labor-summary .alert-stat{padding:7px 5px;min-height:66px}
 .labor-summary .alert-stat-num{font-size:17px}
 .labor-summary .alert-stat-lbl{font-size:10px}
+.labor-summary-note{font-size:9px;color:var(--t3);margin-top:2px}
 .pay-compact-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 .pay-compact-card{background:#fff;border:1px solid var(--bd);border-radius:10px;padding:10px;cursor:pointer;display:grid;grid-template-columns:36px 1fr;gap:8px;align-items:center;min-width:0}
 .pay-compact-card .emp-avatar{width:36px;height:36px;font-size:12px}
@@ -1238,6 +1239,11 @@ input:focus{border-color:var(--green)}
         <div class="alert-stat-num" id="laborStatusDayCnt">0일</div>
         <div class="alert-stat-lbl">근무 등록일</div>
       </div>
+      <div class="alert-stat">
+        <div class="alert-stat-num" id="laborStatusPayTotal">0원</div>
+        <div class="alert-stat-lbl">월 총 인건비</div>
+        <div class="labor-summary-note">주휴수당 제외</div>
+      </div>
     </div>
     <div class="wk-grid" id="laborStatusGrid"></div>
     <div class="labor-pay-note">인건비는 순수 시급 기준이며 주휴수당은 제외됩니다.</div>
@@ -1889,7 +1895,7 @@ function tenantAdd(name,data){
 
 const DAYS=["일","월","화","수","목","금","토"];
 const MONTHS=["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
-const APP_VERSION="v2026.06.28.33";
+const APP_VERSION="v2026.06.28.34";
 const APP_URL="https://zuo-saas.firebaseapp.com";
 const INVITE_BASE_URL="https://radinotech-beep.github.io/zuo-saas/";
 const EMPLOYEE_INVITE_CAFE_ID=new URLSearchParams(location.search).get('store');
@@ -3835,12 +3841,13 @@ function renderLaborStatusGrid(){
   const first=new Date(laborStatusY,laborStatusM,1).getDay();
   const days=new Date(laborStatusY,laborStatusM+1,0).getDate();
   for(let i=0;i<first;i++)g.innerHTML+=`<div></div>`;
-  let monthMin=0,empSet=new Set(),dayCnt=0;
+  let monthMin=0,monthPay=0,empSet=new Set(),dayCnt=0;
   for(let d=1;d<=days;d++){
     const list=laborStatusData[d]||[];
     const totalMin=list.reduce((sum,x)=>sum+getWorkMinutes(x),0);
     const totalPay=list.reduce((sum,x)=>sum+(calcLaborHourlyPay(x)||0),0);
     monthMin+=totalMin;
+    monthPay+=totalPay;
     if(list.length)dayCnt++;
     list.forEach(x=>empSet.add(x.empId||x.empName));
     const peopleCnt=new Set(list.map(x=>x.empId||x.empName)).size;
@@ -3855,9 +3862,11 @@ function renderLaborStatusGrid(){
   const totalEl=document.getElementById('laborStatusTotal');
   const empCntEl=document.getElementById('laborStatusEmpCnt');
   const dayCntEl=document.getElementById('laborStatusDayCnt');
+  const payTotalEl=document.getElementById('laborStatusPayTotal');
   if(totalEl)totalEl.textContent=`${formatHours2(monthMin/60)}h`;
   if(empCntEl)empCntEl.textContent=`${empSet.size}명`;
   if(dayCntEl)dayCntEl.textContent=`${dayCnt}일`;
+  if(payTotalEl)payTotalEl.textContent=formatLaborMoney(monthPay);
   renderLaborHeadcountStats();
   if(laborStatusSelectedDay)renderLaborStatusDetail(laborStatusSelectedDay);
   else{document.getElementById('laborStatusDetailTitle').textContent='날짜를 선택하세요';document.getElementById('laborStatusDetail').textContent='날짜를 누르면 직원별 근로현황이 표시됩니다.';}

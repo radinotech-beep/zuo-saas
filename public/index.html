@@ -574,7 +574,7 @@ input:focus{border-color:var(--green)}
     </div>
     <div class="svc-card" id="workerTimeCard" onclick="enterWorkerTimeInput()">
       <div class="svc-icon" style="background:#E6F1FB">📋</div>
-      <div><div class="svc-name">개인 근로 캘린더</div><div class="svc-desc">본인 근무시간 등록</div></div>
+      <div><div class="svc-name">개인 근로 캘린더</div><div class="svc-desc" id="workerTimeCardDesc">본인 근무시간 등록</div></div>
     </div>
     <div class="svc-card" onclick="enterSvc('sub')">
       <div class="svc-icon" id="svcIcon2" style="background:var(--gl)">🔄</div>
@@ -800,7 +800,7 @@ input:focus{border-color:var(--green)}
         <div style="width:40px;height:40px;border-radius:10px;background:#E6F1FB;display:flex;align-items:center;justify-content:center;font-size:20px">📋</div>
         <div>
           <div style="font-size:14px;font-weight:600;color:var(--t1)">개인 근로 캘린더</div>
-          <div style="font-size:11px;color:var(--t3);margin-top:2px">본인 이름 선택 후 근무시간 등록</div>
+          <div id="laborWorkerTimeMenuDesc" style="font-size:11px;color:var(--t3);margin-top:2px">본인 이름 선택 후 근무시간 등록</div>
         </div>
         <div style="margin-left:auto;color:var(--t3);font-size:18px">›</div>
       </div>
@@ -865,6 +865,9 @@ input:focus{border-color:var(--green)}
       <div style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--t2)"><div style="width:10px;height:10px;border-radius:3px;background:#EBF4FF;border:2px solid #185FA5"></div>선택중</div>
       <div style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--t2)"><div style="width:8px;height:8px;border-radius:50%;background:var(--amb)"></div>비고있음</div>
     </div>
+    <div id="wkReadOnlyNotice" style="display:none;background:#EBF4FF;border:1px solid #cfe2ff;border-radius:8px;padding:9px 11px;font-size:12px;color:#185FA5;font-weight:700;margin-bottom:8px">
+      관리자가 통합 근로 캘린더에서 등록하는 방식입니다. 이 화면에서는 조회만 가능합니다.
+    </div>
     <div class="wk-grid" id="wkGrid"></div>
     <div style="background:#fff;border-radius:10px;border:1px solid var(--bd);padding:12px;margin-top:4px">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
@@ -891,9 +894,9 @@ input:focus{border-color:var(--green)}
       <div style="font-size:12px;font-weight:500;color:var(--t2);margin-bottom:4px">비고 (선택)</div>
       <input type="text" id="wkNote" placeholder="예: 계약4.5h/실근무5h, 조기퇴근 등" style="margin-bottom:10px">
       <div style="display:flex;gap:8px">
-        <button class="fcnl" onclick="resetWkInput()">초기화</button>
+        <button class="fcnl" id="wkResetBtn" onclick="resetWkInput()">초기화</button>
         <button class="fcnl" onclick="cancelWkInput()">취소</button>
-        <button class="fok" style="background:#185FA5;flex:2" onclick="saveWkHours()">💾 저장</button>
+        <button class="fok" id="wkSaveBtn" style="background:#185FA5;flex:2" onclick="saveWkHours()">💾 저장</button>
       </div>
     </div>
     <!-- 관리자 확정 버튼 영역 -->
@@ -1895,7 +1898,7 @@ function tenantAdd(name,data){
 
 const DAYS=["일","월","화","수","목","금","토"];
 const MONTHS=["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
-const APP_VERSION="v2026.06.28.35";
+const APP_VERSION="v2026.06.28.36";
 const APP_URL="https://zuo-saas.firebaseapp.com";
 const INVITE_BASE_URL="https://radinotech-beep.github.io/zuo-saas/";
 const EMPLOYEE_INVITE_CAFE_ID=new URLSearchParams(location.search).get('store');
@@ -2446,7 +2449,6 @@ function enterAsWorker(){
   setTimeout(()=>enterWorkerMenu('entry'),employees.length?0:800);
 }
 function enterWorkerTimeInput(){
-  if(isCalendarWorkMode()){alert('이 가게는 관리자가 통합 근로 캘린더에서 근무시간을 등록합니다.');return;}
   if(currentWorkerEmp&&!currentWorkerEmp.resigned){enterWorkerInput();return;}
   // 직원 선택 모달 표시
   workerAuthPurpose='time';
@@ -3388,6 +3390,7 @@ function enterWorkerInput(){
   initWkTimeSelects();
   loadWorkHours();
   loadConfirmStatus();
+  updateWorkerCalendarReadOnlyUI();
   showScreen('scWorkerInput');
 }
 
@@ -3445,6 +3448,21 @@ function formatWorkMinText(min){
   min=Math.max(0,Math.round(min||0));
   const h=Math.floor(min/60),m=min%60;
   return `${h}시간 ${m}분`;
+}
+function isWorkerCalendarReadOnly(){
+  return isCalendarWorkMode();
+}
+function updateWorkerCalendarReadOnlyUI(){
+  const readOnly=isWorkerCalendarReadOnly();
+  const notice=document.getElementById('wkReadOnlyNotice');
+  if(notice)notice.style.display=readOnly?'block':'none';
+  ['wkStartSelect','wkEndSelect','wkNote','wkResetBtn','wkSaveBtn'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.disabled=readOnly;
+  });
+  document.querySelectorAll('#wkPanel .wk-break-ctrl button').forEach(btn=>btn.disabled=readOnly);
+  const hint=document.getElementById('wkLastHint');
+  if(readOnly&&hint&&!hint.textContent)hint.textContent='조회 전용입니다. 변경이 필요하면 관리자에게 문의하세요.';
 }
 function getTimeMinutes(t){const [h,m]=(t||'0:0').split(':').map(Number);return (h||0)*60+(m||0);}
 function setTimeFromMinutes(m){return `${String(Math.floor(m/60)).padStart(2,'0')}:${String(m%60).padStart(2,'0')}`;}
@@ -3556,6 +3574,7 @@ function openWkInput(d){
     hint.textContent='';
   }
 
+  updateWorkerCalendarReadOnlyUI();
   document.getElementById('wkPanel').style.display='block';
   document.getElementById('wkPanel').scrollIntoView({behavior:'smooth',block:'nearest'});
   renderWkGrid();
@@ -3621,6 +3640,10 @@ async function loadConfirmStatus(){
   const confirmBtn=document.getElementById('wkConfirmBtn');
   // 확정 배너
   banner.style.display=wkIsConfirmed?'block':'none';
+  if(isWorkerCalendarReadOnly()){
+    confirmArea.style.display='none';
+    return;
+  }
   // 관리자만 확정 버튼 표시 (현재 근로관리는 마스터 진입)
   if(isMaster(currentWorkerEmp?.password||'')===false){
     confirmArea.style.display='block';
@@ -3659,7 +3682,6 @@ function enterSvcWithMaster(type){
   document.getElementById('masterPwModal').classList.add('open');
 }
 function enterWorkerMenu(purpose='time'){
-  if(purpose==='time'&&isCalendarWorkMode()){alert('이 가게는 관리자가 통합 근로 캘린더에서 근무시간을 등록합니다.');return;}
   workerAuthPurpose=purpose;
   const colors=['var(--gl)','#EEEDFE','#FBEAF0','#E6F1FB','var(--al)'];
   const tcolors=['var(--gd)','#3C3489','#72243E','#0C447C','var(--ad)'];
@@ -3668,9 +3690,9 @@ function enterWorkerMenu(purpose='time'){
   const title=document.querySelector('#workerSelectModal .mt');
   const sub=document.querySelector('#workerSelectModal .mt + div');
   if(title)title.textContent=purpose==='entry'?'직원 입장 - 본인 선택':'개인 근로 캘린더 - 직원 선택';
-  if(sub)sub.textContent=purpose==='entry'?'본인 이름을 선택하고 비밀번호를 입력하세요':'본인 이름을 선택하세요';
+  if(sub)sub.textContent=purpose==='entry'?'본인 이름을 선택하고 비밀번호를 입력하세요':(isCalendarWorkMode()?'본인 이름을 선택하세요. 관리자가 등록하는 방식이라 조회만 가능합니다.':'본인 이름을 선택하세요');
   if(title)title.textContent=purpose==='entry'?'직원 입장 - 본인 선택':'개인 근로 캘린더 - 직원 선택';
-  if(sub)sub.textContent=purpose==='entry'?'본인 이름을 선택하고 내 락커룸 비밀번호를 입력하세요':'본인 이름을 선택하세요';
+  if(sub)sub.textContent=purpose==='entry'?'본인 이름을 선택하고 내 락커룸 비밀번호를 입력하세요':(isCalendarWorkMode()?'본인 이름을 선택하세요. 관리자가 등록하는 방식이라 조회만 가능합니다.':'본인 이름을 선택하세요');
   if(!active.length){
     w.innerHTML=`<div style="text-align:center;padding:24px;font-size:13px;color:var(--t3)">등록된 직원이 없어요</div>`;
   } else {
@@ -5645,9 +5667,13 @@ function isCalendarWorkMode(){return getWorkEntryMode()==="calendar";}
 function updateWorkEntryModeUI(){
   const calendarMode=isCalendarWorkMode();
   const card=document.getElementById("workerTimeCard");
-  if(card)card.style.display=calendarMode?"none":"";
+  if(card)card.style.display="";
+  const cardDesc=document.getElementById("workerTimeCardDesc");
+  if(cardDesc)cardDesc.textContent=calendarMode?"본인 근무시간 조회":"본인 근무시간 등록";
   const laborWorkerMenu=document.getElementById("laborWorkerTimeMenu");
-  if(laborWorkerMenu)laborWorkerMenu.style.display=calendarMode?"none":"flex";
+  if(laborWorkerMenu)laborWorkerMenu.style.display="flex";
+  const laborWorkerDesc=document.getElementById("laborWorkerTimeMenuDesc");
+  if(laborWorkerDesc)laborWorkerDesc.textContent=calendarMode?"본인 이름 선택 후 근무시간 조회":"본인 이름 선택 후 근무시간 등록";
   const bulk=document.getElementById("laborBulkCard");
   if(bulk){
     bulk.hidden=!calendarMode;

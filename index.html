@@ -489,7 +489,7 @@ input:focus{border-color:var(--green)}
     <div class="welcome-sub">입장할 가게를 선택해주세요</div>
   </div>
   <div class="cafe-list" id="cafeList"></div>
-  <button class="admin-btn" onclick="goAdmin()">⚙️ 관리자 설정</button>
+  <button class="admin-btn" onclick="goAdmin()">⚙️ 내가게 관리설정</button>
 </div>
 
 <!-- 화면2: 가게 비밀번호 -->
@@ -1530,7 +1530,7 @@ input:focus{border-color:var(--green)}
 <div class="screen" id="scAdmin">
   <div class="hdr">
     <button class="back-btn" onclick="goHome()">← 뒤로</button>
-    <div class="hdr-title">⚙️ 관리자 설정</div>
+    <div class="hdr-title">⚙️ 내가게 관리설정</div>
     <div style="width:40px"></div>
   </div>
   <div class="admin-wrap">
@@ -1545,7 +1545,7 @@ input:focus{border-color:var(--green)}
 <div class="mbg" id="adminSettingsModal" onclick="if(event.target===this)closeAdminSettingsModal()">
   <div class="modal">
     <div class="mh"></div>
-    <div class="mt">⚙️ 관리자 설정</div>
+    <div class="mt">⚙️ 내가게 관리설정</div>
     <div class="admin-modal-body">
       <div class="admin-wrap">
         <div class="admin-section">
@@ -1557,6 +1557,32 @@ input:focus{border-color:var(--green)}
     </div>
     <div class="mbtns" style="margin-top:10px">
       <button class="mcnl" onclick="closeAdminSettingsModal()">닫기</button>
+    </div>
+  </div>
+</div>
+
+<div class="mbg" id="menuOptionsModal" onclick="if(event.target===this)closeMenuOptionsModal()">
+  <div class="modal">
+    <div class="mh"></div>
+    <div class="mt" id="menuOptionsTitle">메뉴/옵션설정</div>
+    <div class="admin-modal-body">
+      <div class="admin-wrap">
+        <div class="admin-section">
+          <div class="admin-section-title">직원용 링크</div>
+          <div style="padding:12px 14px">
+            <button class="add-cafe-btn" onclick="copyCurrentCafeInviteLink()">직원용 링크 복사</button>
+          </div>
+        </div>
+        <div class="admin-section">
+          <div class="admin-section-title">근로시간 등록 방식</div>
+          <div class="admin-work-mode" style="margin:12px 14px">
+            <div class="work-mode-radio" id="menuWorkModeOptions"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mbtns" style="margin-top:10px">
+      <button class="mcnl" onclick="closeMenuOptionsModal()">닫기</button>
     </div>
   </div>
 </div>
@@ -1826,7 +1852,7 @@ function tenantAdd(name,data){
 
 const DAYS=["일","월","화","수","목","금","토"];
 const MONTHS=["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
-const APP_VERSION="v2026.06.28.30";
+const APP_VERSION="v2026.06.28.31";
 const APP_URL="https://zuo-saas.firebaseapp.com";
 const INVITE_BASE_URL="https://radinotech-beep.github.io/zuo-saas/";
 const EMPLOYEE_INVITE_CAFE_ID=new URLSearchParams(location.search).get('store');
@@ -1940,9 +1966,9 @@ function updateAdminHeaderButtons(){
   const btn=document.createElement('button');
   btn.type='button';
   btn.className='hdr-icon-btn admin-gear-btn';
-  btn.title='관리자 설정';
+  btn.title='메뉴/옵션설정';
   btn.textContent='⚙️';
-  btn.onclick=openAdminSettingsModal;
+  btn.onclick=openMenuOptionsModal;
   actions.prepend(btn);
 }
 
@@ -2994,12 +3020,28 @@ function openAdminSettingsModal(){
 function closeAdminSettingsModal(){
   document.getElementById('adminSettingsModal').classList.remove('open');
 }
+function openMenuOptionsModal(){
+  if(!currentCafe){alert('가게를 먼저 선택해주세요');return;}
+  renderMenuOptions();
+  document.getElementById('menuOptionsModal').classList.add('open');
+}
+function closeMenuOptionsModal(){
+  document.getElementById('menuOptionsModal').classList.remove('open');
+}
+function renderMenuOptions(){
+  if(!currentCafe)return;
+  const title=document.getElementById('menuOptionsTitle');
+  if(title)title.textContent=`메뉴/옵션설정 - ${currentCafe.name}`;
+  const mode=currentCafe.workEntryMode||'worker';
+  const wrap=document.getElementById('menuWorkModeOptions');
+  if(wrap)wrap.innerHTML=`<label class="work-mode-option"><input type="radio" name="menuWorkEntryMode" value="worker" ${mode==='worker'?'checked':''} onchange="updateCafeWorkEntryMode('${currentCafe.id}',this.value)"><div><span>개인별 캘린더에 등록</span><small>직원이 직접 등록할 때 유용</small></div></label><label class="work-mode-option"><input type="radio" name="menuWorkEntryMode" value="calendar" ${mode==='calendar'?'checked':''} onchange="updateCafeWorkEntryMode('${currentCafe.id}',this.value)"><div><span>통합 캘린더에 등록</span><small>관리자가 직접 등록할 때 유용</small></div></label>`;
+}
 
 function renderAdminCafeList(targetId='adminCafeList'){
   const list=document.getElementById(targetId);
   if(!list)return;
   if(!cafes.length){list.innerHTML=`<div style="padding:14px;font-size:12px;color:var(--t3);text-align:center">등록된 가게가 없어요</div>`;return;}
-  list.innerHTML=cafes.map(c=>`<div class="admin-cafe-item"><div class="admin-cafe-main"><div class="admin-cafe-name">${c.name}</div><div class="admin-cafe-pw">매장 입장 비밀번호: ${c.password}</div><div class="admin-work-mode"><label>근로시간 등록 방식</label><div class="work-mode-radio"><label class="work-mode-option"><input type="radio" name="workMode_${c.id}" value="worker" ${(c.workEntryMode||'worker')==='worker'?'checked':''} onchange="updateCafeWorkEntryMode('${c.id}',this.value)"><div><span>개인별 캘린더에 등록</span><small>직원이 직접 등록할 때 유용</small></div></label><label class="work-mode-option"><input type="radio" name="workMode_${c.id}" value="calendar" ${c.workEntryMode==='calendar'?'checked':''} onchange="updateCafeWorkEntryMode('${c.id}',this.value)"><div><span>통합 캘린더에 등록</span><small>관리자가 직접 등록할 때 유용</small></div></label></div></div></div><div class="admin-cafe-actions"><button class="admin-copy-btn" onclick="copyInviteLink('${c.id}')">직원용 링크 복사</button><button class="admin-edit-btn" onclick="openEditCafe('${c.id}')">수정</button><button class="admin-del-btn" onclick="deleteCafe('${c.id}')">삭제</button></div></div>`).join('');
+  list.innerHTML=cafes.map(c=>`<div class="admin-cafe-item"><div class="admin-cafe-main"><div class="admin-cafe-name">${c.name}</div><div class="admin-cafe-pw">매장 입장 비밀번호: ${c.password}</div></div><div class="admin-cafe-actions"><button class="admin-edit-btn" onclick="openEditCafe('${c.id}')">수정</button><button class="admin-del-btn" onclick="deleteCafe('${c.id}')">삭제</button></div></div>`).join('');
 }
 
 async function updateCafeWorkEntryMode(id,mode){
@@ -3011,6 +3053,7 @@ async function updateCafeWorkEntryMode(id,mode){
   if(currentCafe&&currentCafe.id===id){currentCafe={...currentCafe,workEntryMode:nextMode};updateWorkEntryModeUI();}
   renderAdminCafeList();
   renderAdminCafeList('adminCafeListPopup');
+  renderMenuOptions();
   showToast(nextMode==='calendar'?'통합 캘린더 등록 방식으로 저장했어요':'개인별 캘린더 등록 방식으로 저장했어요');
 }
 
@@ -3023,6 +3066,10 @@ function copyInviteLink(cafeId){
   copyText(getInviteLink(cafeId));
   showToast('링크가 복사되었습니다');
 }
+function copyCurrentCafeInviteLink(){
+  if(!currentCafe){alert('가게를 먼저 선택해주세요');return;}
+  copyInviteLink(currentCafe.id);
+}
 
 let selectedColor='green';
 function renderThemeDots(){
@@ -3033,12 +3080,14 @@ function renderThemeDots(){
 function selectColor(color,el){selectedColor=color;document.querySelectorAll('.color-dot').forEach(d=>d.classList.remove('selected'));if(el)el.classList.add('selected');}
 function setCafeWorkEntryModeInput(mode){document.querySelectorAll('input[name="cafeWorkEntryMode"]').forEach(el=>{el.checked=el.value===(mode==='calendar'?'calendar':'worker');});}
 function getCafeWorkEntryModeInput(){return document.querySelector('input[name="cafeWorkEntryMode"]:checked')?.value||'worker';}
-function openAddCafe(){editingCafeId=null;selectedColor='green';document.getElementById('cafeEditTitle').textContent='가게 추가';document.getElementById('cafeNameInput').value='';document.getElementById('cafePwInput').value='';document.getElementById('cafeOrderInput').value='';setCafeWorkEntryModeInput('worker');renderThemeDots();document.getElementById('cafeEditModal').classList.add('open');}
-function openEditCafe(id){const cafe=cafes.find(c=>c.id===id);if(!cafe)return;editingCafeId=id;selectedColor=cafe.color||'green';document.getElementById('cafeEditTitle').textContent='가게 수정';document.getElementById('cafeNameInput').value=cafe.name;document.getElementById('cafePwInput').value=cafe.password;document.getElementById('cafeOrderInput').value=cafe.order||'';setCafeWorkEntryModeInput(cafe.workEntryMode||'worker');renderThemeDots();document.getElementById('cafeEditModal').classList.add('open');}
+function hideCafeEditWorkMode(){document.querySelectorAll('#cafeEditModal input[name="cafeWorkEntryMode"]').forEach(el=>{const box=el.closest('.fr');if(box)box.style.display='none';});}
+function openAddCafe(){editingCafeId=null;selectedColor='green';document.getElementById('cafeEditTitle').textContent='가게 추가';document.getElementById('cafeNameInput').value='';document.getElementById('cafePwInput').value='';document.getElementById('cafeOrderInput').value='';setCafeWorkEntryModeInput('worker');renderThemeDots();hideCafeEditWorkMode();document.getElementById('cafeEditModal').classList.add('open');}
+function openEditCafe(id){const cafe=cafes.find(c=>c.id===id);if(!cafe)return;editingCafeId=id;selectedColor=cafe.color||'green';document.getElementById('cafeEditTitle').textContent='가게 수정';document.getElementById('cafeNameInput').value=cafe.name;document.getElementById('cafePwInput').value=cafe.password;document.getElementById('cafeOrderInput').value=cafe.order||'';setCafeWorkEntryModeInput(cafe.workEntryMode||'worker');renderThemeDots();hideCafeEditWorkMode();document.getElementById('cafeEditModal').classList.add('open');}
 function closeCafeEdit(){document.getElementById('cafeEditModal').classList.remove('open');editingCafeId=null;}
 async function saveCafe(){const name=document.getElementById('cafeNameInput').value.trim();const pw=document.getElementById('cafePwInput').value.trim();if(!name){alert('가게 이름을 입력해 주세요');return;}if(!pw){alert('매장 입장 비밀번호를 입력해 주세요');return;}const order=parseInt(document.getElementById('cafeOrderInput').value)||99;
-const workEntryMode=getCafeWorkEntryModeInput();
-if(editingCafeId){await db.collection('cafes').doc(editingCafeId).update({name,password:pw,color:selectedColor,order,workEntryMode});if(currentCafe&&currentCafe.id===editingCafeId){currentCafe={...currentCafe,name,password:pw,color:selectedColor,order,workEntryMode};updateWorkEntryModeUI();}}
+const existingCafe=editingCafeId?cafes.find(c=>c.id===editingCafeId):null;
+const workEntryMode=existingCafe?.workEntryMode||'worker';
+if(editingCafeId){await db.collection('cafes').doc(editingCafeId).update({name,password:pw,color:selectedColor,order});if(currentCafe&&currentCafe.id===editingCafeId){currentCafe={...currentCafe,name,password:pw,color:selectedColor,order};updateWorkEntryModeUI();}}
 else{await tenantAdd('cafes',{name,password:pw,masterPw:MASTER_PW||'0000',color:selectedColor,order,workEntryMode,createdAt:Date.now()});}
 renderAdminCafeList();renderAdminCafeList('adminCafeListPopup');closeCafeEdit();}
 async function deleteCafe(id){if(!confirm('가게를 삭제할까요?'))return;await db.collection('cafes').doc(id).delete();renderAdminCafeList();renderAdminCafeList('adminCafeListPopup');}

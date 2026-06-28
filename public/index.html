@@ -434,7 +434,10 @@ input:focus{border-color:var(--green)}
 .contract-add,.labor-bulk-btn{border:none;border-radius:9px;background:var(--green);color:#fff;font-size:12px;font-weight:800;padding:9px 10px;cursor:pointer}
 .contract-del,.labor-bulk-del{border:1px solid var(--bd);border-radius:9px;background:#fff;color:var(--red);font-size:12px;font-weight:800;padding:9px 10px;cursor:pointer}
 .labor-bulk-card{display:none;background:var(--gl);border-color:var(--gm)}
-.labor-bulk-note{font-size:11px;color:var(--gd);line-height:1.55;margin-bottom:8px}
+.labor-bulk-title-left{display:flex;align-items:center;gap:6px;min-width:0}
+.labor-info-btn{width:18px;height:18px;border-radius:50%;border:1px solid var(--gm);background:#fff;color:var(--gd);font-size:11px;font-weight:900;line-height:16px;text-align:center;cursor:pointer;flex-shrink:0}
+.labor-bulk-note{display:none;position:relative;background:#fff;border:1px solid var(--gm);border-radius:9px;padding:8px 9px;font-size:11px;color:var(--gd);line-height:1.55;margin:-2px 0 8px;box-shadow:0 6px 16px rgba(27,53,94,.08)}
+.labor-bulk-note.show{display:block}
 .bulk-emp-list{max-height:220px;overflow:auto;border:1px solid var(--bd);border-radius:10px;padding:8px;background:#fff;margin:8px 0}
 .bulk-emp-list label{display:flex;align-items:center;gap:8px;padding:7px 4px;font-size:13px;color:var(--t1);border-bottom:1px solid #f4f4f4}
 .bulk-emp-list label:last-child{border-bottom:none}
@@ -1198,8 +1201,8 @@ input:focus{border-color:var(--green)}
     </div>
 
     <div class="labor-bulk-card" id="laborBulkCard">
-      <div class="labor-bulk-title"><span>계약근무시간 일괄 관리</span></div>
-      <div class="labor-bulk-note">가게 설정이 통합 캘린더 등록 방식일 때만 사용합니다. 이미 입력된 날짜는 덮어쓰지 않고 건너뜁니다.</div>
+      <div class="labor-bulk-title"><span class="labor-bulk-title-left"><span>계약근무시간 일괄 관리</span><button type="button" class="labor-info-btn" onclick="toggleLaborBulkInfo(event)" aria-label="계약근무시간 일괄 관리 안내">i</button></span></div>
+      <div class="labor-bulk-note" id="laborBulkInfo">가게 설정이 통합 캘린더 등록 방식일 때만 사용합니다. 이미 입력된 날짜는 덮어쓰지 않고 건너뜁니다.</div>
       <div class="labor-bulk-actions"><button class="labor-bulk-btn" onclick="openContractBulkModal('apply')">계약근무시간 일괄적용</button><button class="labor-bulk-del" onclick="openContractBulkModal('delete')">자동생성분 일괄삭제</button></div>
     </div>
     <div style="display:flex;justify-content:flex-end;margin:-4px 0 8px">
@@ -1823,7 +1826,7 @@ function tenantAdd(name,data){
 
 const DAYS=["일","월","화","수","목","금","토"];
 const MONTHS=["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
-const APP_VERSION="v2026.06.27.29";
+const APP_VERSION="v2026.06.28.30";
 const APP_URL="https://zuo-saas.firebaseapp.com";
 const INVITE_BASE_URL="https://radinotech-beep.github.io/zuo-saas/";
 const EMPLOYEE_INVITE_CAFE_ID=new URLSearchParams(location.search).get('store');
@@ -3588,7 +3591,7 @@ function renderLaborStatusGrid(){
     const lines=list.slice(0,2).map(x=>`<div class="labor-status-line">${x.empName} ${formatHours1(getWorkHours(x))}h</div>`).join('');
     const more=list.length>2?`<div class="labor-status-line">+${list.length-2}명</div>`:'';
     g.innerHTML+=`<div class="labor-status-cell ${laborStatusSelectedDay===d?'labor-status-selected':''}" onclick="selectLaborStatusDay(${d})">
-      <div class="labor-status-top"><div class="labor-status-date">${d}</div>${peopleCnt?`<div class="labor-status-people">총${peopleCnt}명 / ${formatHours1(totalMin/60)}h</div>`:''}</div>
+      <div class="labor-status-top"><div class="labor-status-date">${d}</div>${peopleCnt?`<div class="labor-status-people">${peopleCnt}명/${formatHours1(totalMin/60)}h</div>`:''}</div>
       <div class="labor-status-lines">${lines}${more}</div>
       ${totalMin&&totalPay?`<div class="labor-status-total"><span class="labor-status-pay">${formatLaborMoney(totalPay)}</span></div>`:''}
     </div>`;
@@ -5392,6 +5395,17 @@ function updateWorkEntryModeUI(){
     badge.style.color=calendarMode?"var(--gd)":"var(--t3)";
   }
 }
+function toggleLaborBulkInfo(e){
+  if(e)e.stopPropagation();
+  const note=document.getElementById("laborBulkInfo");
+  if(note)note.classList.toggle("show");
+}
+document.addEventListener("click",e=>{
+  const note=document.getElementById("laborBulkInfo");
+  if(!note||!note.classList.contains("show"))return;
+  if(e.target.closest("#laborBulkCard"))return;
+  note.classList.remove("show");
+});
 function periodFromYM(y,m){return y+"-"+String(m+1).padStart(2,"0");}
 function daysInMonth(y,m){return new Date(y,m+1,0).getDate();}
 async function getActiveEmployeesForBulk(){const snap=await tenantCollection("employees").where("cafeId","==",currentCafe.id).get();const list=[];snap.forEach(d=>{const e={id:d.id,...d.data()};if(!e.resigned)list.push(e);});list.sort((a,b)=>(a.name||"").localeCompare(b.name||""));return list;}

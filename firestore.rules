@@ -89,7 +89,17 @@ service cloud.firestore {
         );
       allow get: if signedIn() && (uid == request.auth.uid || isSuperAdmin());
       allow list: if isSuperAdmin();
-      allow update: if isSuperAdmin()
+      allow update: if (
+          isSuperAdmin()
+          && (
+            uid != request.auth.uid
+            || (
+              request.resource.data.status != "suspended"
+              && request.resource.data.status != "withdrawn"
+              && request.resource.data.approved == true
+            )
+          )
+        )
         || (
           signedIn()
           && uid == request.auth.uid

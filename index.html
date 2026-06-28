@@ -1889,7 +1889,7 @@ function tenantAdd(name,data){
 
 const DAYS=["일","월","화","수","목","금","토"];
 const MONTHS=["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
-const APP_VERSION="v2026.06.28.32";
+const APP_VERSION="v2026.06.28.33";
 const APP_URL="https://zuo-saas.firebaseapp.com";
 const INVITE_BASE_URL="https://radinotech-beep.github.io/zuo-saas/";
 const EMPLOYEE_INVITE_CAFE_ID=new URLSearchParams(location.search).get('store');
@@ -2154,19 +2154,20 @@ async function renderUserAdminList(){
     }
     box.innerHTML=userSnap.docs.map(doc=>{
       const u={id:doc.id,...doc.data()};
-      const disabled=u.email===SUPER_ADMIN_EMAIL?'disabled':'';
-      const approveBtn=u.approved!==true||u.status!=='active'
-        ?`<button class="admin-edit-btn" onclick="setUserAccountStatus('${u.id}','active')" ${disabled}>승인/복구</button>`:'';
-      const suspendBtn=u.approved===true&&u.status==='active'
-        ?`<button class="admin-del-btn" onclick="setUserAccountStatus('${u.id}','suspended')" ${disabled}>사용 정지</button>`:'';
-      const withdrawBtn=u.status!=='withdrawn'
-        ?`<button class="admin-del-btn" onclick="setUserAccountStatus('${u.id}','withdrawn')" ${disabled}>탈퇴 처리</button>`:'';
+      const isSelf=u.id===currentUser?.uid||u.email===currentUser?.email;
+      const approveBtn=!isSelf&&(u.approved!==true||u.status!=='active')
+        ?`<button class="admin-edit-btn" onclick="setUserAccountStatus('${u.id}','active')">승인/복구</button>`:'';
+      const suspendBtn=!isSelf&&u.approved===true&&u.status==='active'
+        ?`<button class="admin-del-btn" onclick="setUserAccountStatus('${u.id}','suspended')">사용 정지</button>`:'';
+      const withdrawBtn=!isSelf&&u.status!=='withdrawn'
+        ?`<button class="admin-del-btn" onclick="setUserAccountStatus('${u.id}','withdrawn')">탈퇴 처리</button>`:'';
+      const selfLabel=isSelf?'<span style="font-size:11px;color:var(--green);font-weight:700;padding:7px 9px">본인 계정</span>':'';
       return `<div class="admin-cafe-item">
         <div class="admin-cafe-main">
           <div class="admin-cafe-name">${u.email||'-'}</div>
           <div class="admin-cafe-pw">상태: ${userStatusText(u)} · 가입일: ${formatUserDate(u.createdAt)} · 보유 가게: ${cafeCounts[u.id]||0}개</div>
         </div>
-        <div class="admin-cafe-actions">${approveBtn}${suspendBtn}${withdrawBtn}</div>
+        <div class="admin-cafe-actions">${selfLabel}${approveBtn}${suspendBtn}${withdrawBtn}</div>
       </div>`;
     }).join('');
   }catch(e){

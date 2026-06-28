@@ -476,6 +476,21 @@ input:focus{border-color:var(--green)}
   </div>
 </div>
 
+<div class="screen" id="scApprovalPending">
+  <div class="hdr">
+    <div class="hdr-title">승인 대기</div>
+    <div class="hdr-sub">Account Approval</div>
+  </div>
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="auth-logo">ZUO</div>
+      <div class="auth-title">승인 대기 중입니다</div>
+      <div class="auth-sub" id="approvalPendingMessage">관리자 확인 후 이용 가능합니다.</div>
+      <button class="google-btn" onclick="signOutUser()">로그아웃</button>
+    </div>
+  </div>
+</div>
+
 <div class="screen" id="scHome">
   <div class="hdr">
     <div>
@@ -490,6 +505,7 @@ input:focus{border-color:var(--green)}
   </div>
   <div class="cafe-list" id="cafeList"></div>
   <button class="admin-btn" onclick="goAdmin()">⚙️ 내가게 관리설정</button>
+  <button class="admin-btn" id="superAdminBtn" style="display:none;margin-top:10px" onclick="openUserAdminModal()">사용자 관리</button>
 </div>
 
 <!-- 화면2: 가게 비밀번호 -->
@@ -1808,6 +1824,24 @@ input:focus{border-color:var(--green)}
 
 <div class="mbg" id="myInfoModal"><div class="modal"><div class="mh"></div><div class="mt">내 정보</div><div style="font-size:11px;color:var(--t3);margin-bottom:6px">로그인된 Google 계정</div><div class="info-email" id="myInfoEmail">-</div><button class="btn-outline-s" style="width:100%;margin-bottom:8px" onclick="signOutFromMyInfo()">로그아웃</button><button class="mcnl" style="width:100%" onclick="closeMyInfo()">닫기</button></div></div>
 
+<div class="mbg" id="userAdminModal" onclick="if(event.target===this)closeUserAdminModal()">
+  <div class="modal">
+    <div class="mh"></div>
+    <div class="mt">사용자 관리</div>
+    <div class="admin-modal-body">
+      <div class="admin-wrap">
+        <div class="admin-section">
+          <div class="admin-section-title">가입자 목록</div>
+          <div id="userAdminList" style="padding:10px 12px;font-size:12px;color:var(--t3)">불러오는 중...</div>
+        </div>
+      </div>
+    </div>
+    <div class="mbtns" style="margin-top:10px">
+      <button class="mcnl" onclick="closeUserAdminModal()">닫기</button>
+    </div>
+  </div>
+</div>
+
 <div class="install-banner" id="installBanner" style="display:none"><div class="install-copy">홈 화면에 추가하면 다음부터 한 번에 들어올 수 있어요</div><button class="install-add" onclick="handleInstallClick()">추가하기</button><button class="install-close" onclick="dismissInstallBanner()" aria-label="close">x</button></div>
 <div class="mbg" id="iosInstallModal"><div class="modal"><div class="mh"></div><div class="mt">홈 화면에 추가</div><div style="font-size:13px;color:var(--t2);line-height:1.7;margin-bottom:14px">iPhone에서는 Safari 하단의 공유 버튼을 누른 뒤<br><b>홈 화면에 추가</b>를 선택해주세요.</div><button class="mok" style="width:100%" onclick="closeIosInstallGuide()">확인</button></div></div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -1845,6 +1879,9 @@ function withBusinessData(data){
   return base;
 }
 function tenantAdd(name,data){
+  if(currentUser&&!isApprovedActiveProfile()&&!isSuperAdminUser()){
+    return Promise.reject(new Error('account-not-approved'));
+  }
   const base=withBusinessData(data);
   if(name==='cafes'&&currentUser?.uid)base.ownerUid=currentUser.uid;
   return db.collection(name).add(base);
@@ -1852,16 +1889,19 @@ function tenantAdd(name,data){
 
 const DAYS=["일","월","화","수","목","금","토"];
 const MONTHS=["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
-const APP_VERSION="v2026.06.28.31";
+const APP_VERSION="v2026.06.28.32";
 const APP_URL="https://zuo-saas.firebaseapp.com";
 const INVITE_BASE_URL="https://radinotech-beep.github.io/zuo-saas/";
 const EMPLOYEE_INVITE_CAFE_ID=new URLSearchParams(location.search).get('store');
+const SUPER_ADMIN_EMAIL="radinotech@gmail.com";
 const SUPER_MASTER="2002"; // 최종관리자 고정 번호
 let MASTER_PW="0000"; // 가게별 중간관리자 번호 (Firebase에서 로드)
 
 let cY=new Date().getFullYear(),cM=new Date().getMonth();
 let selDate=null,allSubs={},pendTake=null,pendEdit=null,pendDel=null;
 let currentUser=null;
+let currentUserProfile=null;
+let userProfileUnsubscribe=null;
 let currentCafe=null,cafes=[],editingCafeId=null,unsubscribe=null;
 let isEmployeeInviteMode=false;
 let pickingFor='start',isAm=true,selH=9,selM=0;
@@ -1988,6 +2028,64 @@ function showLoginMessage(msg){
   el.textContent=msg||'';
   el.style.display=msg?'block':'none';
 }
+function isSuperAdminUser(user=currentUser){
+  return (user?.email||'').toLowerCase()===SUPER_ADMIN_EMAIL.toLowerCase();
+}
+function isApprovedActiveProfile(profile=currentUserProfile,user=currentUser){
+  return isSuperAdminUser(user)||(profile?.approved===true&&profile?.status==='active');
+}
+function updateSuperAdminButton(){
+  const btn=document.getElementById('superAdminBtn');
+  if(btn)btn.style.display=isSuperAdminUser()?'flex':'none';
+}
+async function ensureUserProfile(user){
+  const ref=db.collection('users').doc(user.uid);
+  const snap=await ref.get();
+  const isSuper=isSuperAdminUser(user);
+  const base={uid:user.uid,email:user.email||'',updatedAt:Date.now()};
+  if(!snap.exists){
+    const created={...base,approved:isSuper,status:'active',createdAt:Date.now()};
+    await ref.set(created);
+    return created;
+  }
+  const existing={id:snap.id,...snap.data()};
+  const patch={...base};
+  if(!existing.status)patch.status='active';
+  if(existing.approved===undefined)patch.approved=false;
+  if(isSuper&&(existing.approved!==true||existing.status!=='active')){
+    patch.approved=true;
+    patch.status='active';
+  }
+  await ref.set(patch,{merge:true});
+  return {...existing,...patch};
+}
+function showApprovalPending(profile){
+  const msg=document.getElementById('approvalPendingMessage');
+  if(msg){
+    const status=profile?.status||'active';
+    msg.textContent=status==='suspended'
+      ?'사용이 정지된 계정입니다. 관리자에게 문의해주세요.'
+      :status==='withdrawn'
+        ?'탈퇴 처리된 계정입니다. 관리자에게 문의해주세요.'
+        :'관리자 확인 후 이용 가능합니다.';
+  }
+  showScreen('scApprovalPending');
+}
+function watchCurrentUserProfile(){
+  if(userProfileUnsubscribe){userProfileUnsubscribe();userProfileUnsubscribe=null;}
+  if(!currentUser)return;
+  userProfileUnsubscribe=db.collection('users').doc(currentUser.uid).onSnapshot(doc=>{
+    if(!doc.exists)return;
+    currentUserProfile={id:doc.id,...doc.data()};
+    updateSuperAdminButton();
+    if(!isApprovedActiveProfile(currentUserProfile,currentUser)){
+      if(unsubscribe){unsubscribe();unsubscribe=null;}
+      if(empUnsubscribe){empUnsubscribe();empUnsubscribe=null;}
+      currentCafe=null;cafes=[];employees=[];
+      showApprovalPending(currentUserProfile);
+    }
+  },e=>console.log('user profile watch:',e));
+}
 async function signInWithGoogle(){
   showLoginMessage('');
   try{await auth.signInWithPopup(googleProvider);}
@@ -1996,7 +2094,9 @@ async function signInWithGoogle(){
 async function signOutUser(){
   if(unsubscribe){unsubscribe();unsubscribe=null;}
   if(empUnsubscribe){empUnsubscribe();empUnsubscribe=null;}
-  currentCafe=null;cafes=[];employees=[];
+  if(userProfileUnsubscribe){userProfileUnsubscribe();userProfileUnsubscribe=null;}
+  currentCafe=null;cafes=[];employees=[];currentUserProfile=null;
+  updateSuperAdminButton();
   await auth.signOut();
 }
 function openMyInfo(){
@@ -2011,19 +2111,117 @@ async function signOutFromMyInfo(){
   closeMyInfo();
   await signOutUser();
 }
-auth.onAuthStateChanged(user=>{
+function closeUserAdminModal(){
+  document.getElementById('userAdminModal').classList.remove('open');
+}
+async function openUserAdminModal(){
+  if(!isSuperAdminUser()){
+    alert('최고 관리자만 접근할 수 있습니다.');
+    return;
+  }
+  document.getElementById('userAdminModal').classList.add('open');
+  await renderUserAdminList();
+}
+function formatUserDate(v){
+  if(!v)return '-';
+  const d=v?.toDate?v.toDate():new Date(v);
+  if(Number.isNaN(d.getTime()))return '-';
+  return `${d.getFullYear()}.${String(d.getMonth()+1).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+}
+function userStatusText(u){
+  if(u.status==='withdrawn')return '탈퇴 처리';
+  if(u.status==='suspended')return '사용 정지';
+  if(u.approved===true&&u.status==='active')return '승인';
+  return '승인 대기';
+}
+async function renderUserAdminList(){
+  const box=document.getElementById('userAdminList');
+  if(!box)return;
+  box.innerHTML='불러오는 중...';
+  try{
+    const [userSnap,cafeSnap]=await Promise.all([
+      db.collection('users').orderBy('createdAt','desc').get(),
+      db.collection('cafes').get()
+    ]);
+    const cafeCounts={};
+    cafeSnap.forEach(d=>{
+      const owner=d.data().ownerUid||'';
+      if(owner)cafeCounts[owner]=(cafeCounts[owner]||0)+1;
+    });
+    if(userSnap.empty){
+      box.innerHTML='<div style="text-align:center;padding:18px;color:var(--t3)">가입자가 없습니다.</div>';
+      return;
+    }
+    box.innerHTML=userSnap.docs.map(doc=>{
+      const u={id:doc.id,...doc.data()};
+      const disabled=u.email===SUPER_ADMIN_EMAIL?'disabled':'';
+      const approveBtn=u.approved!==true||u.status!=='active'
+        ?`<button class="admin-edit-btn" onclick="setUserAccountStatus('${u.id}','active')" ${disabled}>승인/복구</button>`:'';
+      const suspendBtn=u.approved===true&&u.status==='active'
+        ?`<button class="admin-del-btn" onclick="setUserAccountStatus('${u.id}','suspended')" ${disabled}>사용 정지</button>`:'';
+      const withdrawBtn=u.status!=='withdrawn'
+        ?`<button class="admin-del-btn" onclick="setUserAccountStatus('${u.id}','withdrawn')" ${disabled}>탈퇴 처리</button>`:'';
+      return `<div class="admin-cafe-item">
+        <div class="admin-cafe-main">
+          <div class="admin-cafe-name">${u.email||'-'}</div>
+          <div class="admin-cafe-pw">상태: ${userStatusText(u)} · 가입일: ${formatUserDate(u.createdAt)} · 보유 가게: ${cafeCounts[u.id]||0}개</div>
+        </div>
+        <div class="admin-cafe-actions">${approveBtn}${suspendBtn}${withdrawBtn}</div>
+      </div>`;
+    }).join('');
+  }catch(e){
+    console.error(e);
+    box.innerHTML='<div style="text-align:center;padding:18px;color:var(--red)">사용자 목록을 불러오지 못했습니다.</div>';
+  }
+}
+async function setUserAccountStatus(uid,status){
+  if(!isSuperAdminUser()){
+    alert('최고 관리자만 처리할 수 있습니다.');
+    return;
+  }
+  if(uid===currentUser?.uid){
+    alert('현재 로그인한 최고 관리자 계정은 변경할 수 없습니다.');
+    return;
+  }
+  const labels={active:'승인/복구',suspended:'사용 정지',withdrawn:'탈퇴 처리'};
+  if(status!=='active'&&!confirm(`${labels[status]} 처리할까요? 데이터는 삭제되지 않고 접근만 차단됩니다.`))return;
+  await db.collection('users').doc(uid).set({
+    approved:status==='active',
+    status,
+    updatedAt:Date.now(),
+    updatedBy:currentUser.uid
+  },{merge:true});
+  showToast(`${labels[status]} 완료`);
+  await renderUserAdminList();
+}
+auth.onAuthStateChanged(async user=>{
   currentUser=user||null;
+  if(userProfileUnsubscribe){userProfileUnsubscribe();userProfileUnsubscribe=null;}
   if(EMPLOYEE_INVITE_CAFE_ID){
     loadInviteCafe(EMPLOYEE_INVITE_CAFE_ID);
     return;
   }
   if(!user){
-    currentCafe=null;cafes=[];employees=[];
+    currentCafe=null;cafes=[];employees=[];currentUserProfile=null;
+    updateSuperAdminButton();
     showScreen('scLogin');
     return;
   }
-  showScreen('scHome');
-  loadCafes();
+  try{
+    currentUserProfile=await ensureUserProfile(user);
+    watchCurrentUserProfile();
+    updateSuperAdminButton();
+    if(!isApprovedActiveProfile(currentUserProfile,user)){
+      showApprovalPending(currentUserProfile);
+      return;
+    }
+    showScreen('scHome');
+    loadCafes();
+  }catch(e){
+    console.error(e);
+    showLoginMessage('사용자 승인 상태를 확인하지 못했습니다. 잠시 후 다시 시도해주세요.');
+    showScreen('scLogin');
+  }
 });
 
 async function loadInviteCafe(cafeId){
@@ -2049,6 +2247,10 @@ function goHome(){
     openCafePasswordScreen(currentCafe,true);
     return;
   }
+  if(currentUser&&!isApprovedActiveProfile()){
+    showApprovalPending(currentUserProfile);
+    return;
+  }
   if(unsubscribe){unsubscribe();unsubscribe=null;}
   if(empUnsubscribe){empUnsubscribe();empUnsubscribe=null;}
   currentCafe=null;selDate=null;isAdminMode=false;currentWorkerEmp=null;
@@ -2065,6 +2267,10 @@ function goAfterEntryBack(){
 
 function loadCafes(){
   if(!currentUser){showScreen('scLogin');return;}
+  if(!isApprovedActiveProfile()){
+    showApprovalPending(currentUserProfile);
+    return;
+  }
   if(unsubscribe){unsubscribe();unsubscribe=null;}
   unsubscribe=tenantCollection('cafes').onSnapshot(snap=>{
     cafes=[];

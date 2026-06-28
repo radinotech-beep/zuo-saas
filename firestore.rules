@@ -6,20 +6,35 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-    function ownsCafe(cafeId) {
+    function isSuperAdmin() {
       return signedIn()
+        && request.auth.token.email == "radinotech@gmail.com";
+    }
+
+    function activeApprovedUser() {
+      return isSuperAdmin()
+        || (
+          signedIn()
+          && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+          && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.approved == true
+          && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.status == "active"
+        );
+    }
+
+    function ownsCafe(cafeId) {
+      return activeApprovedUser()
         && cafeId is string
         && exists(/databases/$(database)/documents/cafes/$(cafeId))
         && get(/databases/$(database)/documents/cafes/$(cafeId)).data.ownerUid == request.auth.uid;
     }
 
     function cafeCreateAllowed() {
-      return signedIn()
+      return activeApprovedUser()
         && request.resource.data.ownerUid == request.auth.uid;
     }
 
     function cafeReadAllowed() {
-      return signedIn()
+      return activeApprovedUser()
         && resource.data.ownerUid == request.auth.uid;
     }
 
@@ -42,11 +57,11 @@ service cloud.firestore {
     }
 
     function publicCafeChildReadAllowed() {
-      return resource.data.cafeId is string;
+      return !signedIn() && resource.data.cafeId is string;
     }
 
     function publicCafeChildCreateAllowed() {
-      return request.resource.data.cafeId is string;
+      return !signedIn() && request.resource.data.cafeId is string;
     }
 
     function publicCafeChildUpdateAllowed() {
@@ -54,10 +69,42 @@ service cloud.firestore {
         && request.resource.data.cafeId == resource.data.cafeId;
     }
 
+    match /users/{uid} {
+      allow create: if signedIn()
+        && uid == request.auth.uid
+        && request.resource.data.uid == request.auth.uid
+        && request.resource.data.email == request.auth.token.email
+        && (
+          (
+            request.auth.token.email != "radinotech@gmail.com"
+            && request.resource.data.approved == false
+            && request.resource.data.status == "active"
+          )
+          ||
+          (
+            request.auth.token.email == "radinotech@gmail.com"
+            && request.resource.data.approved == true
+            && request.resource.data.status == "active"
+          )
+        );
+      allow get: if signedIn() && (uid == request.auth.uid || isSuperAdmin());
+      allow list: if isSuperAdmin();
+      allow update: if isSuperAdmin()
+        || (
+          signedIn()
+          && uid == request.auth.uid
+          && request.resource.data.email == request.auth.token.email
+          && request.resource.data.diff(resource.data).changedKeys().hasOnly(["email", "approved", "status", "updatedAt"])
+          && request.resource.data.approved == false
+          && request.resource.data.status == "active"
+        );
+      allow delete: if false;
+    }
+
     match /cafes/{cafeId} {
       allow create: if cafeCreateAllowed();
-      allow get: if true;
-      allow list: if cafeReadAllowed();
+      allow get: if cafeReadAllowed() || isSuperAdmin() || !signedIn();
+      allow list: if cafeReadAllowed() || isSuperAdmin();
       allow update: if cafeUpdateAllowed();
       allow delete: if cafeReadAllowed();
     }

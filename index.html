@@ -1223,7 +1223,7 @@ input:focus{border-color:var(--green)}
     <div class="labor-bulk-card" id="laborBulkCard">
       <div class="labor-bulk-title"><span class="labor-bulk-title-left"><span>계약근무시간 일괄 관리</span><button type="button" class="labor-info-btn" onclick="toggleLaborBulkInfo(event)" aria-label="계약근무시간 일괄 관리 안내">i</button></span></div>
       <div class="labor-bulk-note" id="laborBulkInfo">가게 설정이 통합 캘린더 등록 방식일 때만 사용합니다. 이미 입력된 날짜는 덮어쓰지 않고 건너뜁니다.</div>
-      <div class="labor-bulk-actions"><button class="labor-bulk-btn" onclick="openContractBulkModal('apply')">계약근무시간 일괄적용</button><button class="labor-bulk-del" onclick="openContractBulkModal('delete')">자동생성분 일괄삭제</button></div>
+      <div class="labor-bulk-actions"><button class="labor-bulk-btn" onclick="openContractBulkModal('apply')">일괄적용</button><button class="labor-bulk-del" onclick="openContractBulkModal('delete')">일괄삭제</button></div>
     </div>
     <div style="display:flex;justify-content:flex-end;margin:-4px 0 8px">
       <button class="alert-hide" id="laborHeadcountToggle" onclick="toggleLaborHeadcountEnabled(event)" style="margin:0">월상시 인원 표시 ON</button>
@@ -1243,7 +1243,7 @@ input:focus{border-color:var(--green)}
         <div class="alert-stat-lbl">근무 등록일</div>
       </div>
       <div class="alert-stat">
-        <div class="alert-stat-num" id="laborStatusPayTotal">0원</div>
+        <div class="alert-stat-num" id="laborStatusPayTotal">₩0</div>
         <div class="alert-stat-lbl">월 총 인건비</div>
         <div class="labor-summary-note">주휴수당 제외</div>
       </div>
@@ -1898,7 +1898,7 @@ function tenantAdd(name,data){
 
 const DAYS=["일","월","화","수","목","금","토"];
 const MONTHS=["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
-const APP_VERSION="v2026.06.28.36";
+const APP_VERSION="v2026.06.28.37";
 const APP_URL="https://zuo-saas.firebaseapp.com";
 const INVITE_BASE_URL="https://radinotech-beep.github.io/zuo-saas/";
 const EMPLOYEE_INVITE_CAFE_ID=new URLSearchParams(location.search).get('store');
@@ -3438,7 +3438,7 @@ function getWorkMinutes(dat){
 function getWorkHours(dat){return getWorkMinutes(dat)/60;}
 function formatHours2(v){return (Number(v)||0).toFixed(2);}
 function formatHours1(v){return (Number(v)||0).toFixed(1);}
-function formatLaborMoney(v){return `${Math.round(Number(v)||0).toLocaleString()}원`;}
+function formatLaborMoney(v){return `₩${Math.round(Number(v)||0).toLocaleString()}`;}
 function calcLaborHourlyPay(row){
   const rate=Number(row?.rate)||0;
   if(rate<=0)return null;
@@ -3792,21 +3792,26 @@ function renderLaborHeadcountStats(){
   const badge=document.getElementById('laborStatusRegularBadge');
   const toggle=document.getElementById('laborHeadcountToggle');
   const basis=document.getElementById('laborHeadcountBasis');
-  if(!card||!val||!badge||!basis)return;
   if(toggle)toggle.textContent=`월상시 인원 표시 ${enabled?'ON':'OFF'}`;
-  card.classList.toggle('labor-headcount-off',!enabled);
+  if(card)card.classList.toggle('labor-headcount-off',!enabled);
+  if(!basis)return;
   if(!enabled){
-    val.textContent='숨김';
-    badge.textContent='OFF';
-    badge.className='labor-badge';
+    laborHeadcountOpen=false;
+    if(val)val.textContent='숨김';
+    if(badge){
+      badge.textContent='OFF';
+      badge.className='labor-badge';
+    }
     basis.classList.remove('show');
     basis.innerHTML='';
     return;
   }
   const s=calcLaborHeadcountStats();
-  val.textContent=`${s.avg.toFixed(1)}명`;
-  badge.textContent=s.status;
-  badge.className=`labor-badge ${s.level}`;
+  if(val)val.textContent=`${s.avg.toFixed(1)}명`;
+  if(badge){
+    badge.textContent=s.status;
+    badge.className=`labor-badge ${s.level}`;
+  }
   const pct=s.workDays?Math.round(s.ratio*100):0;
   const resultColor=s.level==='danger'?'#D93025':s.level==='warn'?'#B46800':'#159447';
   const resultText=s.level==='warn'?'주의가 필요한 상태':`${s.status} 사업장`;
@@ -3864,6 +3869,7 @@ function renderLaborStatusGrid(){
   const days=new Date(laborStatusY,laborStatusM+1,0).getDate();
   for(let i=0;i<first;i++)g.innerHTML+=`<div></div>`;
   let monthMin=0,monthPay=0,empSet=new Set(),dayCnt=0;
+  const showHeadcount=isLaborHeadcountEnabled();
   for(let d=1;d<=days;d++){
     const list=laborStatusData[d]||[];
     const totalMin=list.reduce((sum,x)=>sum+getWorkMinutes(x),0);
@@ -3876,7 +3882,7 @@ function renderLaborStatusGrid(){
     const lines=list.slice(0,2).map(x=>`<div class="labor-status-line">${x.empName} ${formatHours1(getWorkHours(x))}h</div>`).join('');
     const more=list.length>2?`<div class="labor-status-line">+${list.length-2}명</div>`:'';
     g.innerHTML+=`<div class="labor-status-cell ${laborStatusSelectedDay===d?'labor-status-selected':''}" onclick="selectLaborStatusDay(${d})">
-      <div class="labor-status-top"><div class="labor-status-date">${d}</div>${peopleCnt?`<div class="labor-status-people">${peopleCnt}명/${formatHours1(totalMin/60)}h</div>`:''}</div>
+      <div class="labor-status-top"><div class="labor-status-date">${d}</div>${showHeadcount&&peopleCnt?`<div class="labor-status-people">${peopleCnt}명/${formatHours1(totalMin/60)}h</div>`:''}</div>
       <div class="labor-status-lines">${lines}${more}</div>
       ${totalMin&&totalPay?`<div class="labor-status-total"><span class="labor-status-pay">${formatLaborMoney(totalPay)}</span></div>`:''}
     </div>`;

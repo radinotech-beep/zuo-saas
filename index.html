@@ -433,14 +433,17 @@ input:focus{border-color:var(--green)}
 .contract-row{display:grid;grid-template-columns:1fr 1fr 88px;gap:6px;align-items:end}
 .contract-row label{font-size:10px;color:var(--t3);font-weight:700;display:block;margin-bottom:3px}
 .contract-row select,.contract-row input,.labor-bulk-card select,.labor-manual-grid select,.labor-manual-grid input{width:100%;border:1px solid var(--bd);border-radius:8px;padding:8px 9px;font-size:12px;background:#fff;color:var(--t1);outline:none}
-.contract-actions,.labor-bulk-actions{display:flex;gap:8px;margin-top:8px}
+.contract-actions{display:flex;gap:8px;margin-top:8px}
+.labor-bulk-actions{display:flex;gap:8px;margin-top:0;flex:0 0 auto}
 .contract-add,.labor-bulk-btn{border:none;border-radius:9px;background:var(--green);color:#fff;font-size:12px;font-weight:800;padding:9px 10px;cursor:pointer}
 .contract-del,.labor-bulk-del{border:1px solid var(--bd);border-radius:9px;background:#fff;color:var(--red);font-size:12px;font-weight:800;padding:9px 10px;cursor:pointer}
-.labor-bulk-card{display:none;background:var(--gl);border-color:var(--gm)}
+.labor-bulk-card{display:none;background:var(--gl);border-color:var(--gm);align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.labor-bulk-title{margin-bottom:0;flex:1 1 auto;min-width:0}
 .labor-bulk-title-left{display:flex;align-items:center;gap:6px;min-width:0}
 .labor-info-btn{width:18px;height:18px;border-radius:50%;border:1px solid var(--gm);background:#fff;color:var(--gd);font-size:11px;font-weight:900;line-height:16px;text-align:center;cursor:pointer;flex-shrink:0}
-.labor-bulk-note{display:none;position:relative;background:#fff;border:1px solid var(--gm);border-radius:9px;padding:8px 9px;font-size:11px;color:var(--gd);line-height:1.55;margin:-2px 0 8px;box-shadow:0 6px 16px rgba(27,53,94,.08)}
+.labor-bulk-note{display:none;position:relative;background:#fff;border:1px solid var(--gm);border-radius:9px;padding:8px 9px;font-size:11px;color:var(--gd);line-height:1.55;margin:0;box-shadow:0 6px 16px rgba(27,53,94,.08);flex:0 0 100%;order:3}
 .labor-bulk-note.show{display:block}
+.pending-user-badge{display:none;align-items:center;justify-content:center;min-width:18px;height:18px;border-radius:999px;background:#d93025;color:#fff;font-size:11px;font-weight:900;line-height:1;padding:0 6px;margin-left:6px}
 .bulk-emp-list{max-height:220px;overflow:auto;border:1px solid var(--bd);border-radius:10px;padding:8px;background:#fff;margin:8px 0}
 .bulk-emp-list label{display:flex;align-items:center;gap:8px;padding:7px 4px;font-size:13px;color:var(--t1);border-bottom:1px solid #f4f4f4}
 .bulk-emp-list label:last-child{border-bottom:none}
@@ -508,7 +511,7 @@ input:focus{border-color:var(--green)}
   </div>
   <div class="cafe-list" id="cafeList"></div>
   <button class="admin-btn" onclick="goAdmin()">⚙️ 내가게 관리설정</button>
-  <button class="admin-btn" id="superAdminBtn" style="display:none;margin-top:10px" onclick="openUserAdminModal()">사용자 관리</button>
+  <button class="admin-btn" id="superAdminBtn" style="display:none;margin-top:10px" onclick="openUserAdminModal()">사용자 관리<span class="pending-user-badge" id="pendingUserBadge">0</span></button>
 </div>
 
 <!-- 화면2: 가게 비밀번호 -->
@@ -1898,7 +1901,7 @@ function tenantAdd(name,data){
 
 const DAYS=["일","월","화","수","목","금","토"];
 const MONTHS=["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
-const APP_VERSION="v2026.06.29.43";
+const APP_VERSION="v2026.06.29.44";
 const APP_URL="https://zuo-saas.firebaseapp.com";
 const INVITE_BASE_URL="https://radinotech-beep.github.io/zuo-saas/";
 const EMPLOYEE_INVITE_CAFE_ID=new URLSearchParams(location.search).get('store');
@@ -1911,6 +1914,7 @@ let selDate=null,allSubs={},pendTake=null,pendEdit=null,pendDel=null;
 let currentUser=null;
 let currentUserProfile=null;
 let userProfileUnsubscribe=null;
+let pendingUsersUnsubscribe=null;
 let currentCafe=null,cafes=[],editingCafeId=null,unsubscribe=null;
 let isEmployeeInviteMode=false;
 let pickingFor='start',isAm=true,selH=9,selM=0;
@@ -2066,7 +2070,40 @@ function isApprovedActiveProfile(profile=currentUserProfile,user=currentUser){
 }
 function updateSuperAdminButton(){
   const btn=document.getElementById('superAdminBtn');
-  if(btn)btn.style.display=isSuperAdminUser()?'flex':'none';
+  const isSuper=isSuperAdminUser();
+  if(btn)btn.style.display=isSuper?'flex':'none';
+  if(!isSuper){
+    stopPendingUsersWatch();
+  }
+}
+function updatePendingUserBadge(count=0){
+  const badge=document.getElementById('pendingUserBadge');
+  if(!badge)return;
+  const visible=isSuperAdminUser()&&count>0;
+  badge.textContent=String(count);
+  badge.style.display=visible?'inline-flex':'none';
+}
+function stopPendingUsersWatch(){
+  if(pendingUsersUnsubscribe){
+    pendingUsersUnsubscribe();
+    pendingUsersUnsubscribe=null;
+  }
+  updatePendingUserBadge(0);
+}
+function watchPendingUsers(){
+  stopPendingUsersWatch();
+  if(!isSuperAdminUser())return;
+  pendingUsersUnsubscribe=db.collection('users').where('approved','==',false).onSnapshot(snap=>{
+    let pendingCount=0;
+    snap.forEach(doc=>{
+      const data=doc.data()||{};
+      if((data.status||'active')==='active')pendingCount++;
+    });
+    updatePendingUserBadge(pendingCount);
+  },e=>{
+    console.log('pending users watch:',e);
+    updatePendingUserBadge(0);
+  });
 }
 async function ensureUserProfile(user){
   const ref=db.collection('users').doc(user.uid);
@@ -2125,6 +2162,7 @@ async function signOutUser(){
   if(unsubscribe){unsubscribe();unsubscribe=null;}
   if(empUnsubscribe){empUnsubscribe();empUnsubscribe=null;}
   if(userProfileUnsubscribe){userProfileUnsubscribe();userProfileUnsubscribe=null;}
+  stopPendingUsersWatch();
   currentCafe=null;cafes=[];employees=[];currentUserProfile=null;
   updateSuperAdminButton();
   await auth.signOut();
@@ -2234,6 +2272,7 @@ auth.onAuthStateChanged(async user=>{
   }
   if(!user){
     currentCafe=null;cafes=[];employees=[];currentUserProfile=null;
+    stopPendingUsersWatch();
     updateSuperAdminButton();
     showScreen('scLogin');
     return;
@@ -2242,6 +2281,7 @@ auth.onAuthStateChanged(async user=>{
     currentUserProfile=await ensureUserProfile(user);
     watchCurrentUserProfile();
     updateSuperAdminButton();
+    watchPendingUsers();
     if(!isApprovedActiveProfile(currentUserProfile,user)){
       showApprovalPending(currentUserProfile);
       return;
@@ -5705,7 +5745,7 @@ function updateWorkEntryModeUI(){
   const bulk=document.getElementById("laborBulkCard");
   if(bulk){
     bulk.hidden=!calendarMode;
-    bulk.style.display=calendarMode?"block":"none";
+    bulk.style.display=calendarMode?"flex":"none";
   }
   const badge=document.getElementById("laborStatusModeBadge");
   if(badge){

@@ -1,4 +1,4 @@
-const APP_VERSION = 'v2026.06.29.41';
+const APP_VERSION = 'v2026.06.29.42';
 const CACHE_NAME = `zuo-saas-${APP_VERSION}`;
 const STATIC_FILES = [
   './manifest.json',

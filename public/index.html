@@ -1899,7 +1899,7 @@ function tenantAdd(name,data){
 
 const DAYS=["일","월","화","수","목","금","토"];
 const MONTHS=["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
-const APP_VERSION="v2026.06.29.39";
+const APP_VERSION="v2026.06.29.40";
 const APP_URL="https://zuo-saas.firebaseapp.com";
 const INVITE_BASE_URL="https://radinotech-beep.github.io/zuo-saas/";
 const EMPLOYEE_INVITE_CAFE_ID=new URLSearchParams(location.search).get('store');
@@ -1945,6 +1945,7 @@ document.getElementById('homeDateLbl').textContent=dateStr;
 document.getElementById('appDateLbl').textContent=dateStr;
 
 let activeScreenId=null;
+let bypassBackConfirm=false;
 function renderAppVersion(){
   ['scSvc','scSvcWorker'].forEach(id=>{
     const wrap=document.querySelector(`#${id} .svc-wrap`);
@@ -1972,6 +1973,26 @@ function showScreen(id,skipHistory=false){
   window.scrollTo(0,0);
 }
 window.addEventListener('popstate',e=>{
+  if(!bypassBackConfirm&&activeScreenId==='scSvc'){
+    if(confirm('이 가게를 나가시겠습니까?')){
+      goHome();
+    }else{
+      history.pushState({screen:'scSvc'},'',location.href);
+      showScreen('scSvc',true);
+    }
+    return;
+  }
+  if(!bypassBackConfirm&&activeScreenId==='scHome'){
+    if(confirm('앱을 종료하시겠습니까?')){
+      bypassBackConfirm=true;
+      history.back();
+    }else{
+      history.pushState({screen:'scHome'},'',location.href);
+      showScreen('scHome',true);
+    }
+    return;
+  }
+  bypassBackConfirm=false;
   const id=e.state?.screen||'scHome';
   showScreen(id,true);
 });

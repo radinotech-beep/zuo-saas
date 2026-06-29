@@ -801,7 +801,7 @@ input:focus{border-color:var(--green)}
         <div style="width:40px;height:40px;border-radius:10px;background:#E6F1FB;display:flex;align-items:center;justify-content:center;font-size:20px">📋</div>
         <div>
           <div style="font-size:14px;font-weight:600;color:var(--t1)">개인 근로 캘린더 <span class="labor-use-badge" id="laborWorkerUseBadge">사용중</span></div>
-          <div id="laborWorkerTimeMenuDesc" style="font-size:11px;color:var(--t3);margin-top:2px">본인 이름 선택 후 근무시간 등록</div>
+          <div id="laborWorkerTimeMenuDesc" style="font-size:11px;color:var(--t3);margin-top:2px">개인별 근로 등록/관리 - 직원 직접 등록시 편리</div>
         </div>
         <div style="margin-left:auto;color:var(--t3);font-size:18px">›</div>
       </div>
@@ -809,7 +809,7 @@ input:focus{border-color:var(--green)}
         <div style="width:40px;height:40px;border-radius:10px;background:#E2EFDA;display:flex;align-items:center;justify-content:center;font-size:20px">📅</div>
         <div>
           <div style="font-size:14px;font-weight:600;color:var(--t1)">통합 근로 캘린더 <span class="labor-use-badge" id="laborCalendarUseBadge">사용중</span></div>
-          <div style="font-size:11px;color:var(--t3);margin-top:2px">날짜별 직원 근무 · 일별 합계</div>
+          <div style="font-size:11px;color:var(--t3);margin-top:2px">전인원 통합 근로 등록/관리 - 관리자 등록 관리시 편리</div>
         </div>
         <div style="margin-left:auto;color:var(--t3);font-size:18px">›</div>
       </div>
@@ -1898,7 +1898,7 @@ function tenantAdd(name,data){
 
 const DAYS=["일","월","화","수","목","금","토"];
 const MONTHS=["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
-const APP_VERSION="v2026.06.29.42";
+const APP_VERSION="v2026.06.29.43";
 const APP_URL="https://zuo-saas.firebaseapp.com";
 const INVITE_BASE_URL="https://radinotech-beep.github.io/zuo-saas/";
 const EMPLOYEE_INVITE_CAFE_ID=new URLSearchParams(location.search).get('store');
@@ -5698,8 +5698,6 @@ function updateWorkEntryModeUI(){
   if(cardDesc)cardDesc.textContent=calendarMode?"본인 근무시간 조회":"본인 근무시간 등록";
   const laborWorkerMenu=document.getElementById("laborWorkerTimeMenu");
   if(laborWorkerMenu)laborWorkerMenu.style.display="flex";
-  const laborWorkerDesc=document.getElementById("laborWorkerTimeMenuDesc");
-  if(laborWorkerDesc)laborWorkerDesc.textContent=calendarMode?"본인 이름 선택 후 근무시간 조회":"본인 이름 선택 후 근무시간 등록";
   const workerBadge=document.getElementById("laborWorkerUseBadge");
   if(workerBadge)workerBadge.style.display=calendarMode?"none":"inline-flex";
   const calendarBadge=document.getElementById("laborCalendarUseBadge");

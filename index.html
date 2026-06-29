@@ -365,10 +365,10 @@ input:focus{border-color:var(--green)}
 .labor-basis-line:before{content:"-";position:absolute;left:0;color:#9b6a26;font-weight:900}
 .labor-basis strong{color:#BA7517;font-weight:900}
 .labor-basis-result{font-weight:900}
-.labor-summary{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;margin-bottom:10px}
-.labor-summary .alert-stat{padding:6px 1px;min-height:52px}
-.labor-summary .alert-stat-num{font-size:10.5px;font-weight:700;white-space:nowrap;letter-spacing:0}
-.labor-summary .alert-stat-lbl{font-size:8px;margin-top:2px;white-space:nowrap}
+.labor-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin-bottom:10px}
+.labor-summary .alert-stat{padding:7px 2px;min-height:54px}
+.labor-summary .alert-stat-num{font-size:12px;font-weight:700;white-space:nowrap;letter-spacing:0}
+.labor-summary .alert-stat-lbl{font-size:9px;margin-top:2px;white-space:nowrap}
 .labor-summary-note{font-size:8px;color:var(--t3);margin-top:1px;white-space:nowrap}
 .pay-compact-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 .pay-compact-card{background:#fff;border:1px solid var(--bd);border-radius:10px;padding:10px;cursor:pointer;display:grid;grid-template-columns:36px 1fr;gap:8px;align-items:center;min-width:0}
@@ -1235,10 +1235,6 @@ input:focus{border-color:var(--green)}
         <div class="alert-stat-lbl">월 총 근무시간</div>
       </div>
       <div class="alert-stat">
-        <div class="alert-stat-num" id="laborStatusEmpCnt">0명</div>
-        <div class="alert-stat-lbl">근무 직원</div>
-      </div>
-      <div class="alert-stat">
         <div class="alert-stat-num" id="laborStatusDayCnt">0일</div>
         <div class="alert-stat-lbl">근무 등록일</div>
       </div>
@@ -1903,7 +1899,7 @@ function tenantAdd(name,data){
 
 const DAYS=["일","월","화","수","목","금","토"];
 const MONTHS=["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
-const APP_VERSION="v2026.06.29.38";
+const APP_VERSION="v2026.06.29.39";
 const APP_URL="https://zuo-saas.firebaseapp.com";
 const INVITE_BASE_URL="https://radinotech-beep.github.io/zuo-saas/";
 const EMPLOYEE_INVITE_CAFE_ID=new URLSearchParams(location.search).get('store');
@@ -3893,11 +3889,9 @@ function renderLaborStatusGrid(){
     </div>`;
   }
   const totalEl=document.getElementById('laborStatusTotal');
-  const empCntEl=document.getElementById('laborStatusEmpCnt');
   const dayCntEl=document.getElementById('laborStatusDayCnt');
   const payTotalEl=document.getElementById('laborStatusPayTotal');
   if(totalEl)totalEl.textContent=`${formatHours2(monthMin/60)}h`;
-  if(empCntEl)empCntEl.textContent=`${empSet.size}명`;
   if(dayCntEl)dayCntEl.textContent=`${dayCnt}일`;
   if(payTotalEl)payTotalEl.textContent=formatLaborMoney(monthPay);
   renderLaborHeadcountStats();

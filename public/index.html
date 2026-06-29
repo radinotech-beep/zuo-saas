@@ -365,10 +365,10 @@ input:focus{border-color:var(--green)}
 .labor-basis-line:before{content:"-";position:absolute;left:0;color:#9b6a26;font-weight:900}
 .labor-basis strong{color:#BA7517;font-weight:900}
 .labor-basis-result{font-weight:900}
-.labor-summary{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;margin-bottom:10px}
-.labor-summary .alert-stat{padding:7px 2px;min-height:54px}
-.labor-summary .alert-stat-num{font-size:12px;font-weight:700;white-space:nowrap;letter-spacing:0}
-.labor-summary .alert-stat-lbl{font-size:9px;margin-top:2px;white-space:nowrap}
+.labor-summary{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;margin-bottom:10px}
+.labor-summary .alert-stat{padding:6px 1px;min-height:52px}
+.labor-summary .alert-stat-num{font-size:10.5px;font-weight:700;white-space:nowrap;letter-spacing:0}
+.labor-summary .alert-stat-lbl{font-size:8px;margin-top:2px;white-space:nowrap}
 .labor-summary-note{font-size:8px;color:var(--t3);margin-top:1px;white-space:nowrap}
 .pay-compact-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 .pay-compact-card{background:#fff;border:1px solid var(--bd);border-radius:10px;padding:10px;cursor:pointer;display:grid;grid-template-columns:36px 1fr;gap:8px;align-items:center;min-width:0}
@@ -1242,6 +1242,11 @@ input:focus{border-color:var(--green)}
         <div class="alert-stat-num" id="laborStatusDayCnt">0일</div>
         <div class="alert-stat-lbl">근무 등록일</div>
       </div>
+      <div class="alert-stat labor-headcount-card" id="laborHeadcountCard" onclick="toggleLaborHeadcountBasis()">
+        <div class="alert-stat-num" id="laborStatusRegularCnt">0.0명</div>
+        <div class="alert-stat-lbl">월상시 인원</div>
+        <div class="labor-summary-note" id="laborStatusRegularBadge">참고</div>
+      </div>
       <div class="alert-stat">
         <div class="alert-stat-num" id="laborStatusPayTotal">₩0</div>
         <div class="alert-stat-lbl">월 총 인건비</div>
@@ -1898,7 +1903,7 @@ function tenantAdd(name,data){
 
 const DAYS=["일","월","화","수","목","금","토"];
 const MONTHS=["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
-const APP_VERSION="v2026.06.28.37";
+const APP_VERSION="v2026.06.29.38";
 const APP_URL="https://zuo-saas.firebaseapp.com";
 const INVITE_BASE_URL="https://radinotech-beep.github.io/zuo-saas/";
 const EMPLOYEE_INVITE_CAFE_ID=new URLSearchParams(location.search).get('store');
@@ -3800,7 +3805,7 @@ function renderLaborHeadcountStats(){
     if(val)val.textContent='숨김';
     if(badge){
       badge.textContent='OFF';
-      badge.className='labor-badge';
+      badge.className='labor-summary-note';
     }
     basis.classList.remove('show');
     basis.innerHTML='';
@@ -3810,7 +3815,8 @@ function renderLaborHeadcountStats(){
   if(val)val.textContent=`${s.avg.toFixed(1)}명`;
   if(badge){
     badge.textContent=s.status;
-    badge.className=`labor-badge ${s.level}`;
+    badge.className='labor-summary-note';
+    badge.style.color=s.level==='danger'?'#D93025':s.level==='warn'?'#B46800':'#159447';
   }
   const pct=s.workDays?Math.round(s.ratio*100):0;
   const resultColor=s.level==='danger'?'#D93025':s.level==='warn'?'#B46800':'#159447';
@@ -3869,7 +3875,6 @@ function renderLaborStatusGrid(){
   const days=new Date(laborStatusY,laborStatusM+1,0).getDate();
   for(let i=0;i<first;i++)g.innerHTML+=`<div></div>`;
   let monthMin=0,monthPay=0,empSet=new Set(),dayCnt=0;
-  const showHeadcount=isLaborHeadcountEnabled();
   for(let d=1;d<=days;d++){
     const list=laborStatusData[d]||[];
     const totalMin=list.reduce((sum,x)=>sum+getWorkMinutes(x),0);
@@ -3882,7 +3887,7 @@ function renderLaborStatusGrid(){
     const lines=list.slice(0,2).map(x=>`<div class="labor-status-line">${x.empName} ${formatHours1(getWorkHours(x))}h</div>`).join('');
     const more=list.length>2?`<div class="labor-status-line">+${list.length-2}명</div>`:'';
     g.innerHTML+=`<div class="labor-status-cell ${laborStatusSelectedDay===d?'labor-status-selected':''}" onclick="selectLaborStatusDay(${d})">
-      <div class="labor-status-top"><div class="labor-status-date">${d}</div>${showHeadcount&&peopleCnt?`<div class="labor-status-people">${peopleCnt}명/${formatHours1(totalMin/60)}h</div>`:''}</div>
+      <div class="labor-status-top"><div class="labor-status-date">${d}</div>${peopleCnt?`<div class="labor-status-people">${peopleCnt}명/${formatHours1(totalMin/60)}h</div>`:''}</div>
       <div class="labor-status-lines">${lines}${more}</div>
       ${totalMin&&totalPay?`<div class="labor-status-total"><span class="labor-status-pay">${formatLaborMoney(totalPay)}</span></div>`:''}
     </div>`;

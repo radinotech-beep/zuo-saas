@@ -1905,7 +1905,7 @@ function tenantAdd(name,data){
 
 const DAYS=["일","월","화","수","목","금","토"];
 const MONTHS=["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
-const APP_VERSION="v2026.07.08.47";
+const APP_VERSION="v2026.07.08.48";
 const APP_URL="https://zuo-saas.firebaseapp.com";
 const INVITE_BASE_URL="https://radinotech-beep.github.io/zuo-saas/";
 const EMPLOYEE_INVITE_CAFE_ID=new URLSearchParams(location.search).get('store');
@@ -3430,6 +3430,11 @@ function renderEmpListForWorker(){
 function openWorkerPw(empId){
   const emp=employees.find(e=>e.id===empId);if(!emp)return;
   currentWorkerEmp=emp;
+  if(isAdminMode){
+    document.getElementById('workerSelectModal').classList.remove('open');
+    enterWorkerInput();
+    return;
+  }
   document.getElementById('workerPwModalTitle').textContent=`${emp.name}님 내 락커룸 비밀번호 확인`;
   document.getElementById('workerPwInput').value='';
   document.getElementById('workerPwError').style.display='none';

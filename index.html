@@ -1905,7 +1905,7 @@ function tenantAdd(name,data){
 
 const DAYS=["일","월","화","수","목","금","토"];
 const MONTHS=["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
-const APP_VERSION="v2026.07.07.46";
+const APP_VERSION="v2026.07.08.47";
 const APP_URL="https://zuo-saas.firebaseapp.com";
 const INVITE_BASE_URL="https://radinotech-beep.github.io/zuo-saas/";
 const EMPLOYEE_INVITE_CAFE_ID=new URLSearchParams(location.search).get('store');
@@ -2005,7 +2005,7 @@ window.addEventListener('popstate',e=>{
 });
 
 function updateAdminHeaderButtons(){
-  document.querySelectorAll('.admin-gear-btn').forEach(btn=>btn.remove());
+  document.querySelectorAll('.admin-gear-btn,.admin-alert-btn').forEach(btn=>btn.remove());
   if(!isAdminMode||!currentCafe)return;
   const active=document.querySelector('.screen.active');
   if(!active||['scLogin','scHome','scSvcWorker','scWorkerInput'].includes(active.id))return;
@@ -2041,13 +2041,21 @@ function updateAdminHeaderButtons(){
     if(child===actions||child===centerSlot||child.classList.contains('back-btn'))return;
     actions.appendChild(child);
   });
+  const alertBtn=document.createElement('button');
+  alertBtn.type='button';
+  alertBtn.className='hdr-icon-btn admin-alert-btn';
+  alertBtn.title='Alerts';
+  alertBtn.innerHTML='\uD83D\uDD14<span class="hdr-badge" id="headerAlertBadge">0</span>';
+  alertBtn.onclick=()=>enterSvc('alerts');
   const btn=document.createElement('button');
   btn.type='button';
   btn.className='hdr-icon-btn admin-gear-btn';
-  btn.title='메뉴/옵션설정';
-  btn.textContent='⚙️';
+  btn.title='Menu options';
+  btn.textContent='\u2699\uFE0F';
   btn.onclick=openMenuOptionsModal;
   actions.prepend(btn);
+  actions.prepend(alertBtn);
+  updateSvcAlertBadge();
 }
 
 function applyTheme(color){
@@ -2460,12 +2468,15 @@ async function refreshSvcAlertBadge(){
 }
 
 function updateSvcAlertBadge(){
-  const badge=document.getElementById('svcAlertBadge');
-  if(!badge)return;
+  const badges=['svcAlertBadge','headerAlertBadge'].map(id=>document.getElementById(id)).filter(Boolean);
+  if(!badges.length)return;
   const hidden=currentCafe?getHiddenAlerts():[];
   const count=(alertItems||[]).filter(a=>!hidden.includes(a.id)).length;
-  badge.textContent=count>99?'99+':String(count);
-  badge.style.display=count>0?'flex':'none';
+  const label=count>99?'99+':String(count);
+  badges.forEach(badge=>{
+    badge.textContent=label;
+    badge.style.display=count>0?'flex':'none';
+  });
 }
 function showAdminPwInput(){
   document.getElementById('adminPwArea').style.display='block';

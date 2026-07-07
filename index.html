@@ -378,25 +378,9 @@ input:focus{border-color:var(--green)}
 .pay-compact-card .emp-nm{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pay-compact-card .emp-info{font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pay-compact-action{grid-column:1/-1;border:none;border-radius:7px;background:#BA7517;color:#fff;font-size:11px;font-weight:800;padding:6px;cursor:pointer}
-.pay-slip-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:420;display:none;align-items:center;justify-content:center;padding:18px}
-.pay-slip-modal-overlay.open{display:flex}
-.pay-slip-modal-card{width:100%;max-width:390px;background:#fff;border-radius:16px;box-shadow:0 18px 48px rgba(0,0,0,.22);overflow:hidden}
-.pay-slip-modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px;border-bottom:1px solid var(--bd)}
-.pay-slip-modal-title{font-size:16px;font-weight:500;color:var(--t1);min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pay-slip-modal-close{border:none;background:#f5f5f5;color:var(--t2);width:30px;height:30px;border-radius:50%;font-size:18px;line-height:1;cursor:pointer;flex-shrink:0}
-.pay-slip-modal-body{padding:14px 18px 4px}
-.pay-slip-modal-sub{font-size:12px;color:var(--t3);margin-bottom:10px}
-.pay-slip-modal-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #f3f3f3}
-.pay-slip-modal-label{font-size:13px;color:var(--t2)}
-.pay-slip-modal-value{font-size:13px;font-weight:500;color:var(--t1);text-align:right}
-.pay-slip-modal-value.danger{color:var(--red)}
-.pay-slip-modal-divider{height:1px;background:var(--bd);margin:8px 0 2px}
-.pay-slip-modal-total{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 0 10px}
-.pay-slip-modal-total .pay-slip-modal-label{font-size:14px;font-weight:500;color:var(--t1)}
-.pay-slip-modal-total .pay-slip-modal-value{font-size:16px;font-weight:500;color:#1B355E}
-.pay-slip-modal-nav{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 18px 16px;background:#fafafa;border-top:1px solid var(--bd)}
-.pay-slip-modal-nav button{border:1px solid var(--bd);background:#fff;color:var(--t1);border-radius:9px;padding:9px 10px;font-size:12px;font-weight:700;cursor:pointer;min-width:0;max-width:46%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pay-slip-modal-nav .spacer{flex:1}
+.payslip-emp-nav{display:none;align-items:center;justify-content:space-between;gap:8px;margin:0 0 10px}
+.payslip-emp-nav button{border:1px solid #8AB4F8;background:#fff;color:#1B355E;border-radius:10px;padding:10px 12px;font-size:12px;font-weight:800;cursor:pointer;min-width:0;max-width:48%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.payslip-emp-nav .spacer{flex:1}
 /* 급여 명세서 */
 .payslip{background:#fff;border-radius:12px;border:1px solid var(--bd);overflow:hidden;margin-bottom:10px}
 .ps-hdr{background:var(--green);padding:14px 16px}
@@ -1153,6 +1137,7 @@ input:focus{border-color:var(--green)}
     </div>
 
     <!-- 버튼들 -->
+    <div class="payslip-emp-nav" id="payslipEmpNav"></div>
     <div style="display:flex;gap:8px;margin-bottom:6px">
       <button class="fcnl" style="flex:1" onclick="savePayslip()">💾 저장</button>
       <button style="flex:2;padding:11px;border-radius:8px;border:none;background:var(--green);color:#fff;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px" onclick="captureAndShare()">
@@ -1164,26 +1149,6 @@ input:focus{border-color:var(--green)}
 </div>
 
 <!-- 화면11: 월 급여 현황 테이블 -->
-
-<div class="pay-slip-modal-overlay" id="paySlipModal" onclick="if(event.target===this)closePaySlipModal()">
-  <div class="pay-slip-modal-card" role="dialog" aria-modal="true" aria-labelledby="paySlipModalTitle">
-    <div class="pay-slip-modal-head">
-      <div class="pay-slip-modal-title" id="paySlipModalTitle"></div>
-      <button type="button" class="pay-slip-modal-close" onclick="closePaySlipModal()" aria-label="close payslip">&times;</button>
-    </div>
-    <div class="pay-slip-modal-body">
-      <div class="pay-slip-modal-sub" id="paySlipModalSub"></div>
-      <div id="paySlipModalRows"></div>
-      <div class="pay-slip-modal-divider"></div>
-      <div class="pay-slip-modal-total">
-        <span class="pay-slip-modal-label">&#xC2E4;&#xC218;&#xB839;&#xC561;</span>
-        <span class="pay-slip-modal-value" id="paySlipModalNet">0&#xC6D0;</span>
-      </div>
-    </div>
-    <div class="pay-slip-modal-nav" id="paySlipModalNav"></div>
-  </div>
-</div>
-
 <div class="screen" id="scPayTable">
   <div class="hdr">
     <button class="back-btn" onclick="showScreen('scLabor')">← 뒤로</button>
@@ -1940,7 +1905,7 @@ function tenantAdd(name,data){
 
 const DAYS=["일","월","화","수","목","금","토"];
 const MONTHS=["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
-const APP_VERSION="v2026.07.07.45";
+const APP_VERSION="v2026.07.07.46";
 const APP_URL="https://zuo-saas.firebaseapp.com";
 const INVITE_BASE_URL="https://radinotech-beep.github.io/zuo-saas/";
 const EMPLOYEE_INVITE_CAFE_ID=new URLSearchParams(location.search).get('store');
@@ -4142,7 +4107,7 @@ function renderPayEmpList(){
   const tcolors=['var(--gd)','#3C3489','#72243E','#0C447C','var(--ad)'];
   w.className='pay-compact-grid';
   const activePayEmployees=employees.filter(e=>!e.resigned);
-  paySlipModalEmpIds=activePayEmployees.map(e=>e.id);
+  paySlipNavEmpIds=activePayEmployees.map(e=>e.id);
   w.innerHTML=activePayEmployees.map((e,i)=>`
     <div class="pay-compact-card" onclick="openPayslip('${e.id}')">
       <div class="emp-avatar" style="background:${colors[i%5]};color:${tcolors[i%5]}">${e.name.substring(0,2)}</div>
@@ -4152,46 +4117,79 @@ function renderPayEmpList(){
 }
 
 let psCurrentEmp=null;
-let paySlipModalEmpIds=[];
-let paySlipModalIndex=-1;
+let paySlipNavEmpIds=[];
 async function openPayslip(empId){
   const emp=employees.find(e=>e.id===empId);if(!emp)return;
   psCurrentEmp=emp;
-  if(!paySlipModalEmpIds.length)paySlipModalEmpIds=employees.filter(e=>!e.resigned).map(e=>e.id);
-  paySlipModalIndex=paySlipModalEmpIds.indexOf(empId);
-  const period=payY+'-'+String(payM+1).padStart(2,'0');
-  const pay=await calcEmpPay(emp,period);
-  renderPaySlipModal(emp,pay);
+  const period=`${payY}-${String(payM+1).padStart(2,'0')}`;
+  // 근무시간 로드
+  const snap=await tenantCollection('workHours').where('cafeId','==',currentCafe.id).where('empId','==',empId).where('period','==',period).get();
+  const workDays=getWorkDaysFromSnapshot(snap);
+  const total=sumWorkDays(workDays);
+  const base=Math.round(total*(emp.rate||0));
+  // 주수 = 해당 월의 일요일 개수
+  const weeksInMonth=(()=>{
+    let sundays=0;
+    const daysInMonth=new Date(payY,payM+1,0).getDate();
+    for(let d=1;d<=daysInMonth;d++){
+      if(new Date(payY,payM,d).getDay()===0)sundays++;
+    }
+    return sundays;
+  })();
+  const weeklyHrs=total/weeksInMonth;
+  // 주휴단가 기본값
+  if(emp.holidayRate!==null&&emp.holidayRate!==undefined){
+    psHoliRateVal=emp.holidayRate;
+  } else if(weeklyHrs>=15){
+    psHoliRateVal=Math.round((weeklyHrs/40)*8*(emp.rate||0));
+  } else {
+    psHoliRateVal=0;
+  }
+  psWeekCntVal=weeksInMonth;
+  // ★ 저장된 명세서 데이터 불러오기
+  const psSnap=await tenantCollection('payslips').where('cafeId','==',currentCafe.id).where('empId','==',empId).where('period','==',period).get();
+  let savedBonus=0,savedBonusMemo='',savedEtc=0,savedEtcMemo='';
+  if(!psSnap.empty){
+    const saved=psSnap.docs[0].data();
+    if(saved.holiRateVal!==undefined)psHoliRateVal=saved.holiRateVal;
+    if(saved.weekCntVal!==undefined)psWeekCntVal=saved.weekCntVal;
+    savedBonus=saved.bonus||0;
+    savedBonusMemo=saved.bonusMemo||'';
+    savedEtc=saved.etc||0;
+    savedEtcMemo=saved.etcMemo||'';
+  }
+  // 고용형태 표시
+  const empType=emp.empType||'기타';
+  const typeLabel={정규직:'정규직 (4대보험)',프리랜서:'프리랜서 (3.3%)',일용직:'일용직 (2.97%+고용보험)',기타:'기타 (공제없음)'};
+  document.getElementById('psCafeName').textContent=`☕ ${currentCafe.name} · 급여 명세서`;
+  document.getElementById('psName').textContent=emp.name;
+  document.getElementById('psPeriod').textContent=`${payY}년 ${payM+1}월 급여 명세서`;
+  document.getElementById('psEmpType').textContent=typeLabel[empType]||empType;
+  document.getElementById('psHours').textContent=formatHours2(total)+'시간';
+  document.getElementById('psRate').textContent='₩'+(emp.rate||0).toLocaleString();
+  document.getElementById('psBase').textContent='₩'+base.toLocaleString();
+  document.getElementById('psHoliRate').textContent='₩'+psHoliRateVal.toLocaleString();
+  setCurrencyValue('psHoliRateInput',psHoliRateVal);
+  document.getElementById('psWeekCnt').textContent=psWeekCntVal;
+  document.getElementById('psWeekCntDisp').textContent=psWeekCntVal;
+  document.getElementById('psBonus').value=savedBonus;
+  document.getElementById('psBonusMemo').value=savedBonusMemo;
+  document.getElementById('psEtc').value=savedEtc;
+  document.getElementById('psEtcMemo').value=savedEtcMemo;
+  calcPayTotal();renderPayslipEmpNav(empId);showScreen('scPayslip');
 }
-function formatPaySlipMoney(v){return Number(v||0).toLocaleString()+'\uC6D0';}
-function renderPaySlipModal(emp,pay){
-  const modal=document.getElementById('paySlipModal');
-  if(!modal)return;
-  document.getElementById('paySlipModalTitle').textContent=emp.name+' \u2014 '+(payM+1)+'\uC6D4 \uBA85\uC138\uC11C';
-  document.getElementById('paySlipModalSub').textContent=payY+'\uB144 '+(payM+1)+'\uC6D4 \u00B7 \uC2DC\uAE09 '+formatPaySlipMoney(emp.rate||0);
-  const rows=[
-    {label:'\uCD1D \uADFC\uBB34\uC2DC\uAC04',value:formatHours2(pay.h||0)+'\uC2DC\uAC04'},
-    {label:'\uAE30\uBCF8\uAE09',value:formatPaySlipMoney(pay.base)},
-    {label:'\uC8FC\uD734\uC218\uB2F9',value:formatPaySlipMoney(pay.holi)},
-    {label:'\uACF5\uC81C\uC561',value:'-'+formatPaySlipMoney(pay.totalDeduct),danger:true}
-  ];
-  document.getElementById('paySlipModalRows').innerHTML=rows.map(r=>'<div class="pay-slip-modal-row"><span class="pay-slip-modal-label">'+r.label+'</span><span class="pay-slip-modal-value'+(r.danger?' danger':'')+'">'+r.value+'</span></div>').join('');
-  document.getElementById('paySlipModalNet').textContent=formatPaySlipMoney(pay.net);
-  renderPaySlipModalNav();
-  modal.classList.add('open');
-}
-function renderPaySlipModalNav(){
-  const nav=document.getElementById('paySlipModalNav');
+function renderPayslipEmpNav(empId){
+  const nav=document.getElementById('payslipEmpNav');
   if(!nav)return;
-  const prevId=paySlipModalIndex>0?paySlipModalEmpIds[paySlipModalIndex-1]:null;
-  const nextId=paySlipModalIndex>=0&&paySlipModalIndex<paySlipModalEmpIds.length-1?paySlipModalEmpIds[paySlipModalIndex+1]:null;
+  if(!paySlipNavEmpIds.length)paySlipNavEmpIds=employees.filter(e=>!e.resigned).map(e=>e.id);
+  const idx=paySlipNavEmpIds.indexOf(empId);
+  const prevId=idx>0?paySlipNavEmpIds[idx-1]:null;
+  const nextId=idx>=0&&idx<paySlipNavEmpIds.length-1?paySlipNavEmpIds[idx+1]:null;
   const prevEmp=prevId?employees.find(e=>e.id===prevId):null;
   const nextEmp=nextId?employees.find(e=>e.id===nextId):null;
+  if(!prevEmp&&!nextEmp){nav.style.display='none';nav.innerHTML='';return;}
+  nav.style.display='flex';
   nav.innerHTML=(prevEmp?'<button type="button" onclick="openPayslip(\''+prevEmp.id+'\')">&lsaquo; '+prevEmp.name+'</button>':'<span class="spacer"></span>')+(nextEmp?'<button type="button" onclick="openPayslip(\''+nextEmp.id+'\')">'+nextEmp.name+' &rsaquo;</button>':'<span class="spacer"></span>');
-}
-function closePaySlipModal(){
-  const modal=document.getElementById('paySlipModal');
-  if(modal)modal.classList.remove('open');
 }
 function changeHoliRate(v){
   psHoliRateVal=Math.max(0,psHoliRateVal+v);

@@ -403,13 +403,14 @@ input:focus{border-color:var(--green)}
 /* 월급여 테이블 */
 .pay-tbl-wrap{overflow-x:hidden;margin-bottom:12px;border-radius:8px;border:1px solid var(--bd)}
 .pay-tbl{border-collapse:collapse;width:100%;table-layout:fixed;font-size:10px}
-.pay-tbl th{background:#BA7517;color:#fff;padding:6px 1px;text-align:center;font-weight:800;white-space:normal;border:1px solid #d59a4a;line-height:1.15}
-.pay-tbl td{padding:6px 1px;text-align:center;border:1px solid #eee;background:#fff;white-space:nowrap;overflow:hidden;text-overflow:clip;font-weight:700;color:#633806}
-.pay-tbl tr:last-child td{background:#FFF2CC;font-weight:800;color:#633806;border-top:2px solid #BA7517}
-.pay-tbl td.nm{text-align:center;font-weight:800;color:var(--t1);padding-left:2px;background:#FFF7DF}
-.pay-tbl td.pay-time{color:#185FA5;background:#F0F7FF}
-.pay-tbl .unit-h{color:#7b98b7;font-size:.9em;font-weight:700;margin-left:1px}
-.pay-tbl td.pay-net{font-weight:900;color:#12855b;background:#EEF9F3}
+.pay-tbl th{background:#1B355E;color:#fff;padding:6px 1px;text-align:center;font-weight:400;white-space:normal;border:1px solid #8AB4F8;line-height:1.15}
+.pay-tbl td{padding:6px 1px;text-align:center;border:1px solid #e8edf5;background:#fff;white-space:nowrap;overflow:hidden;text-overflow:clip;font-weight:400;color:var(--t1)}
+.pay-tbl tr:nth-child(even) td{background:#F7FAFE}
+.pay-tbl tr:last-child td{background:#E8EFF8;font-weight:400;color:#1B355E;border-top:2px solid #8AB4F8}
+.pay-tbl td.nm{text-align:center;font-weight:400;color:var(--t1);padding-left:2px;background:inherit}
+.pay-tbl td.pay-time{color:#185FA5;background:inherit}
+.pay-tbl .unit-h{color:#7b98b7;font-size:.9em;font-weight:400;margin-left:1px}
+.pay-tbl td.pay-net{font-weight:400;color:#1B355E;background:inherit}
 .pay-tbl td.pay-deduct{color:var(--red)}
 .pay-tbl td.pay-money{font-size:9.5px}
 .info-box{border-radius:10px;padding:10px 12px;font-size:12px;line-height:1.6;margin-bottom:12px}
@@ -1905,7 +1906,7 @@ function tenantAdd(name,data){
 
 const DAYS=["일","월","화","수","목","금","토"];
 const MONTHS=["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
-const APP_VERSION="v2026.07.08.48";
+const APP_VERSION="v2026.07.08.49";
 const APP_URL="https://zuo-saas.firebaseapp.com";
 const INVITE_BASE_URL="https://radinotech-beep.github.io/zuo-saas/";
 const EMPLOYEE_INVITE_CAFE_ID=new URLSearchParams(location.search).get('store');

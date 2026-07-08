@@ -696,7 +696,6 @@ input:focus{border-color:var(--green)}
   <div class="hdr" id="alertsHdr">
     <button class="back-btn" onclick="showScreen('scSvc')">← 뒤로</button>
     <div><div class="hdr-title" id="alertsCafeName">가게</div><div class="hdr-sub">오늘 처리할 운영 알림</div></div>
-    <button onclick="loadAlertCenter()" style="background:rgba(255,255,255,0.2);border:none;color:#fff;font-size:11px;padding:4px 8px;border-radius:6px;cursor:pointer">새로고침</button>
   </div>
   <div class="tabs">
     <button class="tab on" id="alertTab_all" onclick="switchAlertFilter('all')">전체</button>
@@ -1903,7 +1902,7 @@ function tenantAdd(name,data){
 
 const DAYS=["일","월","화","수","목","금","토"];
 const MONTHS=["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
-const APP_VERSION="v2026.07.08.50";
+const APP_VERSION="v2026.07.08.51";
 const APP_URL="https://zuo-saas.firebaseapp.com";
 const INVITE_BASE_URL="https://radinotech-beep.github.io/zuo-saas/";
 const EMPLOYEE_INVITE_CAFE_ID=new URLSearchParams(location.search).get('store');

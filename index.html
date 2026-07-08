@@ -42,7 +42,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .top-small-btn{border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.16);color:#fff;border-radius:999px;padding:5px 9px;font-size:11px;font-weight:700;cursor:pointer}
 .hdr-actions{display:flex;align-items:center;gap:8px}
 .hdr-icon-btn{position:relative;width:34px;height:34px;border-radius:999px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.16);color:#fff;font-size:17px;font-weight:800;display:flex;align-items:center;justify-content:center;cursor:pointer}
-.admin-gear-btn{flex-shrink:0;margin-left:auto}
+.admin-gear-btn{flex-shrink:0}
 .hdr-badge{position:absolute;top:-5px;right:-5px;min-width:17px;height:17px;border-radius:999px;background:var(--red);color:#fff;font-size:10px;font-weight:900;display:none;align-items:center;justify-content:center;padding:0 4px;border:2px solid var(--green)}
 .hdr{position:sticky;top:0;z-index:10;background:var(--green);padding:14px 16px 10px;display:flex;align-items:center;justify-content:space-between}
 .hdr-title{font-size:17px;font-weight:700;color:#fff}
@@ -595,10 +595,7 @@ input:focus{border-color:var(--green)}
   <div class="hdr" id="svcHdr">
     <button class="back-btn" onclick="goAfterEntryBack()">← 뒤로</button>
     <div class="hdr-title" id="svcCafeName">가게</div>
-    <div class="hdr-actions">
-      <button class="hdr-icon-btn" onclick="enterSvc('alerts')" title="알림센터">🔔<span class="hdr-badge" id="svcAlertBadge">0</span></button>
-      <div style="font-size:11px;color:rgba(255,255,255,0.8)">관리자</div>
-    </div>
+    <div class="hdr-actions"></div>
   </div>
   <div class="svc-wrap">
     <div class="svc-title">서비스를 선택해주세요</div>
@@ -1906,7 +1903,7 @@ function tenantAdd(name,data){
 
 const DAYS=["일","월","화","수","목","금","토"];
 const MONTHS=["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
-const APP_VERSION="v2026.07.08.49";
+const APP_VERSION="v2026.07.08.50";
 const APP_URL="https://zuo-saas.firebaseapp.com";
 const INVITE_BASE_URL="https://radinotech-beep.github.io/zuo-saas/";
 const EMPLOYEE_INVITE_CAFE_ID=new URLSearchParams(location.search).get('store');
@@ -2006,7 +2003,7 @@ window.addEventListener('popstate',e=>{
 });
 
 function updateAdminHeaderButtons(){
-  document.querySelectorAll('.admin-gear-btn,.admin-alert-btn').forEach(btn=>btn.remove());
+  document.querySelectorAll('.admin-role-label,.admin-alert-btn,.admin-gear-btn').forEach(el=>el.remove());
   if(!isAdminMode||!currentCafe)return;
   const active=document.querySelector('.screen.active');
   if(!active||['scLogin','scHome','scSvcWorker','scWorkerInput'].includes(active.id))return;
@@ -2042,6 +2039,10 @@ function updateAdminHeaderButtons(){
     if(child===actions||child===centerSlot||child.classList.contains('back-btn'))return;
     actions.appendChild(child);
   });
+  const role=document.createElement('div');
+  role.className='admin-role-label';
+  role.textContent='\uAD00\uB9AC\uC790';
+  role.style.cssText='font-size:11px;color:rgba(255,255,255,0.8);white-space:nowrap';
   const alertBtn=document.createElement('button');
   alertBtn.type='button';
   alertBtn.className='hdr-icon-btn admin-alert-btn';
@@ -2054,8 +2055,9 @@ function updateAdminHeaderButtons(){
   btn.title='Menu options';
   btn.textContent='\u2699\uFE0F';
   btn.onclick=openMenuOptionsModal;
-  actions.prepend(btn);
-  actions.prepend(alertBtn);
+  actions.appendChild(role);
+  actions.appendChild(alertBtn);
+  actions.appendChild(btn);
   updateSvcAlertBadge();
 }
 
@@ -2469,15 +2471,12 @@ async function refreshSvcAlertBadge(){
 }
 
 function updateSvcAlertBadge(){
-  const badges=['svcAlertBadge','headerAlertBadge'].map(id=>document.getElementById(id)).filter(Boolean);
-  if(!badges.length)return;
+  const badge=document.getElementById('headerAlertBadge');
+  if(!badge)return;
   const hidden=currentCafe?getHiddenAlerts():[];
   const count=(alertItems||[]).filter(a=>!hidden.includes(a.id)).length;
-  const label=count>99?'99+':String(count);
-  badges.forEach(badge=>{
-    badge.textContent=label;
-    badge.style.display=count>0?'flex':'none';
-  });
+  badge.textContent=count>99?'99+':String(count);
+  badge.style.display=count>0?'flex':'none';
 }
 function showAdminPwInput(){
   document.getElementById('adminPwArea').style.display='block';

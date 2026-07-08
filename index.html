@@ -1179,8 +1179,8 @@ input:focus{border-color:var(--green)}
       <div style="font-size:22px;font-weight:700;color:var(--gd)" id="payTableTotal">₩0</div>
     </div>
     <button class="btn-primary" onclick="exportExcel()">📊 엑셀로 내보내기</button>
-    <button onclick="exportBankTransferExcel()" style="width:100%;margin-top:8px;padding:11px;border-radius:8px;border:1px solid #185FA5;background:#fff;color:#185FA5;font-size:13px;font-weight:600;cursor:pointer">🏦 은행 대량이체 양식 내보내기</button>
-    <button onclick="exportDailyExcel()" style="width:100%;margin-top:8px;padding:11px;border-radius:8px;border:1px solid var(--green);background:#fff;color:var(--green);font-size:13px;font-weight:600;cursor:pointer">📑 세무사 제출 자료 내보내기</button>
+    <button class="pay-hidden-export" onclick="exportBankTransferExcel()" style="display:none;width:100%;margin-top:8px;padding:11px;border-radius:8px;border:1px solid #185FA5;background:#fff;color:#185FA5;font-size:13px;font-weight:600;cursor:pointer">🏦 은행 대량이체 양식 내보내기</button>
+    <button class="pay-hidden-export" onclick="exportDailyExcel()" style="display:none;width:100%;margin-top:8px;padding:11px;border-radius:8px;border:1px solid var(--green);background:#fff;color:var(--green);font-size:13px;font-weight:600;cursor:pointer">📑 세무사 제출 자료 내보내기</button>
   </div>
 
   <!-- 월별 추이 탭 -->
@@ -1902,7 +1902,7 @@ function tenantAdd(name,data){
 
 const DAYS=["일","월","화","수","목","금","토"];
 const MONTHS=["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
-const APP_VERSION="v2026.07.08.51";
+const APP_VERSION="v2026.07.08.52";
 const APP_URL="https://zuo-saas.firebaseapp.com";
 const INVITE_BASE_URL="https://radinotech-beep.github.io/zuo-saas/";
 const EMPLOYEE_INVITE_CAFE_ID=new URLSearchParams(location.search).get('store');

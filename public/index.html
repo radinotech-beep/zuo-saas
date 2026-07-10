@@ -1902,7 +1902,7 @@ function tenantAdd(name,data){
 
 const DAYS=["일","월","화","수","목","금","토"];
 const MONTHS=["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"];
-const APP_VERSION="v2026.07.10.53";
+const APP_VERSION="v2026.07.10.54";
 const APP_URL="https://zuo-saas.firebaseapp.com";
 const INVITE_BASE_URL="https://radinotech-beep.github.io/zuo-saas/";
 const EMPLOYEE_INVITE_CAFE_ID=new URLSearchParams(location.search).get('store');
@@ -2123,22 +2123,29 @@ async function ensureUserProfile(user){
   const ref=db.collection('users').doc(user.uid);
   const snap=await ref.get();
   const isSuper=isSuperAdminUser(user);
-  const base={uid:user.uid,email:user.email||'',updatedAt:Date.now()};
+  const now=Date.now();
+  const base={uid:user.uid,email:user.email||''};
   if(!snap.exists){
-    const created={...base,approved:isSuper,status:'active',createdAt:Date.now()};
+    const created={...base,approved:isSuper,status:'active',createdAt:now,updatedAt:now};
     await ref.set(created);
     return created;
   }
   const existing={id:snap.id,...snap.data()};
-  const patch={...base};
-  if(!existing.status)patch.status='active';
+  const patch={};
+  if(existing.uid!==user.uid)patch.uid=user.uid;
+  if((existing.email||'')!==(user.email||''))patch.email=user.email||'';
+  if(existing.status===undefined)patch.status='active';
   if(existing.approved===undefined)patch.approved=false;
   if(isSuper&&(existing.approved!==true||existing.status!=='active')){
     patch.approved=true;
     patch.status='active';
   }
-  await ref.set(patch,{merge:true});
-  return {...existing,...patch};
+  if(Object.keys(patch).length){
+    patch.updatedAt=now;
+    await ref.set(patch,{merge:true});
+    return {...existing,...patch};
+  }
+  return existing;
 }
 function showApprovalPending(profile){
   const msg=document.getElementById('approvalPendingMessage');
